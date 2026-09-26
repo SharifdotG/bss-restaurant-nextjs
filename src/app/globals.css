@@ -1,26 +1,148 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "./tokens.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
+  --font-sans: var(--font-google-sans), var(--font-baloo), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-foreground: var(--primary-soft-foreground);
+  --color-brand: var(--brand);
+  --color-brand-track: var(--brand-track);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-tile: var(--tile);
+  --color-tile-foreground: var(--tile-foreground);
+  --color-scrim: var(--scrim);
+  --color-veil: var(--veil);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Five tones carry every state; components map a status to one of these. */
+  --color-tone-amber: var(--tone-amber);
+  --color-tone-amber-subtle: var(--tone-amber-subtle);
+  --color-tone-amber-text: var(--tone-amber-text);
+  --color-tone-orange: var(--tone-orange);
+  --color-tone-orange-subtle: var(--tone-orange-subtle);
+  --color-tone-orange-text: var(--tone-orange-text);
+  --color-tone-green: var(--tone-green);
+  --color-tone-green-subtle: var(--tone-green-subtle);
+  --color-tone-green-text: var(--tone-green-text);
+  --color-tone-slate: var(--tone-slate);
+  --color-tone-slate-subtle: var(--tone-slate-subtle);
+  --color-tone-slate-text: var(--tone-slate-text);
+  --color-tone-red: var(--tone-red);
+  --color-tone-red-subtle: var(--tone-red-subtle);
+  --color-tone-red-text: var(--tone-red-text);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-track: var(--chart-track);
+  --color-chart-grid: var(--chart-grid);
+
+  /* Controls 10, cards 16, dialogs 20. */
+  --radius: 10px;
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+
+  --shadow-sm: 0 2px 8px var(--shadow);
+  --shadow-md: 0 6px 24px var(--shadow);
+  --shadow-lg: 0 16px 40px var(--shadow-strong);
+
+  --text-2xs: 11px;
+  --text-2xs--line-height: 16px;
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 13px;
+  --text-sm--line-height: 18px;
+  --text-base: 14px;
+  --text-base--line-height: 20px;
+  --text-md: 16px;
+  --text-md--line-height: 24px;
+  --text-lg: 18px;
+  --text-lg--line-height: 26px;
+  --text-xl: 20px;
+  --text-xl--line-height: 28px;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 32px;
+  --text-3xl: 30px;
+  --text-3xl--line-height: 38px;
+  --text-4xl: 36px;
+  --text-4xl--line-height: 44px;
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 260ms;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    @apply font-sans;
+    -webkit-tap-highlight-color: transparent;
+    scrollbar-color: var(--input) transparent;
+  }
+  body {
+    @apply bg-background text-base text-foreground antialiased;
+    font-variant-numeric: tabular-nums;
+    caret-color: var(--primary);
+  }
+  ::selection {
+    background-color: var(--primary-soft);
+    color: var(--primary-soft-foreground);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  a {
+    text-underline-offset: 3px;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }
