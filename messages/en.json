@@ -1,0 +1,63 @@
+{
+  "common": {
+    "product": "BSS Restaurant",
+    "language": "Language",
+    "theme": "Theme",
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "locales": {
+      "en": "English",
+      "bn": "বাংলা"
+    }
+  },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Use the email and password your manager set up for you.",
+    "email": "Email",
+    "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "errors": {
+      "invalid_credentials": "That email and password don't match. Check both and try again.",
+      "account_disabled": "This account is switched off. Ask a manager to turn it back on.",
+      "rate_limited": "Too many tries. Wait {minutes, plural, one {# minute} other {# minutes}} and try again.",
+      "validation_error": "Enter a valid email and your password.",
+      "network": "Can't reach the server. Check your connection and try again.",
+      "session": "Signed in, but the session couldn't be saved. Try again.",
+      "unknown": "Something went wrong on our side. Try again in a moment."
+    }
+  },
+  "session": {
+    "checking": "Checking your session…",
+    "signedInAs": "Signed in as",
+    "signOut": "Sign out",
+    "signingOut": "Signing out…",
+    "tokenExpires": "Access token renews in {seconds}s",
+    "apiCheck": "API check",
+    "callMe": "Call /auth/me",
+    "ok": "OK",
+    "roles": {
+      "admin": "Admin",
+      "manager": "Manager",
+      "waiter": "Waiter",
+      "chef": "Chef",
+      "cashier": "Cashier"
+    },
+    "live": {
+      "idle": "Not connected",
+      "connecting": "Connecting",
+      "live": "Live",
+      "reconnecting": "Reconnecting",
+      "offline": "Offline"
+    },
+    "unavailable": "Can't reach the server right now.",
+    "unavailableHint": "Your session is safe. Check the connection and try again.",
+    "retry": "Try again",
+    "title": "Session check"
+  }
+}

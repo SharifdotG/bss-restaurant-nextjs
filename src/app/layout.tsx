@@ -1,16 +1,4 @@
-import type { Metadata } from "next";
-import { baloo, googleSans } from "@/lib/fonts";
-import "./globals.css";
-
-export const metadata: Metadata = {
-  title: "BSS Restaurant",
-  description: "Staff dashboard for orders, kitchen, billing and bookings.",
-};
-
+// The real document lives in [locale]/layout.tsx so <html lang> follows the language.
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  return (
-    <html lang="en" className={`${googleSans.variable} ${baloo.variable}`}>
-      <body>{children}</body>
-    </html>
-  );
+  return children;
 }
