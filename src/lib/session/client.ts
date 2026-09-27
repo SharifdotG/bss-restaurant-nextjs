@@ -1,7 +1,8 @@
 import { useSyncExternalStore } from "react";
 import type { User } from "@/lib/api/types";
 
-export type Session = { accessToken: string; expiresAt: number; user: User };
+// lifetime is the token's full life in ms, kept so freshness scales with it.
+export type Session = { accessToken: string; expiresAt: number; lifetime: number; user: User };
 
 export type SessionState =
   | { status: "loading" }
@@ -12,8 +13,6 @@ export type SessionState =
 const CACHE_KEY = "bss.session";
 const LOCK_NAME = "bss-refresh";
 const CHANNEL_NAME = "bss-session";
-// A cached token with less than this left is treated as stale and rotated.
-const MIN_REMAINING_MS = 60_000;
 
 type Message =
   | { type: "refreshed"; session: Session }
@@ -25,6 +24,7 @@ let state: SessionState = LOADING;
 const listeners = new Set<() => void>();
 let channel: BroadcastChannel | null = null;
 let renewTimer: ReturnType<typeof setTimeout> | undefined;
+let started: Promise<Session | null> | null = null;
 
 function setState(next: SessionState) {
   state = next;
@@ -63,8 +63,16 @@ function writeCache(session: Session | null) {
   }
 }
 
+// Good for at least a quarter of its life (at most a minute) before anyone needs a new one.
 const isFresh = (session: Session | null): session is Session =>
-  session !== null && session.expiresAt - Date.now() > MIN_REMAINING_MS;
+  session !== null && session.expiresAt - Date.now() > Math.min(60_000, session.lifetime / 4);
+
+const toSession = (data: { accessToken: string; expiresIn: number; user: User }): Session => ({
+  accessToken: data.accessToken,
+  user: data.user,
+  expiresAt: Date.now() + data.expiresIn * 1000,
+  lifetime: data.expiresIn * 1000,
+});
 
 function post(message: Message) {
   channel?.postMessage(message);
@@ -84,8 +92,9 @@ function signOutLocally() {
 // Renew at about 80% of the token's life so requests rarely meet an expired one.
 function scheduleRenewal(session: Session) {
   clearTimeout(renewTimer);
-  const lifetime = session.expiresAt - Date.now();
-  renewTimer = setTimeout(() => void refresh(), Math.max(lifetime * 0.8, 5_000));
+  const delay = session.expiresAt - Date.now() - session.lifetime * 0.2;
+  // Passing our own token means "rotate unless another tab already did".
+  renewTimer = setTimeout(() => void refresh(session.accessToken), Math.max(delay, 5_000));
 }
 
 async function rotate(): Promise<Session | "anonymous" | "unavailable"> {
@@ -99,18 +108,15 @@ async function rotate(): Promise<Session | "anonymous" | "unavailable"> {
   if (!response.ok) return "unavailable";
 
   const data = (await response.json()) as { accessToken: string; expiresIn: number; user: User };
-  return {
-    accessToken: data.accessToken,
-    user: data.user,
-    expiresAt: Date.now() + data.expiresIn * 1000,
-  };
+  return toSession(data);
 }
 
 /**
  * Get a usable access token, rotating the refresh token only when no tab has a fresh one.
  * Every rotation runs under one Web Lock: the API revokes the whole session if a refresh
  * token is used twice, so two tabs must never rotate at the same moment.
- * Pass the token that just failed so a cached copy of that same token isn't reused.
+ * Pass the token being replaced (one that failed, or is due for renewal) so a cached copy
+ * of that same token isn't picked up again.
  */
 export async function refresh(rejected?: string): Promise<Session | null> {
   const run = async () => {
@@ -140,8 +146,13 @@ export async function refresh(rejected?: string): Promise<Session | null> {
   return navigator.locks ? navigator.locks.request(LOCK_NAME, run) : run();
 }
 
-/** Called once per page load from the app shell. */
+/** Called once per page load from the app shell; later calls share the first result. */
 export function startSession() {
+  started ??= boot();
+  return started;
+}
+
+function boot() {
   if (!channel && "BroadcastChannel" in window) {
     channel = new BroadcastChannel(CHANNEL_NAME);
     channel.onmessage = ({ data }: MessageEvent<Message>) => {
@@ -171,11 +182,7 @@ export async function signIn(tokens: {
   });
   if (!response.ok) throw new Error("session_not_saved");
 
-  const session: Session = {
-    accessToken: tokens.accessToken,
-    user: tokens.user,
-    expiresAt: Date.now() + tokens.expiresIn * 1000,
-  };
+  const session = toSession(tokens);
   writeCache(session);
   adopt(session);
   post({ type: "signed-in", session });
