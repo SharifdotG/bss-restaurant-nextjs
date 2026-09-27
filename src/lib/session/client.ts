@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import type { User } from "@/lib/api/types";
+import type { UserOut as User } from "@/lib/api/schema";
 
 // lifetime is the token's full life in ms, kept so freshness scales with it.
 export type Session = { accessToken: string; expiresAt: number; lifetime: number; user: User };
@@ -64,8 +64,8 @@ function writeCache(session: Session | null) {
 }
 
 // Good for at least a quarter of its life (at most a minute) before anyone needs a new one.
-const isFresh = (session: Session | null): session is Session =>
-  session !== null && session.expiresAt - Date.now() > Math.min(60_000, session.lifetime / 4);
+const isFresh = (session: Session) =>
+  session.expiresAt - Date.now() > Math.min(60_000, session.lifetime / 4);
 
 const toSession = (data: { accessToken: string; expiresIn: number; user: User }): Session => ({
   accessToken: data.accessToken,
@@ -121,7 +121,7 @@ async function rotate(): Promise<Session | "anonymous" | "unavailable"> {
 export async function refresh(rejected?: string): Promise<Session | null> {
   const run = async () => {
     const cached = readCache();
-    if (isFresh(cached) && cached.accessToken !== rejected) {
+    if (cached && isFresh(cached) && cached.accessToken !== rejected) {
       adopt(cached);
       return cached;
     }
@@ -144,6 +144,18 @@ export async function refresh(rejected?: string): Promise<Session | null> {
   };
 
   return navigator.locks ? navigator.locks.request(LOCK_NAME, run) : run();
+}
+
+/**
+ * The access token for the next request: waits while the page is still starting the session,
+ * and renews first if it's about to run out (a laptop waking up, a throttled background tab).
+ */
+export async function accessToken(): Promise<string | null> {
+  if (state.status === "loading" && started) await started;
+  if (state.status !== "authenticated") return null;
+  if (isFresh(state)) return state.accessToken;
+  const renewed = await refresh(state.accessToken);
+  return renewed?.accessToken ?? null;
 }
 
 /** Called once per page load from the app shell; later calls share the first result. */

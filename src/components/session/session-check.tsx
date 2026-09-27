@@ -8,8 +8,8 @@ import { LiveChip } from "@/components/live-chip";
 import { LanguageSwitch, ThemeSwitch } from "@/components/preferences";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "@/i18n/navigation";
-import { ApiError, apiFetch } from "@/lib/api/fetch";
-import type { User } from "@/lib/api/types";
+import { api, unwrap } from "@/lib/api/client";
+import { isApiError } from "@/lib/api/errors";
 import { startLive, stopLive } from "@/lib/live/socket";
 import { signOut, useSession } from "@/lib/session/client";
 
@@ -43,10 +43,10 @@ export function SessionCheck() {
   async function callMe() {
     setCheck("…");
     try {
-      const me = await apiFetch<User>("/auth/me");
+      const me = await unwrap(api.GET("/api/v1/auth/me"));
       setCheck(`${t("ok")} · ${me.fullName}`);
     } catch (error) {
-      setCheck(error instanceof ApiError ? `${error.status} ${error.code}` : "network");
+      setCheck(isApiError(error) ? `${error.status} ${error.code}` : "network");
     }
   }
 

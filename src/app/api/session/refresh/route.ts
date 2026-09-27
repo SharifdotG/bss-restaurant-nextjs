@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { API_BASE } from "@/lib/api/config";
-import type { TokenOut } from "@/lib/api/types";
+import type { TokenOut } from "@/lib/api/schema";
 import {
   clearRefreshToken,
   isSameOrigin,

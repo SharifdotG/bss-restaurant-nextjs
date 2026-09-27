@@ -9,8 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "@/i18n/navigation";
-import { ApiError, publicFetch } from "@/lib/api/fetch";
-import type { TokenOut } from "@/lib/api/types";
+import { api, unwrap } from "@/lib/api/client";
+import { isApiError } from "@/lib/api/errors";
+import type { TokenOut } from "@/lib/api/schema";
 import { signIn } from "@/lib/session/client";
 
 type ProblemKey = keyof Messages["login"]["errors"];
@@ -35,7 +36,7 @@ export function LoginForm() {
 
   // Also wakes the database on a cold start before anyone presses Sign in.
   useEffect(() => {
-    publicFetch<{ name: string }>("/public/restaurant")
+    unwrap(api.GET("/api/v1/public/restaurant"))
       .then((data) => setRestaurant(data.name))
       .catch(() => undefined);
   }, []);
@@ -59,13 +60,10 @@ export function LoginForm() {
 
     let tokens: TokenOut;
     try {
-      tokens = await publicFetch<TokenOut>("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-      });
+      tokens = await unwrap(api.POST("/api/v1/auth/login", { body: { email, password } }));
     } catch (error) {
       setPending(false);
-      if (!(error instanceof ApiError)) return setProblem({ key: "network" });
+      if (!isApiError(error) || error.code === "network") return setProblem({ key: "network" });
       if (error.code === "rate_limited") {
         const seconds = error.body.retryAfter ?? 300;
         setLockedUntil(Date.now() + seconds * 1000);
