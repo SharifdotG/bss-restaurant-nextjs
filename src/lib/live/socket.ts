@@ -1,9 +1,9 @@
 import { useSyncExternalStore } from "react";
 import { LIVE_URL } from "@/lib/api/config";
 import { getSession, refresh, subscribeSession } from "@/lib/session/client";
+import type { LiveMessage } from "./types";
 
 export type LiveStatus = "idle" | "connecting" | "live" | "reconnecting" | "offline";
-export type LiveEvent = { event: string; [key: string]: unknown };
 
 // The server pings every 25 s; two missed pings means the connection is dead.
 const SILENCE_MS = 60_000;
@@ -13,7 +13,7 @@ const CLOSE_FORBIDDEN = 4403;
 
 let status: LiveStatus = "idle";
 const statusListeners = new Set<() => void>();
-const eventListeners = new Set<(event: LiveEvent) => void>();
+const eventListeners = new Set<(message: LiveMessage) => void>();
 
 let socket: WebSocket | null = null;
 let sentToken: string | null = null;
@@ -29,20 +29,24 @@ function setStatus(next: LiveStatus) {
   statusListeners.forEach((listener) => listener());
 }
 
-export function useLiveStatus() {
-  return useSyncExternalStore(
-    (listener) => {
-      statusListeners.add(listener);
-      return () => statusListeners.delete(listener);
-    },
-    () => status,
-    () => "idle" as const,
-  );
+export function subscribeLiveStatus(listener: () => void) {
+  statusListeners.add(listener);
+  return () => {
+    statusListeners.delete(listener);
+  };
 }
 
-export function onLiveEvent(listener: (event: LiveEvent) => void) {
+export const getLiveStatus = () => status;
+
+export function useLiveStatus() {
+  return useSyncExternalStore(subscribeLiveStatus, getLiveStatus, () => "idle" as const);
+}
+
+export function onLiveEvent(listener: (message: LiveMessage) => void) {
   eventListeners.add(listener);
-  return () => eventListeners.delete(listener);
+  return () => {
+    eventListeners.delete(listener);
+  };
 }
 
 function currentToken() {
@@ -82,7 +86,7 @@ function open() {
 
   ws.onmessage = ({ data }) => {
     resetSilenceTimer();
-    let message: LiveEvent;
+    let message: LiveMessage;
     try {
       message = JSON.parse(data);
     } catch {

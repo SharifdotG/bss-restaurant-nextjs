@@ -3,6 +3,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { makeQueryClient } from "@/lib/api/query-client";
+import { syncQueriesWithLive } from "@/lib/live/query-sync";
 import { getSession, subscribeSession } from "@/lib/session/client";
 
 const Devtools =
@@ -25,6 +26,7 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
       }),
     [client],
   );
+  useEffect(() => syncQueriesWithLive(client), [client]);
 
   return (
     <QueryClientProvider client={client}>

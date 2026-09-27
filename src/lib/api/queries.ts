@@ -1,6 +1,9 @@
 import { queryOptions } from "@tanstack/react-query";
 import { api, unwrap } from "./client";
 
+// Keys start with the resource: ["orders", filters], ["order", id], ["reservations", …],
+// ["dashboard"]. The live feed invalidates by those prefixes (lib/live/query-sync.ts).
+
 export const restaurantQuery = queryOptions({
   queryKey: ["restaurant"],
   queryFn: () => unwrap(api.GET("/api/v1/restaurant")),
