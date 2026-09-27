@@ -7,8 +7,6 @@ import {
   writeRefreshToken,
 } from "@/lib/session/cookie";
 
-export const preferredRegion = "iad1";
-
 const forbidden = () => NextResponse.json({ code: "forbidden" }, { status: 403 });
 
 // Login happens browser → API; the page hands the refresh token over once so it can live in an httpOnly cookie.

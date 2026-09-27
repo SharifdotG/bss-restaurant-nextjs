@@ -8,8 +8,6 @@ import {
   writeRefreshToken,
 } from "@/lib/session/cookie";
 
-export const preferredRegion = "iad1";
-
 export async function POST(request: NextRequest) {
   if (!isSameOrigin(request)) return NextResponse.json({ code: "forbidden" }, { status: 403 });
 
