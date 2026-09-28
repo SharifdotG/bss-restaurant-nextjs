@@ -2,6 +2,7 @@ import createMiddleware from "next-intl/middleware";
 import { hasLocale } from "next-intl";
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "@/i18n/routing";
+import { pageForPath } from "@/lib/permissions";
 import { hasSessionCookie } from "@/lib/session/cookie";
 
 const handleI18nRouting = createMiddleware(routing);
@@ -24,7 +25,10 @@ export default function proxy(request: NextRequest) {
   const isPublic = PUBLIC_PATHS.some((p) => path === p || path.startsWith(`${p}/`));
   const signedIn = hasSessionCookie(request);
 
-  if (!signedIn && !isPublic) {
+  // Addresses that aren't pages fall through to the 404, signed in or not.
+  const isPage = path === "/" || pageForPath(path) !== null;
+
+  if (!signedIn && !isPublic && isPage) {
     const login = new URL(`/${first}/login`, request.url);
     if (path !== "/") login.searchParams.set("next", path + search);
     return NextResponse.redirect(login);

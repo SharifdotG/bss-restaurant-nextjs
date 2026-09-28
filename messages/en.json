@@ -46,13 +46,6 @@
   },
   "session": {
     "checking": "Checking your session…",
-    "signedInAs": "Signed in as",
-    "signOut": "Sign out",
-    "signingOut": "Signing out…",
-    "tokenExpires": "Access token renews in {seconds, number}s",
-    "apiCheck": "API check",
-    "callMe": "Call /auth/me",
-    "ok": "OK",
     "roles": {
       "admin": "Admin",
       "manager": "Manager",
@@ -69,25 +62,7 @@
     },
     "unavailable": "Can't reach the server right now.",
     "unavailableHint": "Your session is safe. Check the connection and try again.",
-    "retry": "Try again",
-    "title": "Session check",
-    "check": {
-      "restaurant": "Restaurant",
-      "charges": "VAT {vat} · service {service}",
-      "today": "Today",
-      "todaySummary": "{sales} from {orders, plural, one {# order} other {# orders}}",
-      "open": "Open now",
-      "openSummary": "{orders, plural, one {# order} other {# orders}} · {occupied, number} of {tables, number} tables in use",
-      "notForRole": "Not part of your role",
-      "liveFeed": "Live feed",
-      "liveSummary": "{orders, plural, one {# active order} other {# active orders}} · {bookings, plural, one {# booking} other {# bookings}} today",
-      "waiting": "Waiting for the first snapshot",
-      "formats": "Formats",
-      "pages": "Your pages",
-      "landing": "lands on {page}",
-      "errorCheck": "Error text",
-      "tryError": "Open order #999999"
-    }
+    "retry": "Try again"
   },
   "errors": {
     "generic": {
@@ -170,5 +145,62 @@
       "decimals": "Use at most 2 decimals.",
       "invalid": "This isn't valid."
     }
+  },
+  "shell": {
+    "staffArea": "Staff dashboard",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
+    "mainNav": "Main navigation",
+    "openMenu": "Open menu",
+    "more": "More",
+    "moreHint": "Other pages and your account",
+    "newShort": "New",
+    "breadcrumb": "You are here",
+    "groups": {
+      "service": "Service",
+      "manage": "Manage"
+    },
+    "user": {
+      "menu": "Account menu",
+      "profile": "Your profile",
+      "signOut": "Sign out",
+      "signingOut": "Signing out…"
+    },
+    "denied": {
+      "managersOnly": "{page} is for managers",
+      "notYourRole": "{page} isn't part of your role",
+      "signedInAs": "You're signed in as {name}, {role}. Ask a manager if you need it.",
+      "back": "Back to {page}"
+    },
+    "planned": {
+      "title": "{page} is on its way",
+      "body": "This screen is still being built. Navigation, roles and live updates around it already work."
+    },
+    "notFound": {
+      "title": "There's no page at this address",
+      "body": "<path></path> doesn't exist. The link may be old or mistyped.",
+      "back": "Go back",
+      "open": "Open {page}",
+      "signedOutTitle": "There's no page here",
+      "signedOutBody": "The link may be old or mistyped. Sign in and we'll take you to your workspace.",
+      "signIn": "Go to sign in"
+    },
+    "bookings": "Bookings"
+  },
+  "pages": {
+    "overview": "Tonight's service so far, updated live",
+    "orders": "Every order today, updated live",
+    "newOrder": "Pick a table, add dishes, send it to the kitchen",
+    "floor": "Tables and what's happening at each",
+    "kitchen": "Tickets to cook, oldest first",
+    "billing": "Bills waiting to be settled",
+    "reservations": "Bookings by table and time",
+    "menu": "Dishes, categories and what's sold out",
+    "tables": "Tables, seats and QR codes",
+    "staff": "People, roles and sign-in accounts",
+    "expenses": "What the restaurant spent this month",
+    "reports": "Sales, profit and best sellers",
+    "settings": "Restaurant details, charges and receipts",
+    "profile": "Your details and password"
   }
 }

@@ -35,10 +35,6 @@ describe("messages", () => {
   // A bare {count} prints Latin digits even in Bangla; counts need {count, number}.
   it("formats counts with Bangla digits", () => {
     const t = createTranslator({ locale: "bn", messages: bn });
-    expect(t("session.check.liveSummary", { orders: 7, bookings: 12 })).toBe(
-      "৭টি চালু অর্ডার · আজ ১২টি বুকিং",
-    );
     expect(t("errors.codes.rate_limited", { minutes: 5 })).toContain("৫ মিনিট");
-    expect(t("session.tokenExpires", { seconds: 89 })).toContain("৮৯");
   });
 });
