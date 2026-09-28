@@ -11,7 +11,8 @@
     "locales": {
       "en": "English",
       "bn": "বাংলা"
-    }
+    },
+    "close": "বন্ধ করুন"
   },
   "nav": {
     "overview": "ওভারভিউ",
