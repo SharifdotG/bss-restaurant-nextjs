@@ -13,6 +13,22 @@
       "bn": "বাংলা"
     }
   },
+  "nav": {
+    "overview": "Overview",
+    "orders": "Orders",
+    "newOrder": "New order",
+    "floor": "Floor",
+    "kitchen": "Kitchen",
+    "billing": "Billing",
+    "reservations": "Reservations",
+    "menu": "Menu",
+    "tables": "Tables",
+    "staff": "Staff",
+    "expenses": "Expenses",
+    "reports": "Reports",
+    "settings": "Settings",
+    "profile": "Profile"
+  },
   "login": {
     "title": "Sign in",
     "subtitle": "Use the email and password your manager set up for you.",
@@ -32,7 +48,7 @@
     "signedInAs": "Signed in as",
     "signOut": "Sign out",
     "signingOut": "Signing out…",
-    "tokenExpires": "Access token renews in {seconds}s",
+    "tokenExpires": "Access token renews in {seconds, number}s",
     "apiCheck": "API check",
     "callMe": "Call /auth/me",
     "ok": "OK",
@@ -53,7 +69,24 @@
     "unavailable": "Can't reach the server right now.",
     "unavailableHint": "Your session is safe. Check the connection and try again.",
     "retry": "Try again",
-    "title": "Session check"
+    "title": "Session check",
+    "check": {
+      "restaurant": "Restaurant",
+      "charges": "VAT {vat} · service {service}",
+      "today": "Today",
+      "todaySummary": "{sales} from {orders, plural, one {# order} other {# orders}}",
+      "open": "Open now",
+      "openSummary": "{orders, plural, one {# order} other {# orders}} · {occupied, number} of {tables, number} tables in use",
+      "notForRole": "Not part of your role",
+      "liveFeed": "Live feed",
+      "liveSummary": "{orders, plural, one {# active order} other {# active orders}} · {bookings, plural, one {# booking} other {# bookings}} today",
+      "waiting": "Waiting for the first snapshot",
+      "formats": "Formats",
+      "pages": "Your pages",
+      "landing": "lands on {page}",
+      "errorCheck": "Error text",
+      "tryError": "Open order #999999"
+    }
   },
   "errors": {
     "generic": {

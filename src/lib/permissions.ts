@@ -26,6 +26,24 @@ export type Page =
   | "settings"
   | "profile";
 
+/** In the order the sidebar lists them. */
+export const PAGES: readonly Page[] = [
+  "overview",
+  "orders",
+  "newOrder",
+  "floor",
+  "kitchen",
+  "billing",
+  "reservations",
+  "menu",
+  "tables",
+  "staff",
+  "expenses",
+  "reports",
+  "settings",
+  "profile",
+];
+
 const PAGE_ROLES: Record<Page, readonly Role[]> = {
   overview: [...MANAGERS, "cashier"],
   orders: FRONT,
@@ -70,6 +88,8 @@ const LANDING: Record<Role, Page> = {
 };
 
 export const canOpen = (role: Role, page: Page) => allows(PAGE_ROLES[page], role);
+
+export const landingPage = (role: Role) => LANDING[role];
 
 export const landingPath = (role: Role) => PAGE_PATHS[LANDING[role]];
 

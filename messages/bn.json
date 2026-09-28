@@ -13,6 +13,22 @@
       "bn": "বাংলা"
     }
   },
+  "nav": {
+    "overview": "ওভারভিউ",
+    "orders": "অর্ডার",
+    "newOrder": "নতুন অর্ডার",
+    "floor": "ফ্লোর",
+    "kitchen": "রান্নাঘর",
+    "billing": "বিলিং",
+    "reservations": "রিজার্ভেশন",
+    "menu": "মেনু",
+    "tables": "টেবিল",
+    "staff": "কর্মী",
+    "expenses": "খরচ",
+    "reports": "রিপোর্ট",
+    "settings": "সেটিংস",
+    "profile": "প্রোফাইল"
+  },
   "login": {
     "title": "সাইন ইন",
     "subtitle": "ম্যানেজার আপনার জন্য যে ইমেইল ও পাসওয়ার্ড দিয়েছেন সেটি ব্যবহার করুন।",
@@ -32,7 +48,7 @@
     "signedInAs": "সাইন ইন করেছেন",
     "signOut": "সাইন আউট",
     "signingOut": "সাইন আউট হচ্ছে…",
-    "tokenExpires": "অ্যাক্সেস টোকেন {seconds} সেকেন্ডে নবায়ন হবে",
+    "tokenExpires": "অ্যাক্সেস টোকেন {seconds, number} সেকেন্ডে নবায়ন হবে",
     "apiCheck": "API যাচাই",
     "callMe": "/auth/me কল করুন",
     "ok": "ঠিক আছে",
@@ -53,7 +69,24 @@
     "unavailable": "এই মুহূর্তে সার্ভারে পৌঁছানো যাচ্ছে না।",
     "unavailableHint": "আপনার সেশন ঠিক আছে। সংযোগ দেখে আবার চেষ্টা করুন।",
     "retry": "আবার চেষ্টা করুন",
-    "title": "সেশন যাচাই"
+    "title": "সেশন যাচাই",
+    "check": {
+      "restaurant": "রেস্টুরেন্ট",
+      "charges": "ভ্যাট {vat} · সার্ভিস {service}",
+      "today": "আজ",
+      "todaySummary": "{orders, number}টি অর্ডারে {sales}",
+      "open": "এখন চলছে",
+      "openSummary": "{orders, number}টি অর্ডার · {tables, number}টির মধ্যে {occupied, number}টি টেবিলে অতিথি",
+      "notForRole": "আপনার পদের জন্য নয়",
+      "liveFeed": "লাইভ ফিড",
+      "liveSummary": "{orders, number}টি চালু অর্ডার · আজ {bookings, number}টি বুকিং",
+      "waiting": "প্রথম স্ন্যাপশটের অপেক্ষায়",
+      "formats": "ফরম্যাট",
+      "pages": "আপনার পেজ",
+      "landing": "শুরু হয় {page} থেকে",
+      "errorCheck": "ত্রুটির বার্তা",
+      "tryError": "অর্ডার #৯৯৯৯৯৯ খুলুন"
+    }
   },
   "errors": {
     "generic": {
@@ -71,7 +104,7 @@
       "invalid_credentials": "ইমেইল ও পাসওয়ার্ড মিলছে না। দুটোই দেখে আবার চেষ্টা করুন।",
       "account_disabled": "এই অ্যাকাউন্টটি বন্ধ করা আছে। আবার চালু করতে ম্যানেজারকে বলুন।",
       "wrong_password": "বর্তমান পাসওয়ার্ডটি সঠিক নয়।",
-      "rate_limited": "অনেকবার চেষ্টা হয়েছে। {minutes} মিনিট অপেক্ষা করে আবার চেষ্টা করুন।",
+      "rate_limited": "অনেকবার চেষ্টা হয়েছে। {minutes, number} মিনিট অপেক্ষা করে আবার চেষ্টা করুন।",
       "invalid_sort": "এই তালিকা এভাবে সাজানো যায় না।",
       "email_taken": "এই ইমেইলটি অন্য কেউ ব্যবহার করছেন।",
       "phone_taken": "এই ফোন নম্বরটি অন্য কেউ ব্যবহার করছেন।",

@@ -1,3 +1,4 @@
+import { createTranslator } from "next-intl";
 import { describe, expect, it } from "vitest";
 import bn from "../../messages/bn.json";
 import en from "../../messages/en.json";
@@ -29,5 +30,15 @@ describe("messages", () => {
     for (const [key, message] of Object.entries(english)) {
       expect(argumentsOf(bangla[key] ?? ""), key).toEqual(argumentsOf(message));
     }
+  });
+
+  // A bare {count} prints Latin digits even in Bangla; counts need {count, number}.
+  it("formats counts with Bangla digits", () => {
+    const t = createTranslator({ locale: "bn", messages: bn });
+    expect(t("session.check.liveSummary", { orders: 7, bookings: 12 })).toBe(
+      "৭টি চালু অর্ডার · আজ ১২টি বুকিং",
+    );
+    expect(t("errors.codes.rate_limited", { minutes: 5 })).toContain("৫ মিনিট");
+    expect(t("session.tokenExpires", { seconds: 89 })).toContain("৮৯");
   });
 });
