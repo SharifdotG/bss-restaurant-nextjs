@@ -23,10 +23,24 @@ let retryTimer: ReturnType<typeof setTimeout> | undefined;
 let silenceTimer: ReturnType<typeof setTimeout> | undefined;
 let unsubscribeSession: (() => void) | undefined;
 
+/** When the feed stopped being live, and when the next attempt is due; null when not waiting. */
+export type LiveTiming = { downSince: number | null; retryAt: number | null };
+let timing: LiveTiming = { downSince: null, retryAt: null };
+
+const notify = () => statusListeners.forEach((listener) => listener());
+
+function setTiming(next: Partial<LiveTiming>) {
+  timing = { ...timing, ...next };
+  notify();
+}
+
 function setStatus(next: LiveStatus) {
   if (status === next) return;
+  const healthy = next === "live" || next === "idle";
+  if (healthy) timing = { downSince: null, retryAt: null };
+  else if (timing.downSince === null) timing = { ...timing, downSince: Date.now() };
   status = next;
-  statusListeners.forEach((listener) => listener());
+  notify();
 }
 
 export function subscribeLiveStatus(listener: () => void) {
@@ -40,6 +54,16 @@ export const getLiveStatus = () => status;
 
 export function useLiveStatus() {
   return useSyncExternalStore(subscribeLiveStatus, getLiveStatus, () => "idle" as const);
+}
+
+const SERVER_TIMING: LiveTiming = { downSince: null, retryAt: null };
+
+export function useLiveTiming() {
+  return useSyncExternalStore(
+    subscribeLiveStatus,
+    () => timing,
+    () => SERVER_TIMING,
+  );
 }
 
 export function onLiveEvent(listener: (message: LiveMessage) => void) {
@@ -67,6 +91,14 @@ function scheduleReconnect() {
   const delay = Math.min(30_000, 1000 * 2 ** attempts) * (0.75 + Math.random() * 0.5);
   attempts += 1;
   retryTimer = setTimeout(open, delay);
+  setTiming({ retryAt: Date.now() + delay });
+}
+
+/** Skips the backoff wait, for a "Retry now" button. */
+export function retryLiveNow() {
+  if (!wanted || socket) return;
+  clearTimeout(retryTimer);
+  open();
 }
 
 function open() {
@@ -75,6 +107,7 @@ function open() {
 
   socket?.close();
   setStatus(attempts === 0 ? "connecting" : "reconnecting");
+  if (timing.retryAt !== null) setTiming({ retryAt: null });
   const ws = new WebSocket(LIVE_URL);
   socket = ws;
 

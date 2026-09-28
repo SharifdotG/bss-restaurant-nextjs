@@ -10,6 +10,7 @@ import { pageForPath } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
 import { useShellLayout } from "@/lib/use-shell-layout";
 import { BottomTabs } from "./bottom-tabs";
+import { ConnectionBanner } from "./connection-banner";
 import { Sidebar, SidebarContent } from "./sidebar";
 import { TopBar } from "./top-bar";
 
@@ -48,6 +49,7 @@ export function AppShell({ children, lost = false }: AppShellProps) {
           {layout !== "phone" && (
             <TopBar onOpenMenu={layout === "drawer" ? () => setDrawerOpen(true) : undefined} />
           )}
+          <ConnectionBanner />
           <main
             id="main"
             className="flex flex-1 flex-col px-4 pt-5 pb-28 md:px-6 md:pt-2 md:pb-10 xl:px-8"

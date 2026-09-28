@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "next-intl";
 import { restaurantQuery } from "@/lib/api/queries";
 import {
+  formatClock,
   formatDate,
   formatDateTime,
   formatDay,
@@ -9,6 +10,7 @@ import {
   formatPercent,
   formatRelative,
   formatTime,
+  formatWeekday,
 } from "@/lib/format";
 import { formatMoney } from "@/lib/money";
 import { useSession } from "@/lib/session/client";
@@ -29,6 +31,8 @@ export function useFormat() {
     locale,
     money: (taka: number) => formatMoney(taka, locale, symbol),
     time: (value: DateInput) => formatTime(value, locale),
+    clock: (time: string) => formatClock(time, locale),
+    weekday: (value: DateInput) => formatWeekday(value, locale),
     date: (value: DateInput) => formatDate(value, locale),
     dateTime: (value: DateInput) => formatDateTime(value, locale),
     day: (value: string) => formatDay(value, locale),

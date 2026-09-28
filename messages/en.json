@@ -12,7 +12,11 @@
       "en": "English",
       "bn": "বাংলা"
     },
-    "close": "Close"
+    "close": "Close",
+    "localesShort": {
+      "en": "EN",
+      "bn": "বাং"
+    }
   },
   "nav": {
     "overview": "Overview",
@@ -185,7 +189,38 @@
       "signedOutBody": "The link may be old or mistyped. Sign in and we'll take you to your workspace.",
       "signIn": "Go to sign in"
     },
-    "bookings": "Bookings"
+    "bookings": "Bookings",
+    "search": "Search",
+    "searchPlaceholder": "Search orders, dishes, tables",
+    "day": {
+      "openUntil": "Open until {time}",
+      "closedUntil": "Closed · opens {time}"
+    },
+    "bell": {
+      "label": "Notifications",
+      "labelUnread": "Notifications, something new",
+      "title": "Waiting on you",
+      "count": "{n, plural, one {# thing needs you} other {# things need you}}",
+      "empty": "Nothing is waiting right now.",
+      "takeaway": "Takeaway",
+      "incoming": "Order {number} · {where}",
+      "incomingHint": "Guest order, needs a yes",
+      "toCook": "Order {number} · {where}",
+      "toCookHint": "Confirmed, ready to start",
+      "ready": "Order {number} is ready · {where}",
+      "readyHint": "Take it to the table",
+      "request": "{name} · {guests, plural, one {# guest} other {# guests}} · {time}",
+      "requestHint": "Booking request, needs a yes",
+      "readyTakeawayHint": "Hand it to the guest"
+    },
+    "connection": {
+      "paused": "Live updates paused.",
+      "offline": "You're offline.",
+      "stale": "Numbers may be up to {seconds, number} s old. Anything you save still goes through.",
+      "offlineHint": "It reconnects by itself when the network is back.",
+      "retryIn": "Retrying in {seconds, number} s",
+      "retry": "Retry now"
+    }
   },
   "pages": {
     "overview": "Tonight's service so far, updated live",

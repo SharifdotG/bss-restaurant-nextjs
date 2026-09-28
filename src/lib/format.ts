@@ -42,6 +42,14 @@ export const formatDate = (value: DateInput, locale: Locale) =>
 export const formatDateTime = (value: DateInput, locale: Locale) =>
   dateFormat(locale, { ...DAY, ...TIME }).format(toDate(value));
 
+/** Sunday, 11 October */
+export const formatWeekday = (value: DateInput, locale: Locale) =>
+  dateFormat(locale, { weekday: "long", day: "numeric", month: "long" }).format(toDate(value));
+
+/** A wall-clock time from the API ("23:00:00") as 11:00 PM. */
+export const formatClock = (time: string, locale: Locale) =>
+  formatTime(dhakaDateTime(businessDate(), time), locale);
+
 /** A date-only value from the API ("2026-10-11"), shown without slipping a day. */
 export const formatDay = (day: string, locale: Locale) =>
   formatDate(`${day}T12:00:00${DHAKA_OFFSET}`, locale);

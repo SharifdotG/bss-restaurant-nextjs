@@ -20,7 +20,8 @@ const useMounted = () =>
     () => false,
   );
 
-export function LanguageSwitch() {
+/** English / Bangla. `short` gives EN / বাং for the top bar. */
+export function LanguageSwitch({ short = false }: { short?: boolean }) {
   const t = useTranslations("common");
   const locale = useLocale();
   const router = useRouter();
@@ -38,7 +39,11 @@ export function LanguageSwitch() {
       aria-label={t("language")}
       value={locale}
       onValueChange={change}
-      options={routing.locales.map((value) => ({ value, label: t(`locales.${value}`) }))}
+      options={routing.locales.map((value) => ({
+        value,
+        label: t(short ? `localesShort.${value}` : `locales.${value}`),
+        ariaLabel: short ? t(`locales.${value}`) : undefined,
+      }))}
     />
   );
 }
