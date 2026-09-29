@@ -16,6 +16,13 @@
     "localesShort": {
       "en": "EN",
       "bn": "বাং"
+    },
+    "pagination": {
+      "label": "Pages",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {page, number}",
+      "pageOf": "{page, number} of {pages, number}"
     }
   },
   "nav": {
@@ -309,5 +316,22 @@
       "paid": "Paid",
       "cancelled": "Cancelled"
     }
+  },
+  "orders": {
+    "moves": {
+      "confirmed": "Confirm",
+      "preparing": "Start cooking",
+      "ready": "Mark ready",
+      "served": "Mark served",
+      "cancelled": "Cancel order"
+    },
+    "moved": {
+      "confirmed": "Order {n} confirmed",
+      "preparing": "The kitchen started order {n}",
+      "ready": "Order {n} is ready",
+      "served": "Order {n} served",
+      "cancelled": "Order {n} cancelled"
+    },
+    "moveFailed": "Order {n} didn't change"
   }
 }

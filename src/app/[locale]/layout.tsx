@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { MotionProvider } from "@/components/motion-provider";
 import { QueryProvider } from "@/components/query-provider";
@@ -35,11 +36,13 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
     >
       <body>
         <NextIntlClientProvider>
-          <QueryProvider>
-            <ThemeProvider>
-              <MotionProvider>{children}</MotionProvider>
-            </ThemeProvider>
-          </QueryProvider>
+          <NuqsAdapter>
+            <QueryProvider>
+              <ThemeProvider>
+                <MotionProvider>{children}</MotionProvider>
+              </ThemeProvider>
+            </QueryProvider>
+          </NuqsAdapter>
         </NextIntlClientProvider>
       </body>
     </html>

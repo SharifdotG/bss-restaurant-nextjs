@@ -16,6 +16,13 @@
     "localesShort": {
       "en": "EN",
       "bn": "বাং"
+    },
+    "pagination": {
+      "label": "পৃষ্ঠা",
+      "previous": "আগের পৃষ্ঠা",
+      "next": "পরের পৃষ্ঠা",
+      "page": "পৃষ্ঠা {page, number}",
+      "pageOf": "{pages, number}-এর {page, number}"
     }
   },
   "nav": {
@@ -309,5 +316,22 @@
       "paid": "পরিশোধিত",
       "cancelled": "বাতিল"
     }
+  },
+  "orders": {
+    "moves": {
+      "confirmed": "কনফার্ম করুন",
+      "preparing": "রান্না শুরু",
+      "ready": "তৈরি হয়েছে",
+      "served": "পরিবেশন হয়েছে",
+      "cancelled": "অর্ডার বাতিল"
+    },
+    "moved": {
+      "confirmed": "অর্ডার {n} কনফার্ম হয়েছে",
+      "preparing": "অর্ডার {n} রান্না শুরু হয়েছে",
+      "ready": "অর্ডার {n} তৈরি",
+      "served": "অর্ডার {n} পরিবেশন হয়েছে",
+      "cancelled": "অর্ডার {n} বাতিল হয়েছে"
+    },
+    "moveFailed": "অর্ডার {n} বদলানো যায়নি"
   }
 }

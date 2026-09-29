@@ -1,15 +1,9 @@
 import type { Icon } from "@phosphor-icons/react";
+import { TONES, type Tone } from "@/lib/tones";
 import { cn } from "@/lib/utils";
 
-const tones = {
-  red: "bg-tone-red-subtle text-tone-red-text",
-  amber: "bg-tone-amber-subtle text-tone-amber-text",
-  green: "bg-tone-green-subtle text-tone-green-text",
-  slate: "bg-tone-slate-subtle text-tone-slate-text",
-} as const;
-
 type AlertProps = {
-  tone: keyof typeof tones;
+  tone: Exclude<Tone, "orange">;
   icon: Icon;
   title: React.ReactNode;
   children?: React.ReactNode;
@@ -21,7 +15,7 @@ function Alert({ tone, icon: Icon, title, children, className }: AlertProps) {
   return (
     <div
       role={tone === "red" || tone === "amber" ? "alert" : "status"}
-      className={cn("flex gap-3 rounded-lg px-4 py-3.5 text-sm", tones[tone], className)}
+      className={cn("flex gap-3 rounded-lg px-4 py-3.5 text-sm", TONES[tone], className)}
     >
       <Icon weight="duotone" className="mt-px size-[18px] shrink-0" />
       <div className="min-w-0">

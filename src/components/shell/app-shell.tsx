@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
+import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { usePathname } from "@/i18n/navigation";
 import { startLive, stopLive } from "@/lib/live/socket";
@@ -82,6 +83,7 @@ export function AppShell({ children, lost = false }: AppShellProps) {
         <CommandPalette />
         <ShortcutsSheet />
         <SignOutAllDialog />
+        <Toaster />
       </div>
     </TooltipProvider>
   );
