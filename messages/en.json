@@ -35,8 +35,8 @@
     "profile": "Profile"
   },
   "login": {
-    "title": "Sign in",
-    "subtitle": "Use the email and password your manager set up for you.",
+    "title": "Welcome back",
+    "subtitle": "Sign in with the account your manager set up for you.",
     "email": "Email",
     "password": "Password",
     "showPassword": "Show password",
@@ -46,7 +46,22 @@
     "errors": {
       "missing": "Enter a valid email and your password.",
       "session": "Signed in, but the session couldn't be saved. Try again."
-    }
+    },
+    "staffSignIn": "Staff sign-in",
+    "forgot": "Forgot it? Your manager can reset it from Staff.",
+    "remember": "Keep me signed in on this device",
+    "orDemo": "or look around as",
+    "demoOpening": "Opening…",
+    "demoNote": "Demo accounts use the sample menu and orders. Changes are shared with other visitors.",
+    "noAccount": "No account? Staff accounts are created by the manager.",
+    "openToday": "Open today",
+    "photoCredit": "Photo by <link>{name}</link> on Unsplash",
+    "tryAgainIn": "Try again in {time}",
+    "wrongTitle": "Email or password is wrong",
+    "wrongBody": "Check both and try again. Five tries in 5 minutes pauses sign-in for this email.",
+    "lockedTitle": "Too many tries for this email",
+    "lockedBody": "Sign-in for {email} is paused for {minutes, plural, one {# minute} other {# minutes}}. You can try again at {time}.",
+    "failedTitle": "Couldn't sign you in"
   },
   "session": {
     "checking": "Checking your session…",
@@ -173,7 +188,7 @@
       "signOutAll": "Sign out everywhere"
     },
     "denied": {
-      "managersOnly": "{page} is for managers",
+      "managersOnly": "Only managers can open {page}",
       "notYourRole": "{page} isn't part of your role",
       "signedInAs": "You're signed in as {name}, {role}. Ask a manager if you need it.",
       "back": "Back to {page}"

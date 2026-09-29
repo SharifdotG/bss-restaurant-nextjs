@@ -3,6 +3,7 @@ import { API_BASE } from "@/lib/api/config";
 import type { TokenOut } from "@/lib/api/schema";
 import {
   clearRefreshToken,
+  isRemembered,
   isSameOrigin,
   readRefreshToken,
   writeRefreshToken,
@@ -47,6 +48,6 @@ export async function POST(request: NextRequest) {
     { accessToken: data.accessToken, expiresIn: data.expiresIn, user: data.user },
     { headers: { "cache-control": "no-store" } },
   );
-  writeRefreshToken(request, response, data.refreshToken);
+  writeRefreshToken(request, response, data.refreshToken, isRemembered(request));
   return response;
 }

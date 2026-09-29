@@ -1,11 +1,10 @@
 "use client";
 
-import { ListIcon, MagnifyingGlassIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
+import { ListIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useTheme } from "next-themes";
 import { LiveChip } from "@/components/live-chip";
-import { LanguageSwitch, useMounted } from "@/components/preferences";
+import { LanguageSwitch, ThemeToggle } from "@/components/preferences";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -92,24 +91,5 @@ function SearchButton() {
         <MagnifyingGlassIcon />
       </Button>
     </>
-  );
-}
-
-function ThemeToggle() {
-  const t = useTranslations("common.themes");
-  const { resolvedTheme, setTheme } = useTheme();
-  const mounted = useMounted();
-  const dark = mounted && resolvedTheme === "dark";
-
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="shrink-0"
-      aria-label={dark ? t("light") : t("dark")}
-      onClick={() => setTheme(dark ? "light" : "dark")}
-    >
-      {dark ? <SunIcon weight="duotone" /> : <MoonIcon weight="duotone" />}
-    </Button>
   );
 }

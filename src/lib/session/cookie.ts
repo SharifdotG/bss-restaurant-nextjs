@@ -7,22 +7,39 @@ const MAX_AGE = 60 * 60 * 24 * 7; // the API's refresh token lifetime
 
 const isSecure = (request: NextRequest) => request.nextUrl.protocol === "https:";
 
+// "Keep me signed in" unticked: no max-age, so the browser drops the cookie when it closes.
+// A leading "~" remembers that choice through every refresh.
+const SESSION_ONLY = "~";
+
+const readCookie = (request: NextRequest) =>
+  request.cookies.get(isSecure(request) ? SECURE_NAME : DEV_NAME)?.value;
+
 export function readRefreshToken(request: NextRequest) {
-  return request.cookies.get(isSecure(request) ? SECURE_NAME : DEV_NAME)?.value;
+  const value = readCookie(request);
+  return value?.startsWith(SESSION_ONLY) ? value.slice(SESSION_ONLY.length) : value;
 }
+
+/** False when the person asked not to stay signed in on this device. */
+export const isRemembered = (request: NextRequest) =>
+  !readCookie(request)?.startsWith(SESSION_ONLY);
 
 export function hasSessionCookie(request: NextRequest) {
   return Boolean(readRefreshToken(request));
 }
 
-export function writeRefreshToken(request: NextRequest, response: NextResponse, token: string) {
+export function writeRefreshToken(
+  request: NextRequest,
+  response: NextResponse,
+  token: string,
+  remember = true,
+) {
   const secure = isSecure(request);
-  response.cookies.set(secure ? SECURE_NAME : DEV_NAME, token, {
+  response.cookies.set(secure ? SECURE_NAME : DEV_NAME, remember ? token : SESSION_ONLY + token, {
     httpOnly: true,
     secure,
     sameSite: "lax",
     path: "/",
-    maxAge: MAX_AGE,
+    maxAge: remember ? MAX_AGE : undefined,
   });
 }
 

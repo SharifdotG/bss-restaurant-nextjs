@@ -3,6 +3,7 @@
 import { ArrowLeftIcon, QuestionIcon } from "@phosphor-icons/react";
 import { useTranslations } from "next-intl";
 import { usePathname as useFullPathname } from "next/navigation";
+import { AuthLayout } from "@/components/auth/auth-layout";
 import { SessionGate } from "@/components/session/session-gate";
 import { StateCard } from "@/components/state-card";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -63,22 +64,18 @@ function SignedInNotFound() {
   );
 }
 
-// The split sign-in layout arrives with the new sign-in page; until then a plain card.
 function SignedOutNotFound() {
   const t = useTranslations("shell.notFound");
   return (
-    <main className="grid min-h-dvh place-items-center px-4">
-      <StateCard
-        icon={QuestionIcon}
-        title={t("signedOutTitle")}
-        actions={
-          <Link href="/login" className={buttonVariants()}>
-            {t("signIn")}
-          </Link>
-        }
-      >
-        {t("signedOutBody")}
-      </StateCard>
-    </main>
+    <AuthLayout>
+      <span className="grid size-14 place-items-center rounded-xl bg-tone-slate-subtle text-tone-slate-text">
+        <QuestionIcon weight="duotone" className="size-7" />
+      </span>
+      <h1 className="mt-6 text-3xl font-bold tracking-tight text-balance">{t("signedOutTitle")}</h1>
+      <p className="mt-2 text-md text-pretty text-muted-foreground">{t("signedOutBody")}</p>
+      <Link href="/login" className={buttonVariants({ size: "lg", className: "mt-8 h-12 w-full" })}>
+        {t("signIn")}
+      </Link>
+    </AuthLayout>
   );
 }

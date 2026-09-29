@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
   }
 
   const response = new NextResponse(null, { status: 204 });
-  writeRefreshToken(request, response, token);
+  writeRefreshToken(request, response, token, body?.remember !== false);
   return response;
 }
 

@@ -5,9 +5,11 @@ import { DesktopIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
 import { Segmented } from "@/components/ui/segmented";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 
 const YEAR = 60 * 60 * 24 * 365;
 const noop = () => () => {};
@@ -81,5 +83,25 @@ export function ThemeSwitch() {
         },
       ]}
     />
+  );
+}
+
+/** One button that flips between light and dark, for tight spots like the top bar. */
+export function ThemeToggle({ className }: { className?: string }) {
+  const t = useTranslations("common.themes");
+  const { resolvedTheme, setTheme } = useTheme();
+  const mounted = useMounted();
+  const dark = mounted && resolvedTheme === "dark";
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className={cn("shrink-0", className)}
+      aria-label={dark ? t("light") : t("dark")}
+      onClick={() => setTheme(dark ? "light" : "dark")}
+    >
+      {dark ? <SunIcon weight="duotone" /> : <MoonIcon weight="duotone" />}
+    </Button>
   );
 }

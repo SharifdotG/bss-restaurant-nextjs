@@ -183,16 +183,15 @@ function boot() {
   return refresh();
 }
 
-export async function signIn(tokens: {
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
-  user: User;
-}) {
+/** `remember: false` keeps the session only until the browser closes. */
+export async function signIn(
+  tokens: { accessToken: string; refreshToken: string; expiresIn: number; user: User },
+  { remember = true } = {},
+) {
   const response = await fetch("/api/session", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ refreshToken: tokens.refreshToken }),
+    body: JSON.stringify({ refreshToken: tokens.refreshToken, remember }),
   });
   if (!response.ok) throw new Error("session_not_saved");
 
