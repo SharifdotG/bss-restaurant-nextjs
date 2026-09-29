@@ -38,6 +38,10 @@ export const formatTime = (value: DateInput, locale: Locale) =>
 export const formatDate = (value: DateInput, locale: Locale) =>
   dateFormat(locale, { ...DAY, year: "numeric" }).format(toDate(value));
 
+/** Oct 11 */
+export const formatShortDate = (value: DateInput, locale: Locale) =>
+  dateFormat(locale, DAY).format(toDate(value));
+
 /** Oct 11, 7:45 PM */
 export const formatDateTime = (value: DateInput, locale: Locale) =>
   dateFormat(locale, { ...DAY, ...TIME }).format(toDate(value));

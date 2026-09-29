@@ -238,6 +238,34 @@
       "cancel": "Keep me signed in",
       "confirm": "Sign out everywhere",
       "pending": "Signing out…"
+    },
+    "command": {
+      "title": "Search",
+      "description": "Find a page, an order, a dish or a table.",
+      "placeholder": "Search orders, dishes, tables or pages",
+      "searching": "Searching…",
+      "empty": "Nothing matches “{term}”.",
+      "dishes": "Dishes",
+      "orders": "Orders",
+      "tables": "Tables",
+      "goTo": "Go to",
+      "actions": "Actions",
+      "inStock": "in stock",
+      "soldOut": "sold out",
+      "order": "Order {number}",
+      "takeaway": "Takeaway",
+      "occupied": "in use",
+      "free": "free",
+      "seats": "{n, plural, one {# seat} other {# seats}}",
+      "newOrder": "Start a new order",
+      "darkTheme": "Switch to dark theme",
+      "lightTheme": "Switch to light theme",
+      "language": "Show in {language}",
+      "shortcuts": "Keyboard shortcuts",
+      "signOut": "Sign out",
+      "move": "move",
+      "open": "open",
+      "close": "close"
     }
   },
   "pages": {
@@ -255,5 +283,16 @@
     "reports": "Sales, profit and best sellers",
     "settings": "Restaurant details, charges and receipts",
     "profile": "Your details and password"
+  },
+  "status": {
+    "order": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "preparing": "Preparing",
+      "ready": "Ready",
+      "served": "Served",
+      "paid": "Paid",
+      "cancelled": "Cancelled"
+    }
   }
 }

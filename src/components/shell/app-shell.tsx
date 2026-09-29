@@ -10,11 +10,13 @@ import { pageForPath } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
 import { useShellLayout } from "@/lib/use-shell-layout";
 import { BottomTabs } from "./bottom-tabs";
+import { CommandPalette } from "./command-palette";
 import { ConnectionBanner } from "./connection-banner";
 import { ShortcutsSheet } from "./shortcuts-sheet";
 import { Sidebar, SidebarContent } from "./sidebar";
 import { SignOutAllDialog } from "./sign-out-all-dialog";
 import { TopBar } from "./top-bar";
+import { useShortcuts } from "./use-shortcuts";
 
 type AppShellProps = {
   children: React.ReactNode;
@@ -37,8 +39,10 @@ export function AppShell({ children, lost = false }: AppShellProps) {
     return () => stopLive();
   }, []);
 
-  if (session.status !== "authenticated") return null;
-  const { role } = session.user;
+  const role = session.status === "authenticated" ? session.user.role : null;
+  useShortcuts(role);
+
+  if (role === null) return null;
 
   return (
     <TooltipProvider>
@@ -75,6 +79,7 @@ export function AppShell({ children, lost = false }: AppShellProps) {
           </Sheet>
         )}
         {layout === "phone" && <BottomTabs role={role} current={current} />}
+        <CommandPalette />
         <ShortcutsSheet />
         <SignOutAllDialog />
       </div>

@@ -9,6 +9,7 @@ import {
   formatNumber,
   formatPercent,
   formatRelative,
+  formatShortDate,
   formatTime,
   formatWeekday,
 } from "@/lib/format";
@@ -34,6 +35,7 @@ export function useFormat() {
     clock: (time: string) => formatClock(time, locale),
     weekday: (value: DateInput) => formatWeekday(value, locale),
     date: (value: DateInput) => formatDate(value, locale),
+    shortDate: (value: DateInput) => formatShortDate(value, locale),
     dateTime: (value: DateInput) => formatDateTime(value, locale),
     day: (value: string) => formatDay(value, locale),
     relative: (value: DateInput, now?: number) => formatRelative(value, locale, now),

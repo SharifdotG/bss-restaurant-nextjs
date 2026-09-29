@@ -72,3 +72,9 @@ export function setSidebarCollapsed(collapsed: boolean) {
   }
   listeners.forEach((listener) => listener());
 }
+
+/** ⌘B: only wide screens have a sidebar to collapse. */
+export function toggleSidebar() {
+  if (!window.matchMedia(QUERIES.full).matches) return;
+  setSidebarCollapsed(!readCollapsed());
+}

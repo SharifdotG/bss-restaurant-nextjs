@@ -16,6 +16,8 @@ export function openOverlay(next: Overlay | null) {
 
 export const closeOverlay = () => openOverlay(null);
 
+export const getOverlay = () => current;
+
 function subscribe(listener: () => void) {
   listeners.add(listener);
   return () => {
