@@ -60,7 +60,7 @@ function DropdownMenuLabel({ className, ...props }: MenuPrimitive.GroupLabel.Pro
 }
 
 const itemClass =
-  "group/menu-item relative flex h-9 cursor-default items-center gap-2.5 rounded-sm px-2.5 text-sm font-medium outline-none select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-muted [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg]:text-muted-foreground";
+  "group/menu-item relative flex h-9 cursor-default items-center gap-2.5 rounded-sm px-2.5 text-sm font-medium outline-none select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-foreground/6 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg]:text-muted-foreground";
 
 function DropdownMenuItem({
   className,

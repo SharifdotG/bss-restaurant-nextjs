@@ -165,7 +165,7 @@ function NoticeRow({ notice, onOpen }: { notice: Notice; onOpen: () => void }) {
     <Link
       href={HREF[notice.kind]}
       onClick={onOpen}
-      className="flex items-start gap-3 rounded-md px-3 py-2.5 outline-none hover:bg-muted focus-visible:bg-muted"
+      className="flex items-start gap-3 rounded-md px-3 py-2.5 outline-none hover:bg-foreground/6 focus-visible:bg-foreground/6"
     >
       <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-md bg-primary-soft text-primary-soft-foreground">
         <Icon weight="duotone" className="size-[18px]" />

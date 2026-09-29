@@ -30,7 +30,7 @@ type MoreSheetProps = {
 };
 
 const rowClass =
-  "flex h-14 items-center gap-3 rounded-lg px-2 text-md font-semibold outline-none focus-visible:ring-3 focus-visible:ring-ring/40 active:bg-muted";
+  "flex h-14 items-center gap-3 rounded-lg px-2 text-md font-semibold outline-none focus-visible:ring-3 focus-visible:ring-ring/40 active:bg-foreground/6";
 
 /** Phone only: the pages that didn't fit in the tabs, and the account. */
 export function MoreSheet({ role, current, open, onOpenChange }: MoreSheetProps) {

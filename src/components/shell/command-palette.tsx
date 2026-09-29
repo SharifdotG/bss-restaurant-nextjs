@@ -116,6 +116,8 @@ function Palette({ value, onValueChange }: { value: string; onValueChange: (v: s
   const term = toLatinDigits(useDebounced(value.trim(), 250));
   const role = session.status === "authenticated" ? session.user.role : "waiter";
   const results = useSearch(term, role);
+  const [selected, setSelected] = useState("");
+  const [firstSeen, setFirstSeen] = useState("");
   if (session.status !== "authenticated") return null;
 
   const typed = value.trim().toLowerCase();
@@ -167,11 +169,30 @@ function Palette({ value, onValueChange }: { value: string; onValueChange: (v: s
 
   const shownPages = pages.filter((page) => matches(nav(page)));
   const shownActions = actions.filter((action) => matches(action.label));
+  // New results land above the pages, so the highlight goes back to whatever is first.
+  const first =
+    (results.dishes[0] && `food-${results.dishes[0].id}`) ||
+    (results.orders[0] && `order-${results.orders[0].id}`) ||
+    (results.tables[0] && `table-${results.tables[0].id}`) ||
+    (shownPages[0] && `page-${shownPages[0]}`) ||
+    shownActions[0]?.id ||
+    "";
+  if (first !== firstSeen) {
+    setFirstSeen(first);
+    setSelected(first);
+  }
+
   const today = businessDate();
   const orderHref = canOpen(role, "orders") ? PAGE_PATHS.orders : PAGE_PATHS.kitchen;
 
   return (
-    <Command shouldFilter={false} loop label={t("title")}>
+    <Command
+      shouldFilter={false}
+      loop
+      label={t("title")}
+      value={selected}
+      onValueChange={setSelected}
+    >
       <CommandInput
         value={value}
         onValueChange={onValueChange}
