@@ -1,18 +1,17 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import { ListIcon, MagnifyingGlassIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { setCommandOpen, useModKey } from "@/components/command/command-store";
 import { LiveChip } from "@/components/live-chip";
-import { LanguageSwitch } from "@/components/preferences";
+import { LanguageSwitch, useMounted } from "@/components/preferences";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { Skeleton } from "@/components/ui/skeleton";
 import { restaurantQuery } from "@/lib/api/queries";
 import { openingState } from "@/lib/hours";
+import { openOverlay, useModKey, withMod } from "@/lib/overlays";
 import { useFormat } from "@/lib/use-format";
 import { useNow } from "@/lib/use-now";
 import { NotificationBell } from "./notification-bell";
@@ -76,19 +75,19 @@ function SearchButton() {
     <>
       <button
         type="button"
-        onClick={() => setCommandOpen(true)}
+        onClick={() => openOverlay("command")}
         className="hidden h-11 w-[320px] shrink items-center gap-2.5 rounded-full bg-card pr-1.5 pl-4 text-base text-muted-foreground shadow-sm transition-shadow duration-(--duration-fast) outline-none hover:shadow-md focus-visible:ring-3 focus-visible:ring-ring/40 lg:flex"
       >
         <MagnifyingGlassIcon className="size-[18px] shrink-0" />
         <span className="flex-1 truncate text-left">{t("searchPlaceholder")}</span>
-        <Kbd>{mod}K</Kbd>
+        <Kbd>{withMod(mod, "K")}</Kbd>
       </button>
       <Button
         variant="ghost"
         size="icon"
         className="shrink-0 lg:hidden"
         aria-label={t("search")}
-        onClick={() => setCommandOpen(true)}
+        onClick={() => openOverlay("command")}
       >
         <MagnifyingGlassIcon />
       </Button>
@@ -96,17 +95,10 @@ function SearchButton() {
   );
 }
 
-const noop = () => () => {};
-
 function ThemeToggle() {
   const t = useTranslations("common.themes");
   const { resolvedTheme, setTheme } = useTheme();
-  // The resolved theme is only known after hydration.
-  const mounted = useSyncExternalStore(
-    noop,
-    () => true,
-    () => false,
-  );
+  const mounted = useMounted();
   const dark = mounted && resolvedTheme === "dark";
 
   return (

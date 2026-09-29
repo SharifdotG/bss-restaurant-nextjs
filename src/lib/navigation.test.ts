@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { LiveOrder } from "@/lib/live/types";
-import { bottomTabs, morePages, navCounts, navGroups } from "./navigation";
+import { bottomTabs, goShortcuts, morePages, navCounts, navGroups } from "./navigation";
 
 const order = (status: LiveOrder["status"], total = 500, balanceDue = total): LiveOrder => ({
   id: Math.random(),
@@ -72,5 +72,19 @@ describe("navCounts", () => {
       order("confirmed", 500, 500),
     ];
     expect(navCounts(orders)).toEqual({ orders: 5, billing: 2 });
+  });
+});
+
+describe("goShortcuts", () => {
+  it("only offers keys for pages the role can open", () => {
+    expect(goShortcuts("chef")).toEqual([
+      ["kitchen", "k"],
+      ["menu", "m"],
+    ]);
+  });
+
+  it("never gives two pages the same key", () => {
+    const keys = goShortcuts("admin").map(([, key]) => key);
+    expect(new Set(keys).size).toBe(keys.length);
   });
 });

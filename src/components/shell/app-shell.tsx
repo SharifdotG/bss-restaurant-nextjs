@@ -11,7 +11,9 @@ import { useSession } from "@/lib/session/client";
 import { useShellLayout } from "@/lib/use-shell-layout";
 import { BottomTabs } from "./bottom-tabs";
 import { ConnectionBanner } from "./connection-banner";
+import { ShortcutsSheet } from "./shortcuts-sheet";
 import { Sidebar, SidebarContent } from "./sidebar";
+import { SignOutAllDialog } from "./sign-out-all-dialog";
 import { TopBar } from "./top-bar";
 
 type AppShellProps = {
@@ -73,6 +75,8 @@ export function AppShell({ children, lost = false }: AppShellProps) {
           </Sheet>
         )}
         {layout === "phone" && <BottomTabs role={role} current={current} />}
+        <ShortcutsSheet />
+        <SignOutAllDialog />
       </div>
     </TooltipProvider>
   );

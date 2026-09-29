@@ -168,7 +168,9 @@
       "menu": "Account menu",
       "profile": "Your profile",
       "signOut": "Sign out",
-      "signingOut": "Signing out…"
+      "signingOut": "Signing out…",
+      "shortcuts": "Keyboard shortcuts",
+      "signOutAll": "Sign out everywhere"
     },
     "denied": {
       "managersOnly": "{page} is for managers",
@@ -220,6 +222,22 @@
       "offlineHint": "It reconnects by itself when the network is back.",
       "retryIn": "Retrying in {seconds, number} s",
       "retry": "Retry now"
+    },
+    "shortcuts": {
+      "title": "Keyboard shortcuts",
+      "description": "Press G, then a letter, to jump to a page.",
+      "general": "Anywhere",
+      "search": "Search orders, dishes and tables",
+      "sidebar": "Collapse or expand the sidebar",
+      "help": "Show this list",
+      "goTo": "Go to"
+    },
+    "signOutAll": {
+      "title": "Sign out on every device?",
+      "body": "Every phone, tablet and browser signed in to your account is signed out, this one too. Use it if a device is lost or someone else knows your password.",
+      "cancel": "Keep me signed in",
+      "confirm": "Sign out everywhere",
+      "pending": "Signing out…"
     }
   },
   "pages": {

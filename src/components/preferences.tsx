@@ -13,26 +13,31 @@ const YEAR = 60 * 60 * 24 * 365;
 const noop = () => () => {};
 
 // next-themes only knows the theme after hydration.
-const useMounted = () =>
+export const useMounted = () =>
   useSyncExternalStore(
     noop,
     () => true,
     () => false,
   );
 
-/** English / Bangla. `short` gives EN / বাং for the top bar. */
-export function LanguageSwitch({ short = false }: { short?: boolean }) {
-  const t = useTranslations("common");
-  const locale = useLocale();
+/** Switches language in place, keeping the page and its query. */
+export function useChangeLocale() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const change = (next: Locale) => {
+  return (next: Locale) => {
     // Remembered so the bare address opens in this language next time.
     document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=${YEAR}; samesite=lax`;
     router.replace({ pathname, query: Object.fromEntries(searchParams) }, { locale: next });
   };
+}
+
+/** English / Bangla. `short` gives EN / বাং for the top bar. */
+export function LanguageSwitch({ short = false }: { short?: boolean }) {
+  const t = useTranslations("common");
+  const locale = useLocale();
+  const change = useChangeLocale();
 
   return (
     <Segmented

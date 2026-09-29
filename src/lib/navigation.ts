@@ -39,6 +39,26 @@ export function morePages(role: Role): Page[] {
     .filter((page) => !tabs.has(page));
 }
 
+// "G then O" opens Orders, and so on. Settings and profile are a click away in the menus.
+export const GO_KEYS: Partial<Record<Page, string>> = {
+  overview: "h",
+  orders: "o",
+  newOrder: "n",
+  floor: "f",
+  kitchen: "k",
+  billing: "b",
+  reservations: "r",
+  menu: "m",
+  tables: "t",
+  staff: "s",
+  expenses: "e",
+  reports: "a",
+};
+
+/** The go-to shortcuts a role can use, in sidebar order. */
+export const goShortcuts = (role: Role) =>
+  (Object.entries(GO_KEYS) as [Page, string][]).filter(([page]) => canOpen(role, page));
+
 // The cashier's queue: served orders, plus any that are part paid. The API marks an order
 // paid by itself once the balance reaches zero, so those never show up here.
 export const isBillDue = (order: LiveOrder) =>
