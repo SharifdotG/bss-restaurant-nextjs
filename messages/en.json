@@ -23,6 +23,11 @@
       "next": "Next page",
       "page": "Page {page, number}",
       "pageOf": "{page, number} of {pages, number}"
+    },
+    "qty": {
+      "less": "One less",
+      "more": "One more",
+      "remove": "Remove"
     }
   },
   "nav": {
@@ -288,7 +293,8 @@
       "move": "move",
       "open": "open",
       "close": "close"
-    }
+    },
+    "backTo": "Back to {page}"
   },
   "pages": {
     "overview": "Tonight's service so far, updated live",
@@ -475,6 +481,123 @@
       "now": "Just now",
       "minutes": "{m, number} min",
       "hours": "{h, number} h {m, number} min"
+    },
+    "title": "Orders",
+    "itemsSaved": "Order {n} updated, the kitchen sees the new items",
+    "updated": "Order {n} updated",
+    "updateFailed": "The order didn't change",
+    "types": {
+      "dine_in": "Dine-in",
+      "takeaway": "Takeaway"
+    },
+    "cancel": {
+      "title": "Cancel order {n}?",
+      "body": "It comes off the floor and the kitchen. The {total} bill won't be charged. This can't be undone.",
+      "quickLabel": "Common reasons",
+      "reasons": {
+        "guestLeft": "Guest left",
+        "mistake": "Ordered by mistake",
+        "outOfStock": "Kitchen ran out",
+        "duplicate": "Duplicate order"
+      },
+      "reasonLabel": "Reason (required)",
+      "reasonPlaceholder": "What happened?",
+      "keep": "Keep order",
+      "confirm": "Cancel order",
+      "cancelling": "Cancelling…",
+      "refundFirstTitle": "Refund before you cancel",
+      "refundFirstBody": "Order {n} already has {amount} paid. Refund it at the till first, then cancel the order.",
+      "refund": "Refund {amount}",
+      "close": "Close"
+    },
+    "detail": {
+      "missingTitle": "This order isn't here",
+      "missingBody": "It may be from another day, or the link is wrong. Search for it on the orders list.",
+      "backToOrders": "Back to orders",
+      "failed": "The order didn't load",
+      "dineInAt": "Dine-in at {table}",
+      "placedBy": "placed {time} by {name}",
+      "placedAt": "placed {time}",
+      "addItems": "Add items",
+      "cancelHint": "It comes off the floor and the kitchen. A reason is required.",
+      "cancelCooking": "Cooking has started, so cancelling needs a manager and a reason.",
+      "managerCancels": "Cooking has started. Only a manager can cancel it now.",
+      "cancelledTitle": "Cancelled at {time} by {name}",
+      "soFar": "{time} so far",
+      "stepState": {
+        "done": "done",
+        "current": "in progress",
+        "todo": "not yet"
+      },
+      "items": "Items",
+      "itemsMeta": "{n, plural, one {# item} other {# items}}",
+      "sentAt": "sent to the kitchen {time}",
+      "editItems": "Edit items",
+      "each": "{price} each",
+      "eachOff": "{price} · {off} off",
+      "quantityOf": "How many {name}",
+      "totalsOnSave": "Totals update when you save.",
+      "discard": "Discard",
+      "save": "Save changes",
+      "saving": "Saving…",
+      "saveFailed": "The changes weren't saved",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "serviceCharge": "Service charge {rate}%",
+      "vat": "VAT {rate}%",
+      "vatOnBoth": "VAT {rate}% (on food and service)",
+      "total": "Total",
+      "history": "History",
+      "guestVia": {
+        "qr": "Guest, by QR at the table",
+        "online": "Guest, online",
+        "staff": "Staff"
+      },
+      "event": {
+        "placed": "Placed with {n, plural, one {# item} other {# items}}",
+        "confirmed": "Confirmed",
+        "preparing": "Cooking started",
+        "ready": "Ready",
+        "served": "Served",
+        "paid": "Paid",
+        "cancelled": "Cancelled"
+      },
+      "details": "Details",
+      "seats": "{n, plural, one {# seat} other {# seats}}",
+      "type": "Type",
+      "customer": "Customer",
+      "phone": "Phone",
+      "notes": "Notes",
+      "paidSoFar": "Paid so far",
+      "balanceDue": "Balance due",
+      "changeWaiter": "Change the waiter",
+      "noWaiter": "No waiter yet",
+      "payments": "Payments",
+      "nothingPaid": "Nothing paid yet",
+      "nothingPaidHint": "The bill moves to the till once the table is served.",
+      "nothingPaidCancelled": "Nothing was paid before it was cancelled.",
+      "openTill": "Open at the till",
+      "paidBy": "Paid by {method}",
+      "refundBy": "Refund by {method}",
+      "change": "{amount} change",
+      "methods": {
+        "cash": "cash",
+        "card": "card",
+        "mobile": "mobile banking"
+      },
+      "sentence": {
+        "pendingStaff": "Placed at {time}. Confirm it to send it to the kitchen.",
+        "pendingGuest": "A guest placed it at {time}. Check it and confirm it to send it to the kitchen.",
+        "confirmed": "Sent to the kitchen at {time}. Cooking hasn't started yet.",
+        "preparing": "The kitchen started cooking at {time}.",
+        "preparingBy": "{name} started cooking at {time}. You'll get a ping when it's ready.",
+        "ready": "Ready since {time}. Take it to the table.",
+        "readyTakeaway": "Ready since {time}. Hand it over at the counter.",
+        "served": "Served at {time}. The bill is due at the till.",
+        "paid": "Paid and closed at {time}.",
+        "cancelled": "Cancelled at {time}: {reason}"
+      },
+      "placed": "Placed"
     }
   }
 }

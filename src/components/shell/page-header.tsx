@@ -1,9 +1,12 @@
 "use client";
 
+import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LiveChip } from "@/components/live-chip";
+import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "@/i18n/navigation";
 import { restaurantQuery } from "@/lib/api/queries";
 import { useShellLayout } from "@/lib/use-shell-layout";
 import { cn } from "@/lib/utils";
@@ -11,13 +14,17 @@ import { NotificationBell } from "./notification-bell";
 
 type PageHeaderProps = {
   title: string;
+  /** For pages under another: the breadcrumb links back, and phones get a back arrow. */
+  parent?: { label: string; href: string };
+  /** The last breadcrumb, when it's shorter than the title ("22" for "Order 22"). */
+  crumb?: string;
   meta?: React.ReactNode;
   actions?: React.ReactNode;
   className?: string;
 };
 
 /** Breadcrumb, title and the page's main actions, sitting on the ground above the cards. */
-export function PageHeader({ title, meta, actions, className }: PageHeaderProps) {
+export function PageHeader({ title, parent, crumb, meta, actions, className }: PageHeaderProps) {
   const t = useTranslations("shell");
   const restaurant = useQuery(restaurantQuery).data;
   const phone = useShellLayout() === "phone";
@@ -30,6 +37,15 @@ export function PageHeader({ title, meta, actions, className }: PageHeaderProps)
       )}
     >
       <div className="flex min-w-0 items-start gap-3">
+        {parent && phone && (
+          <Link
+            href={parent.href}
+            aria-label={t("backTo", { page: parent.label })}
+            className={buttonVariants({ variant: "ghost", size: "icon", className: "-ml-2.5" })}
+          >
+            <ArrowLeftIcon className="size-5" />
+          </Link>
+        )}
         <div className="min-w-0 flex-1">
           <nav aria-label={t("breadcrumb")} className="mb-1.5 hidden md:block">
             <ol className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -37,8 +53,18 @@ export function PageHeader({ title, meta, actions, className }: PageHeaderProps)
                 {restaurant ? restaurant.name : <Skeleton className="h-3.5 w-24" />}
               </li>
               <li aria-hidden>/</li>
+              {parent && (
+                <>
+                  <li className="truncate">
+                    <Link href={parent.href} className="hover:text-foreground">
+                      {parent.label}
+                    </Link>
+                  </li>
+                  <li aria-hidden>/</li>
+                </>
+              )}
               <li aria-current="page" className="truncate font-medium text-foreground">
-                {title}
+                {crumb ?? title}
               </li>
             </ol>
           </nav>

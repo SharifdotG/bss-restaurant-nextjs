@@ -23,6 +23,11 @@
       "next": "পরের পৃষ্ঠা",
       "page": "পৃষ্ঠা {page, number}",
       "pageOf": "{pages, number}-এর {page, number}"
+    },
+    "qty": {
+      "less": "একটি কম",
+      "more": "একটি বেশি",
+      "remove": "সরিয়ে দিন"
     }
   },
   "nav": {
@@ -288,7 +293,8 @@
       "move": "সরান",
       "open": "খুলুন",
       "close": "বন্ধ"
-    }
+    },
+    "backTo": "{page}-এ ফিরে যান"
   },
   "pages": {
     "overview": "আজকের সার্ভিস এখন পর্যন্ত, লাইভ আপডেট",
@@ -475,6 +481,123 @@
       "now": "এইমাত্র",
       "minutes": "{m, number} মিনিট",
       "hours": "{h, number} ঘণ্টা {m, number} মিনিট"
+    },
+    "title": "অর্ডার",
+    "itemsSaved": "অর্ডার {n} আপডেট হয়েছে, রান্নাঘর নতুন আইটেম দেখছে",
+    "updated": "অর্ডার {n} আপডেট হয়েছে",
+    "updateFailed": "অর্ডার বদলানো যায়নি",
+    "types": {
+      "dine_in": "ডাইন-ইন",
+      "takeaway": "টেকঅ্যাওয়ে"
+    },
+    "cancel": {
+      "title": "অর্ডার {n} বাতিল করবেন?",
+      "body": "এটি ফ্লোর আর রান্নাঘর থেকে সরে যাবে। {total} বিল নেওয়া হবে না। এটি আর ফেরানো যাবে না।",
+      "quickLabel": "সাধারণ কারণ",
+      "reasons": {
+        "guestLeft": "অতিথি চলে গেছেন",
+        "mistake": "ভুল করে অর্ডার",
+        "outOfStock": "রান্নাঘরে শেষ",
+        "duplicate": "একই অর্ডার দুবার"
+      },
+      "reasonLabel": "কারণ (আবশ্যক)",
+      "reasonPlaceholder": "কী হয়েছিল?",
+      "keep": "অর্ডার রাখুন",
+      "confirm": "অর্ডার বাতিল",
+      "cancelling": "বাতিল হচ্ছে…",
+      "refundFirstTitle": "বাতিলের আগে টাকা ফেরত দিন",
+      "refundFirstBody": "অর্ডার {n}-এ ইতিমধ্যে {amount} পরিশোধ হয়েছে। আগে ক্যাশে ফেরত দিন, তারপর অর্ডার বাতিল করুন।",
+      "refund": "{amount} ফেরত দিন",
+      "close": "বন্ধ করুন"
+    },
+    "detail": {
+      "missingTitle": "অর্ডারটি পাওয়া যাচ্ছে না",
+      "missingBody": "এটি অন্য দিনের হতে পারে, বা লিংকটি ভুল। অর্ডার তালিকায় খুঁজে দেখুন।",
+      "backToOrders": "অর্ডারে ফিরে যান",
+      "failed": "অর্ডারটি লোড হয়নি",
+      "dineInAt": "{table}-এ ডাইন-ইন",
+      "placedBy": "{time}-এ {name} দিয়েছেন",
+      "placedAt": "{time}-এ দেওয়া",
+      "addItems": "আইটেম যোগ করুন",
+      "cancelHint": "এটি ফ্লোর আর রান্নাঘর থেকে সরে যাবে। কারণ দিতে হবে।",
+      "cancelCooking": "রান্না শুরু হয়ে গেছে, তাই বাতিল করতে ম্যানেজার আর কারণ লাগবে।",
+      "managerCancels": "রান্না শুরু হয়ে গেছে। এখন শুধু ম্যানেজার বাতিল করতে পারবেন।",
+      "cancelledTitle": "{time}-এ {name} বাতিল করেছেন",
+      "soFar": "এখন পর্যন্ত {time}",
+      "stepState": {
+        "done": "হয়েছে",
+        "current": "চলছে",
+        "todo": "এখনও না"
+      },
+      "items": "আইটেম",
+      "itemsMeta": "{n, plural, other {#টি আইটেম}}",
+      "sentAt": "{time}-এ রান্নাঘরে পাঠানো",
+      "editItems": "আইটেম বদলান",
+      "each": "প্রতিটি {price}",
+      "eachOff": "{price} · {off} ছাড়",
+      "quantityOf": "{name} কয়টি",
+      "totalsOnSave": "সেভ করলে মোট হিসাব বদলাবে।",
+      "discard": "বাদ দিন",
+      "save": "সেভ করুন",
+      "saving": "সেভ হচ্ছে…",
+      "saveFailed": "বদলগুলো সেভ হয়নি",
+      "subtotal": "সাবটোটাল",
+      "discount": "ছাড়",
+      "serviceCharge": "সার্ভিস চার্জ {rate}%",
+      "vat": "ভ্যাট {rate}%",
+      "vatOnBoth": "ভ্যাট {rate}% (খাবার ও সার্ভিসের ওপর)",
+      "total": "মোট",
+      "history": "ইতিহাস",
+      "guestVia": {
+        "qr": "অতিথি, টেবিলের QR থেকে",
+        "online": "অতিথি, অনলাইনে",
+        "staff": "স্টাফ"
+      },
+      "event": {
+        "placed": "{n, plural, other {#টি আইটেম}} নিয়ে অর্ডার",
+        "confirmed": "কনফার্ম হয়েছে",
+        "preparing": "রান্না শুরু",
+        "ready": "তৈরি",
+        "served": "পরিবেশিত",
+        "paid": "পরিশোধিত",
+        "cancelled": "বাতিল"
+      },
+      "details": "বিস্তারিত",
+      "seats": "{n, plural, other {#টি আসন}}",
+      "type": "ধরন",
+      "customer": "গ্রাহক",
+      "phone": "ফোন",
+      "notes": "নোট",
+      "paidSoFar": "এ পর্যন্ত পরিশোধ",
+      "balanceDue": "বাকি",
+      "changeWaiter": "ওয়েটার বদলান",
+      "noWaiter": "এখনও ওয়েটার নেই",
+      "payments": "পেমেন্ট",
+      "nothingPaid": "এখনও কিছু পরিশোধ হয়নি",
+      "nothingPaidHint": "টেবিলে পরিবেশনের পর বিল ক্যাশে যায়।",
+      "nothingPaidCancelled": "বাতিলের আগে কিছু পরিশোধ হয়নি।",
+      "openTill": "ক্যাশে খুলুন",
+      "paidBy": "{method}-এ পরিশোধ",
+      "refundBy": "{method}-এ ফেরত",
+      "change": "{amount} ভাংতি",
+      "methods": {
+        "cash": "নগদ",
+        "card": "কার্ড",
+        "mobile": "মোবাইল ব্যাংকিং"
+      },
+      "sentence": {
+        "pendingStaff": "{time}-এ দেওয়া। রান্নাঘরে পাঠাতে কনফার্ম করুন।",
+        "pendingGuest": "{time}-এ একজন অতিথি দিয়েছেন। দেখে কনফার্ম করলে রান্নাঘরে যাবে।",
+        "confirmed": "{time}-এ রান্নাঘরে পাঠানো হয়েছে। রান্না এখনও শুরু হয়নি।",
+        "preparing": "{time}-এ রান্না শুরু হয়েছে।",
+        "preparingBy": "{time}-এ {name} রান্না শুরু করেছেন। তৈরি হলে জানানো হবে।",
+        "ready": "{time} থেকে তৈরি। টেবিলে নিয়ে যান।",
+        "readyTakeaway": "{time} থেকে তৈরি। কাউন্টারে দিয়ে দিন।",
+        "served": "{time}-এ পরিবেশিত। বিল ক্যাশে বাকি।",
+        "paid": "{time}-এ পরিশোধ হয়ে বন্ধ হয়েছে।",
+        "cancelled": "{time}-এ বাতিল: {reason}"
+      },
+      "placed": "দেওয়া হয়েছে"
     }
   }
 }

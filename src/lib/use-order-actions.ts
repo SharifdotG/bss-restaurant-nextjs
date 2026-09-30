@@ -2,7 +2,7 @@ import { useMutation, useQueryClient, type QueryClient } from "@tanstack/react-q
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { api, unwrap } from "@/lib/api/client";
-import type { OrderDetailOut } from "@/lib/api/schema";
+import type { OrderDetailOut, OrderItemIn, OrderUpdate } from "@/lib/api/schema";
 import { useErrorText } from "@/lib/api/use-error-text";
 import { shortOrderNumber } from "@/lib/format";
 import { receive, toLiveOrder } from "@/lib/live/store";
@@ -59,5 +59,51 @@ export function useOrderStatus({ toastErrors = true } = {}) {
         });
       }
     },
+  });
+}
+
+type ItemsInput = { order: OrderRef; items: OrderItemIn[] };
+
+/** Swaps the whole item list; the API only allows it before the kitchen starts. */
+export function useReplaceItems() {
+  const client = useQueryClient();
+  const t = useTranslations("orders");
+
+  return useMutation({
+    mutationFn: ({ order, items }: ItemsInput) =>
+      unwrap(
+        api.PUT("/api/v1/orders/{order_id}/items", {
+          params: { path: { order_id: order.id } },
+          body: { items },
+        }),
+      ),
+    onSuccess: (order) => {
+      applyOrder(client, order);
+      toast.success(t("itemsSaved", { n: shortOrderNumber(order.orderNumber) }));
+    },
+  });
+}
+
+type UpdateInput = { order: OrderRef; changes: OrderUpdate };
+
+/** Table, waiter and customer details; the items and the status have their own calls. */
+export function useUpdateOrder() {
+  const client = useQueryClient();
+  const t = useTranslations("orders");
+  const errorText = useErrorText();
+
+  return useMutation({
+    mutationFn: ({ order, changes }: UpdateInput) =>
+      unwrap(
+        api.PATCH("/api/v1/orders/{order_id}", {
+          params: { path: { order_id: order.id } },
+          body: changes,
+        }),
+      ),
+    onSuccess: (order) => {
+      applyOrder(client, order);
+      toast.success(t("updated", { n: shortOrderNumber(order.orderNumber) }));
+    },
+    onError: (error) => toast.error(t("updateFailed"), { description: errorText.message(error) }),
   });
 }

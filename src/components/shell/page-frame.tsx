@@ -12,13 +12,17 @@ import { PageHeader } from "./page-header";
 
 type PageFrameProps = {
   page: Page;
+  /** Overrides the page's name, for detail pages ("Order 22"). */
+  title?: string;
+  crumb?: string;
+  parent?: { label: string; href: string };
   meta?: React.ReactNode;
   actions?: React.ReactNode;
   children: React.ReactNode;
 };
 
 /** Every app page goes through here: the role check first, then the header and the page. */
-export function PageFrame({ page, meta, actions, children }: PageFrameProps) {
+export function PageFrame({ page, title, crumb, parent, meta, actions, children }: PageFrameProps) {
   const nav = useTranslations("nav");
   const session = useSession();
   if (session.status !== "authenticated") return null;
@@ -30,7 +34,13 @@ export function PageFrame({ page, meta, actions, children }: PageFrameProps) {
 
   return (
     <>
-      <PageHeader title={nav(page)} meta={meta} actions={actions} />
+      <PageHeader
+        title={title ?? nav(page)}
+        crumb={crumb}
+        parent={parent}
+        meta={meta}
+        actions={actions}
+      />
       {children}
     </>
   );
