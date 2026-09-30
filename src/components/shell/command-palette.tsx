@@ -183,7 +183,8 @@ function Palette({ value, onValueChange }: { value: string; onValueChange: (v: s
   }
 
   const today = businessDate();
-  const orderHref = canOpen(role, "orders") ? PAGE_PATHS.orders : PAGE_PATHS.kitchen;
+  const orderHref = (id: number) =>
+    canOpen(role, "orders") ? `${PAGE_PATHS.orders}/${id}` : PAGE_PATHS.kitchen;
 
   return (
     <Command
@@ -229,7 +230,7 @@ function Palette({ value, onValueChange }: { value: string; onValueChange: (v: s
               <CommandItem
                 key={order.id}
                 value={`order-${order.id}`}
-                onSelect={() => go(orderHref)}
+                onSelect={() => go(orderHref(order.id))}
               >
                 <ReceiptIcon weight="duotone" />
                 <span className="min-w-0 flex-1 truncate">

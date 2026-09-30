@@ -74,11 +74,17 @@ const ICONS: Record<Notice["kind"], Icon> = {
   request: CalendarDotsIcon,
 };
 
-const HREF: Record<Notice["kind"], string> = {
-  incoming: PAGE_PATHS.orders,
-  toCook: PAGE_PATHS.kitchen,
-  ready: PAGE_PATHS.floor,
-  request: PAGE_PATHS.reservations,
+// Guest orders and food to serve open the order itself; the chef works from the board.
+const href = (notice: Notice) => {
+  switch (notice.kind) {
+    case "incoming":
+    case "ready":
+      return `${PAGE_PATHS.orders}/${notice.order.id}`;
+    case "toCook":
+      return PAGE_PATHS.kitchen;
+    case "request":
+      return PAGE_PATHS.reservations;
+  }
 };
 
 /** Live items waiting on this person: guest orders, booking requests, food to serve. */
@@ -163,7 +169,7 @@ function NoticeRow({ notice, onOpen }: { notice: Notice; onOpen: () => void }) {
 
   return (
     <Link
-      href={HREF[notice.kind]}
+      href={href(notice)}
       onClick={onOpen}
       className="flex items-start gap-3 rounded-md px-3 py-2.5 outline-none hover:bg-foreground/6 focus-visible:bg-foreground/6"
     >
