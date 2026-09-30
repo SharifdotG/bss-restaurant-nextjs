@@ -91,3 +91,27 @@ export const waitersQuery = queryOptions({
     ),
   staleTime: 5 * 60_000,
 });
+
+// Bookings
+
+/** One day's bookings that still matter on the floor: asked for, confirmed or seated. */
+export const dayBookingsQuery = (day: string) =>
+  queryOptions({
+    queryKey: ["reservations", { day, open: true }],
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/reservations", {
+          params: {
+            query: {
+              dateFrom: day,
+              dateTo: day,
+              status: ["requested", "confirmed", "seated"],
+              sort: "startsAt",
+              size: 100,
+            },
+          },
+          signal,
+        }),
+      ),
+    select: (page) => page.items,
+  });

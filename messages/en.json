@@ -599,5 +599,62 @@
       },
       "placed": "Placed"
     }
+  },
+  "floor": {
+    "meta": "{busy, number} of {total, plural, one {# table} other {# tables}} in use · {soon, plural, =0 {no bookings in the next hour} one {# booking in the next hour} other {# bookings in the next hour}}",
+    "reservations": "Reservations",
+    "newOrder": "New order",
+    "hint": "Tap a table to open its order or start one",
+    "failed": "The floor didn't load",
+    "retry": "Try again",
+    "noArea": "Other tables",
+    "tableCount": "{n, plural, one {# table} other {# tables}}",
+    "views": {
+      "all": "All tables",
+      "inUse": "In use",
+      "free": "Free",
+      "booked": "Booked",
+      "mine": "My tables"
+    },
+    "emptyView": {
+      "all": "No tables are set up yet. A manager can add them under Tables.",
+      "inUse": "Every table is free.",
+      "free": "No free tables right now.",
+      "booked": "No tables are held for bookings in the next hour.",
+      "mine": "No tables are assigned to you."
+    },
+    "seats": "Seats",
+    "free": "Free",
+    "billDue": "Bill due",
+    "bookedAt": "Booked {time}",
+    "order": "Order {n}",
+    "due": "{amount} due",
+    "qrGuest": "QR · guest",
+    "noWaiter": "No waiter yet",
+    "noOrder": "No order",
+    "tapToStart": "Tap to start an order",
+    "bookedFrom": "Booked from {time}",
+    "party": "{name} · {n, plural, one {# guest} other {# guests}}",
+    "arriving": "Arriving",
+    "seated": "Seated",
+    "inTime": "in {time}",
+    "late": "{time} late",
+    "readyOne": "Order {n} is ready to hand over",
+    "readyMany": "Order {n} and {more, plural, one {# more} other {# more}} are ready",
+    "upNext": {
+      "title": "Up next",
+      "empty": "Nothing waiting. New orders and bookings show up here.",
+      "ready": "Ready to hand over",
+      "arriving": "Arriving",
+      "toPay": "Waiting to pay",
+      "party": "{name} · {n, plural, one {# guest} other {# guests}}",
+      "request": "Online request · no table yet",
+      "noTable": "No table yet",
+      "takeawayShort": "TA",
+      "order": "Order {n}",
+      "paidSoFar": "{amount} paid so far",
+      "servedAt": "Served {time}",
+      "openBilling": "Open billing"
+    }
   }
 }
