@@ -332,6 +332,114 @@
       "served": "Order {n} served",
       "cancelled": "Order {n} cancelled"
     },
-    "moveFailed": "Order {n} didn't change"
+    "moveFailed": "Order {n} didn't change",
+    "meta": "{when} · {placed, plural, =0 {nothing placed} other {# placed}}, {open, plural, =0 {none open} other {# still open}}",
+    "newOrder": "New order",
+    "tabs": {
+      "open": "Open",
+      "all": "All",
+      "billsDue": "Bills due",
+      "paid": "Paid",
+      "cancelled": "Cancelled"
+    },
+    "ranges": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "week": "Last 7 days",
+      "month": "This month",
+      "any": "Any date"
+    },
+    "sources": {
+      "staff": "Staff",
+      "qr": "QR",
+      "online": "Online"
+    },
+    "via": {
+      "qr": "via QR",
+      "online": "Online"
+    },
+    "sorts": {
+      "-createdAt": "Newest first",
+      "createdAt": "Oldest first",
+      "-total": "Highest total",
+      "total": "Lowest total"
+    },
+    "columns": {
+      "order": "Order",
+      "table": "Table",
+      "items": "Items",
+      "waiter": "Waiter",
+      "placed": "Placed",
+      "status": "Status",
+      "total": "Total",
+      "actions": "Actions"
+    },
+    "filters": {
+      "title": "Filters",
+      "hint": "Narrow the orders by source, table, date and waiter.",
+      "button": "Filters",
+      "buttonCount": "Filters · {n, number}",
+      "search": "Order no., name or phone",
+      "clearSearch": "Clear the search",
+      "source": "Source",
+      "sourceIs": "Source: {source}",
+      "allSources": "All sources",
+      "table": "Table",
+      "tableIs": "Table {table}",
+      "allTables": "All tables",
+      "date": "Date",
+      "waiter": "Waiter",
+      "allWaiters": "All waiters",
+      "mine": "Mine",
+      "sort": "Sort",
+      "clear": "Clear filters",
+      "done": "Done"
+    },
+    "export": {
+      "button": "Export CSV",
+      "working": "Exporting…",
+      "failed": "The export didn't download"
+    },
+    "takeaway": "Takeaway",
+    "counter": "Counter",
+    "guest": "Guest",
+    "itemCount": "{n, plural, one {# item} other {# items}}",
+    "more": "+{n, number} more",
+    "due": "{amount} due",
+    "paidAt": "Paid {time}",
+    "cancelledAt": "Cancelled {time}",
+    "showing": "Showing {from, number}–{to, number} of {total, plural, one {# order} other {# orders}}",
+    "perPage": "{n, number} per page",
+    "perPageLabel": "Orders per page",
+    "rowMenu": "Actions for order {n}",
+    "openOrder": "Open order",
+    "failed": {
+      "title": "The orders didn't load",
+      "retry": "Try again"
+    },
+    "empty": {
+      "filteredTitle": "No orders match these filters",
+      "filteredBody": "Try a wider date, or clear the filters to see everything.",
+      "open": {
+        "title": "Nothing open right now",
+        "body": "Orders from the floor, the QR codes and online show up here the moment they're placed."
+      },
+      "all": {
+        "title": "No orders on these dates",
+        "body": "Pick another date to see what was placed then."
+      },
+      "billsDue": {
+        "title": "No bills waiting",
+        "body": "Served orders wait here until they're paid at the till."
+      },
+      "paid": {
+        "title": "Nothing paid on these dates",
+        "body": "Settled bills show up here."
+      },
+      "cancelled": {
+        "title": "Nothing cancelled",
+        "body": "Cancelled orders and their reasons show up here."
+      }
+    }
   }
 }

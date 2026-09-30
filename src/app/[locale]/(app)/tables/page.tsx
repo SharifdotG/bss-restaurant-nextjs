@@ -1,4 +1,4 @@
-import { plannedRoute } from "../planned-route";
+import { plannedRoute } from "../app-route";
 
 const route = plannedRoute("tables");
 

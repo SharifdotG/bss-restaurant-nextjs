@@ -140,6 +140,10 @@
   a {
     text-underline-offset: 3px;
   }
+  /* Search boxes bring their own clear button. */
+  input[type="search"]::-webkit-search-cancel-button {
+    appearance: none;
+  }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
