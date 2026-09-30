@@ -440,6 +440,41 @@
         "title": "কিছু বাতিল হয়নি",
         "body": "বাতিল অর্ডার আর তার কারণ এখানে দেখা যাবে।"
       }
+    },
+    "views": {
+      "label": "অর্ডার দেখান",
+      "list": "তালিকা",
+      "board": "বোর্ড"
+    },
+    "orderN": "অর্ডার {n}",
+    "moreItems": "আরও আইটেম",
+    "readyFor": "তৈরি {time}",
+    "moveOrder": "{move}, অর্ডার {n}",
+    "sourceBadge": {
+      "staff": "ST",
+      "qr": "QR",
+      "online": "ON"
+    },
+    "board": {
+      "failed": "বোর্ড লোড হয়নি",
+      "retry": "আবার চেষ্টা করুন",
+      "columns": {
+        "waiting": "অপেক্ষায়",
+        "preparing": "রান্না হচ্ছে",
+        "ready": "তৈরি",
+        "served": "পরিবেশিত, বিল বাকি"
+      },
+      "empty": {
+        "waiting": "নতুন অর্ডার নেই",
+        "preparing": "কিছু রান্না হচ্ছে না",
+        "ready": "পাসে কিছু অপেক্ষায় নেই",
+        "served": "কোনো বিল বাকি নেই"
+      }
+    },
+    "wait": {
+      "now": "এইমাত্র",
+      "minutes": "{m, number} মিনিট",
+      "hours": "{h, number} ঘণ্টা {m, number} মিনিট"
     }
   }
 }

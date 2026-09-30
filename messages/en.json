@@ -440,6 +440,41 @@
         "title": "Nothing cancelled",
         "body": "Cancelled orders and their reasons show up here."
       }
+    },
+    "views": {
+      "label": "Show orders as",
+      "list": "List",
+      "board": "Board"
+    },
+    "orderN": "Order {n}",
+    "moreItems": "more items",
+    "readyFor": "Ready {time}",
+    "moveOrder": "{move}, order {n}",
+    "sourceBadge": {
+      "staff": "ST",
+      "qr": "QR",
+      "online": "ON"
+    },
+    "board": {
+      "failed": "The board didn't load",
+      "retry": "Try again",
+      "columns": {
+        "waiting": "Waiting",
+        "preparing": "Preparing",
+        "ready": "Ready",
+        "served": "Served, bill due"
+      },
+      "empty": {
+        "waiting": "No new orders",
+        "preparing": "Nothing cooking",
+        "ready": "Nothing waiting at the pass",
+        "served": "No bills waiting"
+      }
+    },
+    "wait": {
+      "now": "Just now",
+      "minutes": "{m, number} min",
+      "hours": "{h, number} h {m, number} min"
     }
   }
 }

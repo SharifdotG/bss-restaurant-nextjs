@@ -1,10 +1,11 @@
 "use client";
 
-import { PlusIcon } from "@phosphor-icons/react";
+import { KanbanIcon, ListBulletsIcon, PlusIcon } from "@phosphor-icons/react";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { PageFrame } from "@/components/shell/page-frame";
 import { buttonVariants } from "@/components/ui/button";
+import { Segmented } from "@/components/ui/segmented";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs";
 import { Link } from "@/i18n/navigation";
 import { activeOrdersQuery, ordersQuery } from "@/lib/api/queries";
@@ -15,6 +16,7 @@ import { useFormat } from "@/lib/use-format";
 import { useNow } from "@/lib/use-now";
 import { useShellLayout } from "@/lib/use-shell-layout";
 import { ExportOrders } from "./export-orders";
+import { OrdersBoard } from "./orders-board";
 import { OrdersList } from "./orders-list";
 import { useOrderUrl } from "./use-order-filters";
 
@@ -62,6 +64,9 @@ export function OrdersPage() {
   if (session.status !== "authenticated") return null;
   const { role } = session.user;
 
+  // Phones always get the list; the board needs the width.
+  const view = phone ? "list" : url.view;
+  const tab = view === "board" ? "open" : url.tab;
   const when = url.range === "today" ? format.weekday(now) : t(`ranges.${url.range}`);
   const meta =
     counts.all === undefined || counts.open === undefined
@@ -84,16 +89,54 @@ export function OrdersPage() {
         </>
       }
     >
-      <Tabs value={url.tab} onValueChange={(tab) => void setUrl({ tab, page: null })}>
-        <TabsList className="-mx-4 mb-5 px-4 md:mx-0 md:px-0">
-          {ORDER_TABS.map((tab) => (
-            <TabsTab key={tab} value={tab} count={counts[tab]}>
-              {t(`tabs.${tab}`)}
-            </TabsTab>
-          ))}
-        </TabsList>
-        <TabsPanel value={url.tab}>
-          <OrdersList role={role} />
+      <Tabs
+        value={tab}
+        onValueChange={(next) =>
+          // The board only holds open orders, so any other tab goes back to the list.
+          void setUrl({ tab: next, page: null, view: next === "open" ? url.view : null })
+        }
+      >
+        <div className="mb-5 flex items-end gap-4">
+          <TabsList className="-mx-4 min-w-0 flex-1 px-4 md:mx-0 md:px-0">
+            {ORDER_TABS.map((key) => (
+              <TabsTab key={key} value={key} count={counts[key]}>
+                {t(`tabs.${key}`)}
+              </TabsTab>
+            ))}
+          </TabsList>
+          {!phone && (
+            <Segmented
+              aria-label={t("views.label")}
+              value={view}
+              onValueChange={(next) =>
+                void setUrl({ view: next, tab: next === "board" ? "open" : url.tab, page: null })
+              }
+              options={[
+                {
+                  value: "list",
+                  label: (
+                    <>
+                      <ListBulletsIcon />
+                      {t("views.list")}
+                    </>
+                  ),
+                },
+                {
+                  value: "board",
+                  label: (
+                    <>
+                      <KanbanIcon />
+                      {t("views.board")}
+                    </>
+                  ),
+                },
+              ]}
+              className="mb-1.5 shrink-0"
+            />
+          )}
+        </div>
+        <TabsPanel value={tab}>
+          {view === "board" ? <OrdersBoard /> : <OrdersList role={role} />}
         </TabsPanel>
       </Tabs>
     </PageFrame>

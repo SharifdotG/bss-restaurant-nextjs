@@ -46,6 +46,16 @@ export function ItemsLine({ order, limit = 2 }: { order: OrderLike; limit?: numb
   return <>{parts.join(", ")}</>;
 }
 
+/** "Just now", "19 min", "1 h 14 min": how long something has waited. */
+export function useWaitText() {
+  const t = useTranslations("orders.wait");
+  return (minutes: number) => {
+    if (minutes < 1) return t("now");
+    if (minutes < 60) return t("minutes", { m: minutes });
+    return t("hours", { h: Math.floor(minutes / 60), m: minutes % 60 });
+  };
+}
+
 /** The clock time it was placed, with the day in front when it wasn't today. */
 export function PlacedAt({ value }: { value: string }) {
   const format = useFormat();
