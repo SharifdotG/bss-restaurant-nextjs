@@ -57,7 +57,7 @@ export function UserCard({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
   const locale = useLocale();
   const changeLocale = useChangeLocale();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, forcedTheme } = useTheme();
   const mounted = useMounted();
   const { leave, leaving } = useSignOut();
   if (session.status !== "authenticated") return null;
@@ -104,20 +104,25 @@ export function UserCard({ compact = false }: { compact?: boolean }) {
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuLabel>{common("theme")}</DropdownMenuLabel>
-          <DropdownMenuRadioGroup
-            value={mounted ? (theme ?? "system") : "system"}
-            onValueChange={(value) => setTheme(value as string)}
-          >
-            {THEMES.map((value) => (
-              <DropdownMenuRadioItem key={value} value={value} closeOnClick={false}>
-                {common(`themes.${value}`)}
-              </DropdownMenuRadioItem>
-            ))}
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
+        {/* The kitchen keeps its own theme, so there's nothing to pick there. */}
+        {!forcedTheme && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>{common("theme")}</DropdownMenuLabel>
+              <DropdownMenuRadioGroup
+                value={mounted ? (theme ?? "system") : "system"}
+                onValueChange={(value) => setTheme(value as string)}
+              >
+                {THEMES.map((value) => (
+                  <DropdownMenuRadioItem key={value} value={value} closeOnClick={false}>
+                    {common(`themes.${value}`)}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuGroup>
+          </>
+        )}
 
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

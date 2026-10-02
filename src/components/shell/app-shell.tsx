@@ -50,6 +50,27 @@ export function AppShell({ children, lost = false }: AppShellProps) {
 
   if (role === null) return null;
 
+  const overlays = (
+    <>
+      <CommandPalette />
+      <ShortcutsSheet />
+      <SignOutAllDialog />
+      <Toaster />
+    </>
+  );
+
+  // The kitchen board runs full screen with its own header.
+  if (current === "kitchen") {
+    return (
+      <TooltipProvider>
+        <main id="main" className="flex min-h-dvh flex-col">
+          {children}
+        </main>
+        {overlays}
+      </TooltipProvider>
+    );
+  }
+
   return (
     <TooltipProvider>
       <div className="flex min-h-dvh">
@@ -96,10 +117,7 @@ export function AppShell({ children, lost = false }: AppShellProps) {
         )}
         {/* The phone POS is a full-screen flow with its own way out. */}
         {layout === "phone" && !compact && <BottomTabs role={role} current={current} />}
-        <CommandPalette />
-        <ShortcutsSheet />
-        <SignOutAllDialog />
-        <Toaster />
+        {overlays}
       </div>
     </TooltipProvider>
   );

@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import type { UserOut as User } from "@/lib/api/schema";
+import { forgetTickets } from "@/lib/kitchen-tickets";
 import { forgetDrafts } from "@/lib/pos-draft";
 
 // lifetime is the token's full life in ms, kept so freshness scales with it.
@@ -204,8 +205,9 @@ export async function signIn(
 
 export async function signOut() {
   await fetch("/api/session", { method: "DELETE" }).catch(() => undefined);
-  // A half-built order belongs to whoever was signed in.
+  // A half-built order and the kitchen's ticks belong to whoever was signed in.
   forgetDrafts();
+  forgetTickets();
   signOutLocally();
   post({ type: "signed-out" });
 }
