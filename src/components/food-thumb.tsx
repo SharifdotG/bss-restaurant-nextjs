@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element -- the API serves one resized WebP; next/image would only spend quota */
-import { BowlFoodIcon } from "@phosphor-icons/react";
+import { DishIcon } from "@/components/dish-icon";
 import { imageUrl } from "@/lib/api/images";
 import { cn } from "@/lib/utils";
 
-type FoodThumbProps = { src: string | null | undefined; className?: string };
+type FoodThumbProps = { src: string | null | undefined; category?: string; className?: string };
 
-/** A dish photo, or a quiet bowl when there isn't one. Most menus start without photos. */
-export function FoodThumb({ src, className }: FoodThumbProps) {
+/** A dish photo, or an icon for its kind when there isn't one. Most menus start without photos. */
+export function FoodThumb({ src, category, className }: FoodThumbProps) {
   const url = imageUrl(src);
   return (
     <span
@@ -18,7 +18,7 @@ export function FoodThumb({ src, className }: FoodThumbProps) {
       {url ? (
         <img src={url} alt="" loading="lazy" decoding="async" className="size-full object-cover" />
       ) : (
-        <BowlFoodIcon weight="duotone" className="size-1/2" />
+        <DishIcon category={category} className="size-1/2" />
       )}
     </span>
   );

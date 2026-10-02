@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- the API serves one resized WebP; next/image would only spend quota */
 "use client";
 
+import { useState } from "react";
 import {
   ArrowLeftIcon,
   CaretRightIcon,
@@ -29,7 +30,7 @@ import { useFormat } from "@/lib/use-format";
 import { cn } from "@/lib/utils";
 import { CartFooter, CartLines, type CartProps } from "./cart-panel";
 import { CategoryChips, MenuSearch } from "./menu-panel";
-import { DishIcon } from "./dish-card";
+import { DishIcon } from "@/components/dish-icon";
 import type { Menu } from "./use-menu";
 
 const STEPS = ["where", "menu", "review"] as const;
@@ -53,9 +54,13 @@ export function PosSteps(props: PosStepsProps) {
     "step",
     parseAsStringLiteral(STEPS).withOptions({ history: "push" }),
   );
-  const needsWhere =
-    !cart.adding && cart.draft.orderType === "dine_in" && cart.draft.tableId === null;
-  const step: Step = stepParam ?? (needsWhere ? "where" : "menu");
+  // Where to start is decided once; picking a table shouldn't jump ahead on its own.
+  const [start] = useState<Step>(() =>
+    !cart.adding && cart.draft.orderType === "dine_in" && cart.draft.tableId === null
+      ? "where"
+      : "menu",
+  );
+  const step: Step = stepParam ?? start;
   const go = (next: Step) => void setStep(next);
 
   if (step === "where" && !cart.adding) return <WhereStep {...props} onNext={() => go("menu")} />;

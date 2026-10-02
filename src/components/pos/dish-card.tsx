@@ -8,7 +8,7 @@ import { imageUrl } from "@/lib/api/images";
 import type { FoodOut } from "@/lib/api/schema";
 import { useFormat } from "@/lib/use-format";
 import { cn } from "@/lib/utils";
-import { DISH_ICONS, dishKind } from "./use-menu";
+import { DishIcon } from "@/components/dish-icon";
 
 type DishCardProps = {
   food: FoodOut;
@@ -138,12 +138,6 @@ export function DishCard({ food, inCart, onAdd, onSetQuantity, photo }: DishCard
       </div>
     </article>
   );
-}
-
-/** Stands in for a dish photo: a drawn icon for the kind of dish. */
-export function DishIcon({ category, className }: { category?: string; className?: string }) {
-  const Icon = DISH_ICONS[dishKind(category)];
-  return <Icon weight="duotone" className={className} />;
 }
 
 function SoldOut({ className }: { className?: string }) {

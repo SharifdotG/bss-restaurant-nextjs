@@ -30,7 +30,7 @@ export function OrderItems({ order, editable }: OrderItemsProps) {
   const format = useFormat();
   const errorText = useErrorText();
   const { data: foods } = useQuery(foodsQuery);
-  const photos = new Map(foods?.map((food) => [food.id, food.imageUrl]));
+  const dishes = new Map(foods?.map((food) => [food.id, food]));
   const replace = useReplaceItems();
   const [draft, setDraft] = useState<DraftLine[] | null>(null);
   const editing = draft !== null && editable;
@@ -78,7 +78,10 @@ export function OrderItems({ order, editable }: OrderItemsProps) {
                 editing && quantity === 0 && "opacity-45",
               )}
             >
-              <FoodThumb src={photos.get(item.foodId)} />
+              <FoodThumb
+                src={dishes.get(item.foodId)?.imageUrl}
+                category={dishes.get(item.foodId)?.category?.name}
+              />
               <div className="min-w-0 flex-1">
                 <p
                   className={cn("truncate font-bold", editing && quantity === 0 && "line-through")}
