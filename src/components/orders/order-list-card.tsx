@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { OrderOut } from "@/lib/api/schema";
-import { shortOrderNumber } from "@/lib/format";
 import { useFormat } from "@/lib/use-format";
 import { cn } from "@/lib/utils";
 import { ItemsLine, PlacedAt, useOrderWhere } from "./order-bits";
@@ -23,7 +22,7 @@ export function OrderListCard({ order }: { order: OrderOut }) {
       <div className="flex items-start justify-between gap-3">
         <p className="min-w-0 truncate">
           <span className="text-lg font-bold tabular-nums">
-            {format.number(Number(shortOrderNumber(order.orderNumber)))}
+            {format.orderNo(order.orderNumber)}
           </span>
           <span className="ml-2 text-sm text-muted-foreground">
             {[place.title, place.detail].filter(Boolean).join(" · ")}

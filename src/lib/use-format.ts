@@ -12,6 +12,7 @@ import {
   formatShortDate,
   formatTime,
   formatWeekday,
+  shortOrderNumber,
 } from "@/lib/format";
 import { formatMoney } from "@/lib/money";
 import { useSession } from "@/lib/session/client";
@@ -42,5 +43,8 @@ export function useFormat() {
     number: (value: number, options?: Intl.NumberFormatOptions) =>
       formatNumber(value, locale, options),
     percent: (value: number) => formatPercent(value, locale),
+    /** The number staff call out, "22", in the page's digits. */
+    orderNo: (orderNumber: string) =>
+      formatNumber(Number(shortOrderNumber(orderNumber)), locale, { useGrouping: false }),
   };
 }

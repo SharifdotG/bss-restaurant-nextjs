@@ -19,7 +19,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Link } from "@/i18n/navigation";
 import type { OrderOut, UserRole } from "@/lib/api/schema";
 import { useErrorText } from "@/lib/api/use-error-text";
-import { shortOrderNumber } from "@/lib/format";
 import { can, cancelNeedsRefund, PAGE_PATHS, paidSoFar } from "@/lib/permissions";
 import { useFormat } from "@/lib/use-format";
 import { useOrderStatus } from "@/lib/use-order-actions";
@@ -44,7 +43,7 @@ export function CancelOrderDialog({ order, role, open, onOpenChange }: CancelOrd
   const errorText = useErrorText();
   const move = useOrderStatus({ toastErrors: false });
   const [reason, setReason] = useState("");
-  const n = shortOrderNumber(order.orderNumber);
+  const n = format.orderNo(order.orderNumber);
   const blocked = cancelNeedsRefund(order);
   const ready = reason.trim().length >= 3;
 

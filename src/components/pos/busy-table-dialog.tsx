@@ -13,7 +13,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { OrderOut, TableOut } from "@/lib/api/schema";
-import { shortOrderNumber } from "@/lib/format";
 import { useFormat } from "@/lib/use-format";
 
 type BusyTableDialogProps = {
@@ -36,7 +35,7 @@ export function BusyTableDialog({
   const t = useTranslations("pos.busy");
   const status = useTranslations("status.order");
   const format = useFormat();
-  const n = busy ? shortOrderNumber(busy.order.orderNumber) : "";
+  const n = busy ? format.orderNo(busy.order.orderNumber) : "";
 
   return (
     <Dialog open={busy !== null} onOpenChange={(open) => !open && onClose()}>

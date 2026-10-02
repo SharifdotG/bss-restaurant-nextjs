@@ -480,7 +480,7 @@
     "wait": {
       "now": "এইমাত্র",
       "minutes": "{m, number} মিনিট",
-      "hours": "{h, number} ঘণ্টা {m, number} মিনিট"
+      "hours": "{h, number} ঘ {m, number} মি"
     },
     "title": "অর্ডার",
     "itemsSaved": "অর্ডার {n} আপডেট হয়েছে, রান্নাঘর নতুন আইটেম দেখছে",

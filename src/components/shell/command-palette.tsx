@@ -32,7 +32,7 @@ import { Kbd } from "@/components/ui/kbd";
 import { useRouter } from "@/i18n/navigation";
 import { api, unwrap } from "@/lib/api/client";
 import type { UserRole } from "@/lib/api/schema";
-import { businessDate, shortOrderNumber, toLatinDigits } from "@/lib/format";
+import { businessDate, toLatinDigits } from "@/lib/format";
 import { GO_KEYS, navGroups } from "@/lib/navigation";
 import { closeOverlay, openOverlay, useOverlay } from "@/lib/overlays";
 import { canOpen, PAGE_PATHS, type Page } from "@/lib/permissions";
@@ -235,7 +235,7 @@ function Palette({ value, onValueChange }: { value: string; onValueChange: (v: s
                 <ReceiptIcon weight="duotone" />
                 <span className="min-w-0 flex-1 truncate">
                   {t("order", {
-                    number: format.number(Number(shortOrderNumber(order.orderNumber))),
+                    number: format.orderNo(order.orderNumber),
                   })}
                   <span className="text-muted-foreground">
                     {" · "}

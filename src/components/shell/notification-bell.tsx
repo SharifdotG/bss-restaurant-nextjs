@@ -19,7 +19,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Link } from "@/i18n/navigation";
-import { shortOrderNumber } from "@/lib/format";
 import { useLiveOrders, useLiveReservations } from "@/lib/live/store";
 import type { LiveOrder } from "@/lib/live/types";
 import { notices, type Notice } from "@/lib/notifications";
@@ -163,7 +162,7 @@ function NoticeRow({ notice, onOpen }: { notice: Notice; onOpen: () => void }) {
           time: format.time(notice.reservation.startsAt),
         })
       : t(notice.kind, {
-          number: format.number(Number(shortOrderNumber(notice.order.orderNumber))),
+          number: format.orderNo(notice.order.orderNumber),
           where: where(notice.order),
         });
 

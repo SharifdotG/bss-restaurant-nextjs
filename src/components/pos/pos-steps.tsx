@@ -22,7 +22,6 @@ import { imageUrl } from "@/lib/api/images";
 import { restaurantQuery } from "@/lib/api/queries";
 import type { FoodOut, OrderType } from "@/lib/api/schema";
 import { byArea, type FloorTable } from "@/lib/floor";
-import { shortOrderNumber } from "@/lib/format";
 import { toTaka } from "@/lib/money";
 import { PAGE_PATHS } from "@/lib/permissions";
 import { cartTotals } from "@/lib/pos";
@@ -222,7 +221,7 @@ function TableChoice({
           "bg-tone-slate",
           state.order.status === "served"
             ? t("billDue")
-            : t("orderN", { n: shortOrderNumber(state.order.orderNumber) }),
+            : t("orderN", { n: format.orderNo(state.order.orderNumber) }),
         ]
       : state.kind === "booked"
         ? ["bg-tone-amber", t("bookedShort", { time: format.time(state.booking.startsAt) })]

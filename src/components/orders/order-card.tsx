@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Pill } from "@/components/ui/pill";
 import { Link } from "@/i18n/navigation";
 import type { OrderOut } from "@/lib/api/schema";
-import { shortOrderNumber } from "@/lib/format";
 import { ageTone, forwardMove, minutesSince, STATUS_LOOK } from "@/lib/orders";
 import { orderMoves } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
@@ -34,7 +33,7 @@ export function OrderCard({ order, now }: { order: OrderOut; now: number }) {
 
   const role = session.status === "authenticated" ? session.user.role : null;
   const next = role ? forwardMove(orderMoves(role, order)) : null;
-  const n = shortOrderNumber(order.orderNumber);
+  const n = format.orderNo(order.orderNumber);
   const lines = order.items.slice(0, SHOWN_LINES);
   const rest = order.items.slice(SHOWN_LINES);
   const restTotal = rest.reduce((sum, item) => sum + item.lineTotal, 0);
@@ -94,7 +93,7 @@ export function OrderCard({ order, now }: { order: OrderOut; now: number }) {
         )}
       </ul>
 
-      <div className="mt-3 flex items-center gap-2 border-t border-border pt-3">
+      <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
         <Avatar className="size-7">
           <AvatarFallback className="text-2xs">
             {order.waiter ? initials(order.waiter.fullName) : t(`sourceBadge.${order.source}`)}

@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/table";
 import { Link } from "@/i18n/navigation";
 import type { OrderOut } from "@/lib/api/schema";
-import { shortOrderNumber } from "@/lib/format";
 import type { OrderSort } from "@/lib/orders";
 import { isClosed } from "@/lib/permissions";
 import { useFormat } from "@/lib/use-format";
@@ -71,7 +70,7 @@ export function OrdersTable({ orders, now, sort, onSort }: OrdersTableProps) {
                   className="block outline-none after:absolute after:inset-0 after:rounded-sm focus-visible:after:ring-3 focus-visible:after:ring-ring/40 focus-visible:after:ring-inset"
                 >
                   <span className="block text-md font-bold tabular-nums">
-                    {format.number(Number(shortOrderNumber(order.orderNumber)))}
+                    {format.orderNo(order.orderNumber)}
                   </span>
                   <span className="block text-xs whitespace-nowrap text-muted-foreground tabular-nums">
                     {order.orderNumber}

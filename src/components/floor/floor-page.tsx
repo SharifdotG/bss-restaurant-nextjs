@@ -30,7 +30,7 @@ import {
   matchesView,
   type FloorView,
 } from "@/lib/floor";
-import { businessDate, shortOrderNumber } from "@/lib/format";
+import { businessDate } from "@/lib/format";
 import { can, canOpen, PAGE_PATHS } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
 import { useDraft } from "@/lib/pos-draft";
@@ -39,6 +39,7 @@ import { useNow } from "@/lib/use-now";
 import { useShellLayout } from "@/lib/use-shell-layout";
 import { TableTile } from "./table-tile";
 import { UpNext } from "./up-next";
+import { useFormat } from "@/lib/use-format";
 
 const viewParser = parseAsStringLiteral(FLOOR_VIEWS).withDefault("all");
 
@@ -209,6 +210,7 @@ export function FloorPage() {
 /** Phones have no side panel, so food waiting at the pass gets a banner instead. */
 function ReadyBanner({ orders }: { orders: OrderOut[] }) {
   const t = useTranslations("floor");
+  const format = useFormat();
   const where = useOrderWhere();
   const first = orders[0];
   const place = where(first);
@@ -222,8 +224,8 @@ function ReadyBanner({ orders }: { orders: OrderOut[] }) {
       <span className="min-w-0 flex-1">
         <span className="block text-sm font-bold">
           {orders.length > 1
-            ? t("readyMany", { n: shortOrderNumber(first.orderNumber), more: orders.length - 1 })
-            : t("readyOne", { n: shortOrderNumber(first.orderNumber) })}
+            ? t("readyMany", { n: format.orderNo(first.orderNumber), more: orders.length - 1 })
+            : t("readyOne", { n: format.orderNo(first.orderNumber) })}
         </span>
         <span className="block truncate text-xs">
           {[place.title, place.detail].filter(Boolean).join(" · ")}

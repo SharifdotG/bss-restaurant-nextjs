@@ -17,7 +17,7 @@ import { activeOrdersQuery, dayBookingsQuery, orderQuery, tablesQuery } from "@/
 import type { OrderOut, TableOut, UserRole } from "@/lib/api/schema";
 import { useErrorText } from "@/lib/api/use-error-text";
 import { floorTables } from "@/lib/floor";
-import { businessDate, shortOrderNumber } from "@/lib/format";
+import { businessDate } from "@/lib/format";
 import { canAddItems, PAGE_PATHS } from "@/lib/permissions";
 import { addToCart, EMPTY_DRAFT, quantities, setLineQuantity, type Draft } from "@/lib/pos";
 import { clearDraft, saveDraft, useDraft } from "@/lib/pos-draft";
@@ -30,6 +30,7 @@ import { CartFooter, CartHeader, CartLines, CartTitle, type CartProps } from "./
 import { CategoryChips, MenuGrid, MenuSearch } from "./menu-panel";
 import { PosSteps } from "./pos-steps";
 import { useMenu, type Menu } from "./use-menu";
+import { useFormat } from "@/lib/use-format";
 
 export function PosPage() {
   const session = useSession();
@@ -137,6 +138,7 @@ function AddItems({ orderId, userId }: { orderId: number; userId: number }) {
   const session = useSession();
   const menu = useMenu();
   const where = useOrderWhere();
+  const format = useFormat();
   const query = useQuery(orderQuery(orderId));
   const add = useAddItems();
   const [carry, setCarry] = useQueryState("carry", parseAsBoolean);
@@ -162,7 +164,7 @@ function AddItems({ orderId, userId }: { orderId: number; userId: number }) {
     );
   }
 
-  const n = shortOrderNumber(order.orderNumber);
+  const n = format.orderNo(order.orderNumber);
   if (!canAddItems(role, order)) {
     return (
       <PageFrame page="newOrder" title={t("addingTitle", { n })} parent={back}>

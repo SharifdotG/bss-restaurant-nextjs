@@ -22,7 +22,6 @@ import { orderQuery } from "@/lib/api/queries";
 import type { OrderDetailOut, UserRole } from "@/lib/api/schema";
 import { isApiError } from "@/lib/api/errors";
 import { useErrorText } from "@/lib/api/use-error-text";
-import { shortOrderNumber } from "@/lib/format";
 import { stepEvents } from "@/lib/order-detail";
 import { forwardMove, STATUS_LOOK } from "@/lib/orders";
 import {
@@ -122,7 +121,7 @@ function OrderDetail({ order, role, parent }: OrderDetailProps) {
   const move = useOrderStatus();
   const [cancelling, setCancelling] = useState(false);
 
-  const n = shortOrderNumber(order.orderNumber);
+  const n = format.orderNo(order.orderNumber);
   const moves = orderMoves(role, order);
   const next = forwardMove(moves);
   const NextIcon = next ? STATUS_LOOK[next].icon : null;

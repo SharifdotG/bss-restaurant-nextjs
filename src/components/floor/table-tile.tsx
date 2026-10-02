@@ -13,7 +13,6 @@ import { OrderStatusPill } from "@/components/orders/order-status";
 import { Pill } from "@/components/ui/pill";
 import { Link } from "@/i18n/navigation";
 import type { FloorTable } from "@/lib/floor";
-import { shortOrderNumber } from "@/lib/format";
 import { ageTone, minutesSince } from "@/lib/orders";
 import { PAGE_PATHS } from "@/lib/permissions";
 import { useFormat } from "@/lib/use-format";
@@ -53,7 +52,7 @@ export function TableTile({ entry, now, onStart }: TableTileProps) {
       );
     line = (
       <>
-        <span>{t("order", { n: shortOrderNumber(order.orderNumber) })}</span>
+        <span>{t("order", { n: format.orderNo(order.orderNumber) })}</span>
         <span className="tabular-nums">
           {owing ? t("due", { amount: format.money(order.balanceDue) }) : format.money(order.total)}
         </span>

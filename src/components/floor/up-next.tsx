@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { useOrderWhere } from "@/components/orders/order-bits";
 import { Link } from "@/i18n/navigation";
 import type { OrderOut, ReservationOut } from "@/lib/api/schema";
-import { shortOrderNumber } from "@/lib/format";
 import { PAGE_PATHS } from "@/lib/permissions";
 import { TONES, type Tone } from "@/lib/tones";
 import { useFormat } from "@/lib/use-format";
@@ -39,7 +38,7 @@ export function UpNext({ ready, arriving, toPay, canBill }: UpNextProps) {
                 key={order.id}
                 href={`${PAGE_PATHS.orders}/${order.id}`}
                 tone="green"
-                tile={shortOrderNumber(order.orderNumber)}
+                tile={format.orderNo(order.orderNumber)}
                 title={[place.title, order.customerName].filter(Boolean).join(" · ")}
                 detail={place.detail}
                 amount={format.money(order.total)}
@@ -83,7 +82,7 @@ export function UpNext({ ready, arriving, toPay, canBill }: UpNextProps) {
               }
               tone="slate"
               tile={order.table?.number ?? t("takeawayShort")}
-              title={t("order", { n: shortOrderNumber(order.orderNumber) })}
+              title={t("order", { n: format.orderNo(order.orderNumber) })}
               detail={
                 order.amountPaid > 0
                   ? t("paidSoFar", { amount: format.money(order.amountPaid) })

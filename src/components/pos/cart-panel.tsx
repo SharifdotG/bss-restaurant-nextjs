@@ -26,7 +26,6 @@ import {
 import { restaurantQuery, waitersQuery } from "@/lib/api/queries";
 import type { FoodOut, OrderType } from "@/lib/api/schema";
 import type { FloorTable } from "@/lib/floor";
-import { shortOrderNumber } from "@/lib/format";
 import { toTaka } from "@/lib/money";
 import {
   cartTotals,
@@ -110,7 +109,7 @@ function TablePicker({ draft, tables, onPickTable }: CartProps) {
   const describe = (entry: FloorTable) => {
     const { state } = entry;
     if (state.kind === "order") {
-      return t("tableBusy", { n: shortOrderNumber(state.order.orderNumber) });
+      return t("tableBusy", { n: format.orderNo(state.order.orderNumber) });
     }
     if (state.kind === "booked")
       return t("tableBooked", { time: format.time(state.booking.startsAt) });

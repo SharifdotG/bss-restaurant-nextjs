@@ -13,17 +13,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "@/i18n/navigation";
 import type { OrderOut } from "@/lib/api/schema";
-import { shortOrderNumber } from "@/lib/format";
 import { forwardMove, STATUS_LOOK } from "@/lib/orders";
 import { orderMoves } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
 import { useOrderStatus } from "@/lib/use-order-actions";
 import { CancelOrderDialog } from "./cancel-order-dialog";
+import { useFormat } from "@/lib/use-format";
 
 /** The "⋯" at the end of a row: open it, take the next step or cancel without leaving the list. */
 export function OrderRowMenu({ order }: { order: OrderOut }) {
   const t = useTranslations("orders");
   const router = useRouter();
+  const format = useFormat();
   const session = useSession();
   const move = useOrderStatus();
   const [cancelling, setCancelling] = useState(false);
@@ -32,7 +33,7 @@ export function OrderRowMenu({ order }: { order: OrderOut }) {
   const { role } = session.user;
   const moves = orderMoves(role, order);
   const next = forwardMove(moves);
-  const n = shortOrderNumber(order.orderNumber);
+  const n = format.orderNo(order.orderNumber);
   const NextIcon = next ? STATUS_LOOK[next].icon : null;
 
   return (

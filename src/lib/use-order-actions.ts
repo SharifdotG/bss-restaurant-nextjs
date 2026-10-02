@@ -4,9 +4,9 @@ import { toast } from "sonner";
 import { api, unwrap } from "@/lib/api/client";
 import type { OrderCreate, OrderDetailOut, OrderItemIn, OrderUpdate } from "@/lib/api/schema";
 import { useErrorText } from "@/lib/api/use-error-text";
-import { shortOrderNumber } from "@/lib/format";
 import { receive, toLiveOrder } from "@/lib/live/store";
 import type { OrderMove } from "@/lib/orders";
+import { useFormat } from "@/lib/use-format";
 
 type OrderRef = { id: number; orderNumber: string };
 
@@ -35,6 +35,7 @@ type StatusInput = { order: OrderRef; status: OrderMove; note?: string };
 export function useOrderStatus({ toastErrors = true } = {}) {
   const client = useQueryClient();
   const t = useTranslations("orders");
+  const format = useFormat();
   const errorText = useErrorText();
 
   return useMutation({
@@ -47,14 +48,14 @@ export function useOrderStatus({ toastErrors = true } = {}) {
       ),
     onSuccess: (order, { status }) => {
       applyOrder(client, order);
-      toast.success(t(`moved.${status}`, { n: shortOrderNumber(order.orderNumber) }));
+      toast.success(t(`moved.${status}`, { n: format.orderNo(order.orderNumber) }));
     },
     onError: (error, { order }) => {
       // The status changed under us; fetch what's true now.
       void client.invalidateQueries({ queryKey: ["order", order.id] });
       void client.invalidateQueries({ queryKey: ["orders"] });
       if (toastErrors) {
-        toast.error(t("moveFailed", { n: shortOrderNumber(order.orderNumber) }), {
+        toast.error(t("moveFailed", { n: format.orderNo(order.orderNumber) }), {
           description: errorText.message(error),
         });
       }
@@ -68,6 +69,7 @@ type ItemsInput = { order: OrderRef; items: OrderItemIn[] };
 export function useReplaceItems() {
   const client = useQueryClient();
   const t = useTranslations("orders");
+  const format = useFormat();
 
   return useMutation({
     mutationFn: ({ order, items }: ItemsInput) =>
@@ -79,7 +81,7 @@ export function useReplaceItems() {
       ),
     onSuccess: (order) => {
       applyOrder(client, order);
-      toast.success(t("itemsSaved", { n: shortOrderNumber(order.orderNumber) }));
+      toast.success(t("itemsSaved", { n: format.orderNo(order.orderNumber) }));
     },
   });
 }
@@ -90,6 +92,7 @@ type UpdateInput = { order: OrderRef; changes: OrderUpdate };
 export function useUpdateOrder() {
   const client = useQueryClient();
   const t = useTranslations("orders");
+  const format = useFormat();
   const errorText = useErrorText();
 
   return useMutation({
@@ -102,7 +105,7 @@ export function useUpdateOrder() {
       ),
     onSuccess: (order) => {
       applyOrder(client, order);
-      toast.success(t("updated", { n: shortOrderNumber(order.orderNumber) }));
+      toast.success(t("updated", { n: format.orderNo(order.orderNumber) }));
     },
     onError: (error) => toast.error(t("updateFailed"), { description: errorText.message(error) }),
   });
@@ -115,6 +118,7 @@ export function useUpdateOrder() {
 export function useSendOrder() {
   const client = useQueryClient();
   const t = useTranslations("pos");
+  const format = useFormat();
 
   return useMutation({
     mutationFn: async (body: OrderCreate) => {
@@ -134,7 +138,7 @@ export function useSendOrder() {
     },
     onSuccess: ({ order, confirmed }) => {
       applyOrder(client, order);
-      const n = shortOrderNumber(order.orderNumber);
+      const n = format.orderNo(order.orderNumber);
       if (confirmed) toast.success(t("sent", { n }));
       else toast.warning(t("sentNotConfirmed", { n }));
     },
@@ -145,6 +149,7 @@ export function useSendOrder() {
 export function useAddItems() {
   const client = useQueryClient();
   const t = useTranslations("pos");
+  const format = useFormat();
 
   return useMutation({
     mutationFn: ({ order, items }: ItemsInput) =>
@@ -156,7 +161,7 @@ export function useAddItems() {
       ),
     onSuccess: (order) => {
       applyOrder(client, order);
-      toast.success(t("added", { n: shortOrderNumber(order.orderNumber) }));
+      toast.success(t("added", { n: format.orderNo(order.orderNumber) }));
     },
   });
 }
