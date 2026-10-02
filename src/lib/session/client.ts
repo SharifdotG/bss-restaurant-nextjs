@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import type { UserOut as User } from "@/lib/api/schema";
+import { forgetDrafts } from "@/lib/pos-draft";
 
 // lifetime is the token's full life in ms, kept so freshness scales with it.
 export type Session = { accessToken: string; expiresAt: number; lifetime: number; user: User };
@@ -203,6 +204,8 @@ export async function signIn(
 
 export async function signOut() {
   await fetch("/api/session", { method: "DELETE" }).catch(() => undefined);
+  // A half-built order belongs to whoever was signed in.
+  forgetDrafts();
   signOutLocally();
   post({ type: "signed-out" });
 }

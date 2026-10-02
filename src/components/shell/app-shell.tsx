@@ -10,9 +10,11 @@ import { startLive, stopLive } from "@/lib/live/socket";
 import { pageForPath } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
 import { useShellLayout } from "@/lib/use-shell-layout";
+import { cn } from "@/lib/utils";
 import { BottomTabs } from "./bottom-tabs";
 import { CommandPalette } from "./command-palette";
 import { ConnectionBanner } from "./connection-banner";
+import { AsideProvider, useAsideSlot } from "./shell-aside";
 import { ShortcutsSheet } from "./shortcuts-sheet";
 import { Sidebar, SidebarContent } from "./sidebar";
 import { SignOutAllDialog } from "./sign-out-all-dialog";
@@ -33,6 +35,9 @@ export function AppShell({ children, lost = false }: AppShellProps) {
   const pathname = usePathname();
   const current = lost ? null : pageForPath(pathname);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const aside = useAsideSlot();
+  // The POS needs the width for the menu and the cart, so it keeps to the rail.
+  const compact = current === "newOrder";
 
   // One socket for the whole signed-in app.
   useEffect(() => {
@@ -49,7 +54,12 @@ export function AppShell({ children, lost = false }: AppShellProps) {
     <TooltipProvider>
       <div className="flex min-h-dvh">
         {(layout === "full" || layout === "rail") && (
-          <Sidebar variant={layout} role={role} current={current} />
+          <Sidebar
+            variant={compact ? "rail" : layout}
+            role={role}
+            current={current}
+            pinned={compact}
+          />
         )}
 
         <div className="flex min-w-0 flex-1 flex-col">
@@ -59,11 +69,16 @@ export function AppShell({ children, lost = false }: AppShellProps) {
           <ConnectionBanner />
           <main
             id="main"
-            className="flex flex-1 flex-col px-4 pt-5 pb-28 md:px-6 md:pt-2 md:pb-10 xl:px-8"
+            className={cn(
+              "flex flex-1 flex-col px-4 pt-5 md:px-6 md:pt-2 xl:px-8",
+              // Room for the bottom tabs; the POS has its own bar down there instead.
+              compact ? "pb-0 md:pb-6" : "pb-28 md:pb-10",
+            )}
           >
-            {children}
+            <AsideProvider value={aside.node}>{children}</AsideProvider>
           </main>
         </div>
+        {aside.slot}
 
         {layout === "drawer" && (
           <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
@@ -79,7 +94,8 @@ export function AppShell({ children, lost = false }: AppShellProps) {
             </SheetContent>
           </Sheet>
         )}
-        {layout === "phone" && <BottomTabs role={role} current={current} />}
+        {/* The phone POS is a full-screen flow with its own way out. */}
+        {layout === "phone" && !compact && <BottomTabs role={role} current={current} />}
         <CommandPalette />
         <ShortcutsSheet />
         <SignOutAllDialog />

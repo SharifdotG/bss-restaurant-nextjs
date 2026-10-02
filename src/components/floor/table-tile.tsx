@@ -19,10 +19,15 @@ import { PAGE_PATHS } from "@/lib/permissions";
 import { useFormat } from "@/lib/use-format";
 import { cn } from "@/lib/utils";
 
-type TableTileProps = { entry: FloorTable; now: number; canStart: boolean };
+type TableTileProps = {
+  entry: FloorTable;
+  now: number;
+  /** Free and booked tables start a new order there; absent when the role can't. */
+  onStart?: () => void;
+};
 
 /** One table at a glance. Busy tables open their order; free ones start a new order there. */
-export function TableTile({ entry, now, canStart }: TableTileProps) {
+export function TableTile({ entry, now, onStart }: TableTileProps) {
   const t = useTranslations("floor");
   const format = useFormat();
   const wait = useWaitText();
@@ -84,7 +89,7 @@ export function TableTile({ entry, now, canStart }: TableTileProps) {
         </Pill>
       );
     }
-    if (canStart) href = `${PAGE_PATHS.newOrder}?table=${table.id}`;
+    if (onStart) href = PAGE_PATHS.newOrder;
   } else {
     pill = (
       <Pill tone="slate" icon={CheckCircleIcon}>
@@ -94,10 +99,10 @@ export function TableTile({ entry, now, canStart }: TableTileProps) {
     line = <span className="text-muted-foreground">{t("noOrder")}</span>;
     note = state.laterBooking
       ? t("bookedFrom", { time: format.time(state.laterBooking.startsAt) })
-      : canStart
+      : onStart
         ? t("tapToStart")
         : null;
-    if (canStart) href = `${PAGE_PATHS.newOrder}?table=${table.id}`;
+    if (onStart) href = PAGE_PATHS.newOrder;
   }
 
   const body = (
@@ -125,7 +130,7 @@ export function TableTile({ entry, now, canStart }: TableTileProps) {
   );
 
   return href ? (
-    <Link href={href} className={className}>
+    <Link href={href} className={className} onClick={state.kind === "order" ? undefined : onStart}>
       {body}
     </Link>
   ) : (

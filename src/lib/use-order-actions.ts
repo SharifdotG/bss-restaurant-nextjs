@@ -2,7 +2,7 @@ import { useMutation, useQueryClient, type QueryClient } from "@tanstack/react-q
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { api, unwrap } from "@/lib/api/client";
-import type { OrderDetailOut, OrderItemIn, OrderUpdate } from "@/lib/api/schema";
+import type { OrderCreate, OrderDetailOut, OrderItemIn, OrderUpdate } from "@/lib/api/schema";
 import { useErrorText } from "@/lib/api/use-error-text";
 import { shortOrderNumber } from "@/lib/format";
 import { receive, toLiveOrder } from "@/lib/live/store";
@@ -105,5 +105,58 @@ export function useUpdateOrder() {
       toast.success(t("updated", { n: shortOrderNumber(order.orderNumber) }));
     },
     onError: (error) => toast.error(t("updateFailed"), { description: errorText.message(error) }),
+  });
+}
+
+/**
+ * "Send to kitchen": create the order, then confirm it so the chef sees it straight away.
+ * If the confirm doesn't go through, the order still exists as pending and says so.
+ */
+export function useSendOrder() {
+  const client = useQueryClient();
+  const t = useTranslations("pos");
+
+  return useMutation({
+    mutationFn: async (body: OrderCreate) => {
+      const created = await unwrap(api.POST("/api/v1/orders", { body }));
+      applyOrder(client, created);
+      try {
+        const confirmed = await unwrap(
+          api.POST("/api/v1/orders/{order_id}/status", {
+            params: { path: { order_id: created.id } },
+            body: { status: "confirmed", note: null },
+          }),
+        );
+        return { order: confirmed, confirmed: true };
+      } catch {
+        return { order: created, confirmed: false };
+      }
+    },
+    onSuccess: ({ order, confirmed }) => {
+      applyOrder(client, order);
+      const n = shortOrderNumber(order.orderNumber);
+      if (confirmed) toast.success(t("sent", { n }));
+      else toast.warning(t("sentNotConfirmed", { n }));
+    },
+  });
+}
+
+/** New lines on an open order; the API keeps them separate so old prices stay as they were. */
+export function useAddItems() {
+  const client = useQueryClient();
+  const t = useTranslations("pos");
+
+  return useMutation({
+    mutationFn: ({ order, items }: ItemsInput) =>
+      unwrap(
+        api.POST("/api/v1/orders/{order_id}/items", {
+          params: { path: { order_id: order.id } },
+          body: { items },
+        }),
+      ),
+    onSuccess: (order) => {
+      applyOrder(client, order);
+      toast.success(t("added", { n: shortOrderNumber(order.orderNumber) }));
+    },
   });
 }

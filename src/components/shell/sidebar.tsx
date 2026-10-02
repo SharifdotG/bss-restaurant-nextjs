@@ -27,10 +27,12 @@ type SidebarProps = {
   role: UserRole;
   current: Page | null;
   onNavigate?: () => void;
+  /** The page asked for the rail, so there's nothing to expand. */
+  pinned?: boolean;
 };
 
 /** The sidebar's contents: the drawer reuses them, so it holds no layout of its own. */
-export function SidebarContent({ variant, role, current, onNavigate }: SidebarProps) {
+export function SidebarContent({ variant, role, current, onNavigate, pinned }: SidebarProps) {
   const t = useTranslations("shell");
   const nav = useTranslations("nav");
   const counts = navCounts(useLiveOrders());
@@ -70,7 +72,7 @@ export function SidebarContent({ variant, role, current, onNavigate }: SidebarPr
             <CaretLeftIcon />
           </Button>
         )}
-        {rail && collapsedByChoice && (
+        {rail && collapsedByChoice && !pinned && (
           <Button
             variant="ghost"
             size="icon-sm"

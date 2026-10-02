@@ -43,7 +43,7 @@ export function OrderHistory({ order }: { order: OrderDetailOut }) {
                 <div className="flex items-baseline justify-between gap-3">
                   <p className="text-sm font-bold">
                     {event.toStatus === "pending"
-                      ? t("event.placed", { n: order.itemCount })
+                      ? t("event.placed")
                       : t(`event.${event.toStatus}`)}
                   </p>
                   <time className="shrink-0 text-xs text-muted-foreground tabular-nums">

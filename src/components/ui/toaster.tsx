@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircleIcon, InfoIcon, WarningCircleIcon } from "@phosphor-icons/react";
+import { CheckCircleIcon, InfoIcon, WarningCircleIcon, WarningIcon } from "@phosphor-icons/react";
 import { useTheme } from "next-themes";
 import { Toaster as Sonner } from "sonner";
 import { useShellLayout } from "@/lib/use-shell-layout";
@@ -20,6 +20,7 @@ function Toaster() {
       icons={{
         success: <CheckCircleIcon weight="duotone" className="size-5 text-tone-green" />,
         error: <WarningCircleIcon weight="duotone" className="size-5 text-tone-red" />,
+        warning: <WarningIcon weight="duotone" className="size-5 text-tone-amber" />,
         info: <InfoIcon weight="duotone" className="size-5 text-muted-foreground" />,
       }}
       toastOptions={{

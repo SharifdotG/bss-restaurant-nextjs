@@ -33,6 +33,7 @@ import {
 import { businessDate, shortOrderNumber } from "@/lib/format";
 import { can, canOpen, PAGE_PATHS } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
+import { useDraft } from "@/lib/pos-draft";
 import { useMyWaiterId } from "@/lib/use-my-waiter";
 import { useNow } from "@/lib/use-now";
 import { useShellLayout } from "@/lib/use-shell-layout";
@@ -53,6 +54,8 @@ export function FloorPage() {
   const tables = useQuery(tablesQuery);
   const orders = useQuery(activeOrdersQuery);
   const bookings = useQuery(dayBookingsQuery(businessDate(now)));
+  // Tapping a free table opens the POS with that table already picked.
+  const [, updateDraft] = useDraft(session.status === "authenticated" ? session.user.id : 0);
   if (session.status !== "authenticated") return null;
   const { role } = session.user;
 
@@ -164,7 +167,16 @@ export function FloorPage() {
                       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:gap-4">
                         {group.map((entry) => (
                           <li key={entry.table.id}>
-                            <TableTile entry={entry} now={now} canStart={canStart} />
+                            <TableTile
+                              entry={entry}
+                              now={now}
+                              onStart={
+                                canStart
+                                  ? () =>
+                                      updateDraft({ orderType: "dine_in", tableId: entry.table.id })
+                                  : undefined
+                              }
+                            />
                           </li>
                         ))}
                       </ul>
