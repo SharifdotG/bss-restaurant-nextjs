@@ -114,11 +114,11 @@
     0%,
     50% {
       outline: 3px solid var(--primary);
-      outline-offset: 2px;
+      outline-offset: -3px;
     }
     100% {
       outline: 3px solid transparent;
-      outline-offset: 6px;
+      outline-offset: -3px;
     }
   }
 }

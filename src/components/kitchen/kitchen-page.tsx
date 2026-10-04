@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { ConnectionBanner } from "@/components/shell/connection-banner";
@@ -10,11 +10,17 @@ import { syncTickets } from "@/lib/kitchen-tickets";
 import { useLiveOrders, useLiveSynced, useServerNow } from "@/lib/live/store";
 import type { LiveOrder } from "@/lib/live/types";
 import { useSession } from "@/lib/session/client";
-import { playChime } from "@/lib/sound";
+import { playChime, primeSound, unlockSound } from "@/lib/sound";
+import { useFullscreen, useWakeLock } from "@/lib/use-screen";
 import { useShellLayout } from "@/lib/use-shell-layout";
 import { KitchenBoard } from "./kitchen-board";
 import { KitchenHeader } from "./kitchen-header";
+import { StartService } from "./start-service";
 import { useBump, useHeldMoves } from "./use-bump";
+
+type Service = "ask" | "on" | "skipped";
+// Asked once per visit; coming back from the profile page doesn't ask again.
+let answered: Service | null = null;
 
 /** The live kitchen: tickets in from the socket, bumped along with a tap. */
 export function KitchenPage() {
@@ -27,6 +33,12 @@ export function KitchenPage() {
   const phone = useShellLayout() === "phone";
   const foods = useQuery(foodsQuery);
   const bump = useBump();
+  const screen = useFullscreen();
+  const [service, setService] = useState<Service>(() => answered ?? "ask");
+  useWakeLock(service === "on");
+
+  // Waved off the start screen? Sound still unlocks on the next tap anywhere.
+  useEffect(() => primeSound(), []);
 
   // New tickets and additions to ones already cooking get a chime.
   useEffect(() => {
@@ -57,6 +69,17 @@ export function KitchenPage() {
         now={now}
         phone={phone}
         onBump={(order: LiveOrder, column: KitchenColumn) => bump(order, column.next)}
+      />
+      <StartService
+        open={service === "ask"}
+        onDone={(tapped) => {
+          if (tapped) {
+            unlockSound();
+            screen.enter();
+          }
+          answered = tapped ? "on" : "skipped";
+          setService(answered);
+        }}
       />
     </div>
   );

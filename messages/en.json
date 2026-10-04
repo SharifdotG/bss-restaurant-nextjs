@@ -784,6 +784,17 @@
       "toCook": "New tickets land here with a chime.",
       "cooking": "Nothing on the stove",
       "ready": "Nothing waiting for pickup"
+    },
+    "start": {
+      "title": "Start service",
+      "body": "One tap lets this screen ring for new tickets. Browsers need a tap before they play sound.",
+      "perks": {
+        "chime": "A chime for every new ticket",
+        "awake": "The screen stays on all service",
+        "fullscreen": "Full screen, no browser bars"
+      },
+      "action": "Start service",
+      "note": "Tickets update either way. Press Esc to leave full screen."
     }
   }
 }
