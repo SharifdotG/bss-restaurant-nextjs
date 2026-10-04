@@ -126,15 +126,17 @@ export function KitchenTicket({ order, column, clock, action }: KitchenTicketPro
 
       <footer className="flex flex-wrap items-center justify-between gap-3 px-4 pb-4">
         <Pill tone={clock.tone} icon={TimerIcon} className="h-8 px-3 text-sm">
-          {column.key === "ready"
-            ? t("readyFor", { time: wait(clock.minutes) })
-            : wait(clock.minutes)}
+          {column.key !== "ready"
+            ? wait(clock.minutes)
+            : clock.minutes < 1
+              ? t("readyNow")
+              : t("readyFor", { time: wait(clock.minutes) })}
         </Pill>
         {action && (
           <Button
             onClick={action.onClick}
             disabled={action.busy}
-            className="h-14 min-w-32 gap-2.5 rounded-lg px-6 text-lg font-bold [&_svg:not([class*='size-'])]:size-6"
+            className="ml-auto h-14 min-w-32 gap-2.5 rounded-lg px-6 text-lg font-bold [&_svg:not([class*='size-'])]:size-6"
           >
             <action.icon weight="duotone" />
             {action.label}

@@ -819,7 +819,8 @@
       "noneSoldOut": "Everything's available",
       "noneSoldOutHint": "Dishes you switch off show up here.",
       "noMatch": "No dishes match"
-    }
+    },
+    "readyNow": "Just ready"
   },
   "menu": {
     "availability": {
