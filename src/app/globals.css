@@ -107,6 +107,20 @@
 
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  /* A kitchen ticket that just got more food draws the eye twice, then settles. */
+  --animate-ticket-flash: ticket-flash 1.4s var(--ease-standard) 2;
+  @keyframes ticket-flash {
+    0%,
+    50% {
+      outline: 3px solid var(--primary);
+      outline-offset: 2px;
+    }
+    100% {
+      outline: 3px solid transparent;
+      outline-offset: 6px;
+    }
+  }
 }
 
 :root {

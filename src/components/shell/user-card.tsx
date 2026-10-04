@@ -49,7 +49,13 @@ export function useSignOut() {
 const THEMES = ["light", "dark", "system"] as const;
 
 /** The signed-in person at the foot of the sidebar, opening their menu. */
-export function UserCard({ compact = false }: { compact?: boolean }) {
+export function UserCard({
+  compact = false,
+  side = compact ? "right" : "top",
+}: {
+  compact?: boolean;
+  side?: "right" | "top" | "bottom";
+}) {
   const t = useTranslations("shell.user");
   const common = useTranslations("common");
   const roles = useTranslations("session.roles");
@@ -90,7 +96,7 @@ export function UserCard({ compact = false }: { compact?: boolean }) {
         )}
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent side={compact ? "right" : "top"} align="end" className="w-64">
+      <DropdownMenuContent side={side} align="end" className="w-64">
         <DropdownMenuGroup>
           <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
           <DropdownMenuItem onClick={() => router.push(PAGE_PATHS.profile)}>

@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from "react";
 import { api, unwrap } from "@/lib/api/client";
 import type { OrderOut } from "@/lib/api/schema";
+import { useNow } from "@/lib/use-now";
 import { getLiveStatus, onLiveEvent, subscribeLiveStatus } from "./socket";
 import { applyMessage, EMPTY, sortedOrders, sortedReservations, type LiveState } from "./state";
 import type { LiveMessage, LiveOrder, LiveReservation } from "./types";
@@ -110,3 +111,14 @@ export const useLiveSynced = () =>
 
 /** Date.now() on the server's clock, so ticket ages agree across tablets. */
 export const serverNow = () => Date.now() + state.skew;
+
+/** A ticking clock on the server's time, for timers that render. */
+export function useServerNow(interval = 1000) {
+  const now = useNow(interval);
+  const skew = useSyncExternalStore(
+    subscribe,
+    () => state.skew,
+    () => 0,
+  );
+  return now + skew;
+}

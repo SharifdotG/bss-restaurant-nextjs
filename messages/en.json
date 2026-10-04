@@ -248,7 +248,8 @@
       "stale": "Numbers may be up to {seconds, number} s old. Anything you save still goes through.",
       "offlineHint": "It reconnects by itself when the network is back.",
       "retryIn": "Retrying in {seconds, number} s",
-      "retry": "Retry now"
+      "retry": "Retry now",
+      "kitchen": "No connection for {seconds, number} seconds. New tickets can't reach this screen until it's back."
     },
     "shortcuts": {
       "title": "Keyboard shortcuts",
@@ -742,6 +743,47 @@
       "bodyLocked": "Order {n} is {status} at this table, so nothing more can join it. Start a separate order instead.",
       "addTo": "Add to order {n}",
       "separate": "Start a separate order"
+    }
+  },
+  "kitchen": {
+    "title": "Kitchen",
+    "back": "Back to the app",
+    "soundOn": "Sound on",
+    "soundOff": "Sound off",
+    "fullscreen": "Full screen",
+    "exitFullscreen": "Leave full screen",
+    "columns": {
+      "toCook": "To cook",
+      "cooking": "Cooking",
+      "ready": "Ready"
+    },
+    "state": {
+      "toCook": "New",
+      "cooking": "Cooking",
+      "ready": "Ready"
+    },
+    "actions": {
+      "preparing": "Start",
+      "ready": "Ready",
+      "served": "Served"
+    },
+    "bumped": {
+      "preparing": "Order {n} is cooking",
+      "ready": "Order {n} is ready",
+      "served": "Order {n} served"
+    },
+    "undo": "Undo",
+    "bumpFailed": "Couldn't move order {n}",
+    "ticketLabel": "Order {n}",
+    "added": "Added {n, number}",
+    "readyFor": "Ready {time}",
+    "servedHint": "The waiter marks it served at handover",
+    "toCookCount": "{n, plural, =0 {Nothing to cook} one {# ticket to cook} other {# tickets to cook}}",
+    "empty": {
+      "toCookTitle": "All caught up",
+      "toCook": "New tickets land here with a chime.",
+      "cooking": "Nothing on the stove",
+      "ready": "Nothing waiting for pickup"
     }
   }
 }
