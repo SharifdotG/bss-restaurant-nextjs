@@ -1,4 +1,5 @@
 import type { UserRole as Role } from "@/lib/api/schema";
+import { billGroup } from "@/lib/billing";
 import type { LiveOrder } from "@/lib/live/types";
 import { canOpen, type Page } from "@/lib/permissions";
 
@@ -59,10 +60,8 @@ export const GO_KEYS: Partial<Record<Page, string>> = {
 export const goShortcuts = (role: Role) =>
   (Object.entries(GO_KEYS) as [Page, string][]).filter(([page]) => canOpen(role, page));
 
-// The cashier's queue: served orders, plus any that are part paid. The API marks an order
-// paid by itself once the balance reaches zero, so those never show up here.
-export const isBillDue = (order: LiveOrder) =>
-  order.status === "served" || (order.balanceDue > 0 && order.balanceDue < order.total);
+// The cashier's queue: served orders, plus any that are part paid.
+export const isBillDue = (order: LiveOrder) => billGroup(order) === "waiting";
 
 /** Badges beside nav items, from the live feed. Zero means no badge. */
 export function navCounts(orders: readonly LiveOrder[]): Partial<Record<Page, number>> {

@@ -2,16 +2,9 @@
 "use client";
 
 import { useState } from "react";
-import {
-  ArrowLeftIcon,
-  CaretRightIcon,
-  CheckIcon,
-  PlusIcon,
-  UsersIcon,
-  XIcon,
-} from "@phosphor-icons/react";
+import { CaretRightIcon, CheckIcon, PlusIcon, UsersIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { CartFooter, CartLines, type CartProps } from "./cart-panel";
 import { CategoryChips, MenuSearch } from "./menu-panel";
 import { DishIcon } from "@/components/dish-icon";
+import { StepBar, StepHeader } from "@/components/step-bits";
 import type { Menu } from "./use-menu";
 
 const STEPS = ["where", "menu", "review"] as const;
@@ -74,59 +68,30 @@ export function PosSteps(props: PosStepsProps) {
   );
 }
 
-type HeaderProps = {
-  title: string;
-  subtitle?: string;
-  step: number;
-  total: number;
-  onBack: (() => void) | null;
-};
-
-function StepHeader({ title, subtitle, step, total, onBack }: HeaderProps) {
-  const t = useTranslations("pos");
-  const format = useFormatter();
+// Leaving without sending keeps the draft; the orders list is where the POS was opened from.
+function useLeave() {
   const router = useRouter();
-  return (
-    <header className="sticky top-0 z-20 -mx-4 -mt-5 mb-4 flex items-center gap-2 bg-background/95 px-2 py-3 backdrop-blur-sm md:-mx-6 md:-mt-2 md:px-4">
-      <Button
-        variant="ghost"
-        size="icon"
-        aria-label={onBack ? t("back") : t("close")}
-        onClick={onBack ?? (() => router.push(PAGE_PATHS.orders))}
-      >
-        {onBack ? <ArrowLeftIcon className="size-5" /> : <XIcon className="size-5" />}
-      </Button>
-      <div className="min-w-0 flex-1">
-        <h1 className="truncate text-lg leading-tight font-bold">{title}</h1>
-        {subtitle && <p className="truncate text-xs text-muted-foreground">{subtitle}</p>}
-      </div>
-      <span className="pr-2 text-sm font-bold text-muted-foreground tabular-nums">
-        {t("stepOf", { step: format.number(step), total: format.number(total) })}
-      </span>
-    </header>
-  );
-}
-
-/** A bar pinned to the bottom of the screen for the step's main action. */
-function BottomBar({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="sticky bottom-0 z-20 -mx-4 mt-6 border-t border-border bg-background/95 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),16px)] backdrop-blur-sm md:-mx-6 md:px-6">
-      {children}
-    </div>
-  );
+  return () => router.push(PAGE_PATHS.orders);
 }
 
 // Step 1
 
 function WhereStep({ cart, onNext }: PosStepsProps & { onNext: () => void }) {
   const t = useTranslations("pos");
+  const leave = useLeave();
   const { draft, update, tables } = cart;
   const picked = tables.find((entry) => entry.table.id === draft.tableId);
   const ready = draft.orderType === "takeaway" || picked;
 
   return (
     <div className="flex flex-1 flex-col">
-      <StepHeader title={t("newTitle")} subtitle={t("notSent")} step={1} total={3} onBack={null} />
+      <StepHeader
+        title={t("newTitle")}
+        subtitle={t("notSent")}
+        step={1}
+        total={3}
+        onClose={leave}
+      />
       <h2 className="mb-3 text-2xl font-bold tracking-tight">{t("whereTitle")}</h2>
       <Segmented<OrderType>
         aria-label={t("orderType")}
@@ -187,7 +152,7 @@ function WhereStep({ cart, onNext }: PosStepsProps & { onNext: () => void }) {
       )}
 
       <div className="flex-1" />
-      <BottomBar>
+      <StepBar>
         <Button size="lg" className="h-13 w-full text-md" disabled={!ready} onClick={onNext}>
           {draft.orderType === "takeaway"
             ? t("continueTakeaway")
@@ -195,7 +160,7 @@ function WhereStep({ cart, onNext }: PosStepsProps & { onNext: () => void }) {
               ? t("continueWith", { table: picked.table.number })
               : t("pickTable")}
         </Button>
-      </BottomBar>
+      </StepBar>
     </div>
   );
 }
@@ -285,6 +250,7 @@ function MenuStep({
   onNext,
 }: PosStepsProps & { onBack: (() => void) | null; onNext: () => void }) {
   const t = useTranslations("pos");
+  const leave = useLeave();
   const format = useFormat();
   const { data: restaurant } = useQuery(restaurantQuery);
   const { draft, adding, tables } = cart;
@@ -332,6 +298,7 @@ function MenuStep({
         step={adding ? 1 : 2}
         total={adding ? 2 : 3}
         onBack={onBack}
+        onClose={leave}
       />
       <MenuSearch menu={menu} className="mb-3" />
       <CategoryChips menu={menu} className="-mx-4 mb-4 px-4" />
@@ -372,7 +339,7 @@ function MenuStep({
 
       <div className="flex-1" />
       {totals.items > 0 && (
-        <BottomBar>
+        <StepBar>
           <Button size="lg" className="h-14 w-full justify-between px-4 text-md" onClick={onNext}>
             <span className="flex items-center gap-3">
               <span className="grid size-8 place-items-center rounded-full bg-primary-foreground/20 text-sm font-bold tabular-nums">
@@ -385,7 +352,7 @@ function MenuStep({
               <CaretRightIcon weight="bold" className="size-4" />
             </span>
           </Button>
-        </BottomBar>
+        </StepBar>
       )}
     </div>
   );
@@ -516,9 +483,9 @@ function ReviewStep({
       </Button>
 
       <div className="flex-1" />
-      <BottomBar>
+      <StepBar>
         <CartFooter {...cart} />
-      </BottomBar>
+      </StepBar>
     </div>
   );
 }

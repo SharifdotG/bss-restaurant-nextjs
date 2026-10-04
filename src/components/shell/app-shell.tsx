@@ -38,8 +38,8 @@ export function AppShell({ children, lost = false }: AppShellProps) {
   const current = lost ? null : pageForPath(pathname);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const aside = useAsideSlot();
-  // The POS needs the width for the menu and the cart, so it keeps to the rail.
-  const compact = current === "newOrder";
+  // The POS and the till need the width for their side panels, so they keep to the rail.
+  const compact = current === "newOrder" || current === "billing";
 
   // One socket for the whole signed-in app.
   useEffect(() => {

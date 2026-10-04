@@ -28,7 +28,9 @@
       "less": "One less",
       "more": "One more",
       "remove": "Remove"
-    }
+    },
+    "back": "Back",
+    "stepOf": "{step} of {total}"
   },
   "nav": {
     "overview": "Overview",
@@ -727,9 +729,6 @@
     "clear": "Clear the order",
     "cleared": "Order cleared",
     "undo": "Undo",
-    "back": "Back",
-    "close": "Close",
-    "stepOf": "{step} of {total}",
     "whereTitle": "Pick a table",
     "otherTables": "Other tables",
     "selected": "Selected",

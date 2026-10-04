@@ -12,7 +12,7 @@ import {
 import { useTranslations } from "next-intl";
 import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import type { OrderDetailOut, PaymentMethod } from "@/lib/api/schema";
+import type { OrderDetailOut, PaymentMethod, PaymentOut } from "@/lib/api/schema";
 import { PAGE_PATHS } from "@/lib/permissions";
 import { useFormat } from "@/lib/use-format";
 import { cn } from "@/lib/utils";
@@ -28,7 +28,6 @@ type OrderPaymentsProps = { order: OrderDetailOut; canTakePayment: boolean };
 /** Money in and out so far. Taking payment itself happens at the till. */
 export function OrderPayments({ order, canTakePayment }: OrderPaymentsProps) {
   const t = useTranslations("orders.detail");
-  const format = useFormat();
   const tillLink = canTakePayment && (
     <Link
       href={{ pathname: PAGE_PATHS.billing, query: { order: order.id } }}
@@ -57,52 +56,67 @@ export function OrderPayments({ order, canTakePayment }: OrderPaymentsProps) {
         </div>
       ) : (
         <>
-          <ul className="mt-2 divide-y divide-border">
-            {order.payments.map((payment) => {
-              const refund = payment.kind === "refund";
-              const MethodIcon = refund ? ArrowUUpLeftIcon : METHOD_ICONS[payment.method];
-              return (
-                <li key={payment.id} className="flex items-center gap-3.5 py-3">
-                  <span
-                    className={cn(
-                      "grid size-10 shrink-0 place-items-center rounded-lg",
-                      refund
-                        ? "bg-tone-red-subtle text-tone-red-text"
-                        : "bg-tone-green-subtle text-tone-green-text",
-                    )}
-                  >
-                    <MethodIcon weight="duotone" className="size-5" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-bold">
-                      {t(refund ? "refundBy" : "paidBy", {
-                        method: t(`methods.${payment.method}`),
-                      })}
-                      {payment.reference && (
-                        <span className="ml-1.5 font-normal text-muted-foreground">
-                          · {payment.reference}
-                        </span>
-                      )}
-                    </p>
-                    <p className="truncate text-sm text-muted-foreground">
-                      {[payment.receivedBy?.fullName, format.time(payment.createdAt), payment.note]
-                        .filter(Boolean)
-                        .join(" · ")}
-                      {payment.change > 0 &&
-                        ` · ${t("change", { amount: format.money(payment.change) })}`}
-                    </p>
-                  </div>
-                  <span className={cn("font-bold tabular-nums", refund && "text-tone-red-text")}>
-                    {refund ? "−" : ""}
-                    {format.money(payment.amount)}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
+          <PaymentList payments={order.payments} className="mt-2" />
           {tillLink && <div className="mt-3 flex justify-end">{tillLink}</div>}
         </>
       )}
     </section>
+  );
+}
+
+/** Payments and refunds on an order, newest last, as the API lists them. */
+export function PaymentList({
+  payments,
+  className,
+}: {
+  payments: PaymentOut[];
+  className?: string;
+}) {
+  const t = useTranslations("orders.detail");
+  const format = useFormat();
+  return (
+    <ul className={cn("divide-y divide-border", className)}>
+      {payments.map((payment) => {
+        const refund = payment.kind === "refund";
+        const MethodIcon = refund ? ArrowUUpLeftIcon : METHOD_ICONS[payment.method];
+        return (
+          <li key={payment.id} className="flex items-center gap-3.5 py-3">
+            <span
+              className={cn(
+                "grid size-10 shrink-0 place-items-center rounded-lg",
+                refund
+                  ? "bg-tone-red-subtle text-tone-red-text"
+                  : "bg-tone-green-subtle text-tone-green-text",
+              )}
+            >
+              <MethodIcon weight="duotone" className="size-5" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-bold">
+                {t(refund ? "refundBy" : "paidBy", {
+                  method: t(`methods.${payment.method}`),
+                })}
+                {payment.reference && (
+                  <span className="ml-1.5 font-normal text-muted-foreground">
+                    · {payment.reference}
+                  </span>
+                )}
+              </p>
+              <p className="truncate text-sm text-muted-foreground">
+                {[payment.receivedBy?.fullName, format.time(payment.createdAt), payment.note]
+                  .filter(Boolean)
+                  .join(" · ")}
+                {payment.change > 0 &&
+                  ` · ${t("change", { amount: format.money(payment.change) })}`}
+              </p>
+            </div>
+            <span className={cn("font-bold tabular-nums", refund && "text-tone-red-text")}>
+              {refund ? "−" : ""}
+              {format.money(payment.amount)}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

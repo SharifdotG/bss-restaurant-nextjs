@@ -152,13 +152,14 @@ export function OrderItems({ order, editable }: OrderItemsProps) {
           </div>
         </div>
       ) : (
-        <Totals order={order} />
+        <OrderTotals order={order} />
       )}
     </section>
   );
 }
 
-function Totals({ order }: { order: OrderDetailOut }) {
+/** Subtotal down to the total, as the receipt prints it. */
+export function OrderTotals({ order }: { order: OrderDetailOut }) {
   const t = useTranslations("orders.detail");
   const format = useFormat();
   const rows: [string, number][] = [[t("subtotal"), order.subtotal]];
