@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { LiveOrder, LiveReservation } from "@/lib/live/types";
-import { notices } from "./notifications";
+import { incomingOrders, notices } from "./notifications";
 
 const order = (id: number, status: LiveOrder["status"], source: LiveOrder["source"] = "staff") =>
   ({
@@ -57,5 +57,23 @@ describe("notices", () => {
 
   it("leaves serving to the floor for a cashier", () => {
     expect(keys("cashier")).toEqual(["incoming:1", "request:1"]);
+  });
+});
+
+describe("incomingOrders", () => {
+  const orders = [
+    order(1, "pending", "qr"),
+    order(2, "pending", "staff"),
+    order(3, "confirmed", "online"),
+    order(4, "pending", "online"),
+  ];
+
+  it("lists guest orders still waiting for a yes, oldest first", () => {
+    expect(incomingOrders("waiter", orders).map((o) => o.id)).toEqual([1, 4]);
+    expect(incomingOrders("cashier", orders).map((o) => o.id)).toEqual([1, 4]);
+  });
+
+  it("leaves them out for the kitchen, which can't accept", () => {
+    expect(incomingOrders("chef", orders)).toEqual([]);
   });
 });

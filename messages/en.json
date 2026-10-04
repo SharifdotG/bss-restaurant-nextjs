@@ -499,7 +499,10 @@
         "guestLeft": "Guest left",
         "mistake": "Ordered by mistake",
         "outOfStock": "Kitchen ran out",
-        "duplicate": "Duplicate order"
+        "duplicate": "Duplicate order",
+        "soldOut": "A dish is sold out",
+        "closing": "Kitchen is closing",
+        "noAnswer": "Couldn't reach the guest"
       },
       "reasonLabel": "Reason (required)",
       "reasonPlaceholder": "What happened?",
@@ -509,7 +512,11 @@
       "refundFirstTitle": "Refund before you cancel",
       "refundFirstBody": "Order {n} already has {amount} paid. Refund it at the till first, then cancel the order.",
       "refund": "Refund {amount}",
-      "close": "Close"
+      "close": "Close",
+      "declineTitle": "Decline order {n}?",
+      "declineBody": "It won't reach the kitchen, and the guest's tracking page will show it as cancelled.",
+      "decline": "Decline order",
+      "declining": "Declining…"
     },
     "detail": {
       "missingTitle": "This order isn't here",
@@ -820,5 +827,26 @@
       "backOn": "{name} is back on",
       "failed": "Couldn't update {name}"
     }
+  },
+  "incoming": {
+    "button": "Incoming",
+    "buttonLabel": "{n, plural, one {# guest order waiting} other {# guest orders waiting}}",
+    "title": "Incoming orders",
+    "description": "QR and online orders wait here until someone says yes. Whoever accepts becomes the order's waiter.",
+    "emptyTitle": "Nothing waiting",
+    "empty": "New QR and online orders show up here with a chime.",
+    "orderAt": "Order {n} · {where}",
+    "waited": "{time}",
+    "total": "Total",
+    "open": "Open",
+    "decline": "Decline",
+    "accept": "Accept",
+    "accepting": "Accepting…",
+    "arrived": "New order {n} · {where}",
+    "from": {
+      "qr": "From a table QR code, {items, plural, one {# item} other {# items}}",
+      "online": "Online takeaway, {items, plural, one {# item} other {# items}}"
+    },
+    "review": "Review"
   }
 }

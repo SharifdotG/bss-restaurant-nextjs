@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { IncomingSheet } from "@/components/incoming/incoming-sheet";
+import { IncomingWatcher } from "@/components/incoming/incoming-watcher";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -55,6 +57,8 @@ export function AppShell({ children, lost = false }: AppShellProps) {
       <CommandPalette />
       <ShortcutsSheet />
       <SignOutAllDialog />
+      <IncomingSheet />
+      <IncomingWatcher />
       <Toaster />
     </>
   );

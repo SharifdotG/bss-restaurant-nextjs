@@ -1,9 +1,10 @@
 import { useSyncExternalStore } from "react";
 
-// The shell's overlays (search, shortcuts, the sign-out-everywhere check) can be opened from
-// the top bar, menus or the keyboard, so which one is open lives outside React. One at a time.
+// The shell's overlays (search, shortcuts, the sign-out-everywhere check, incoming orders) can be
+// opened from the top bar, menus or the keyboard, so which one is open lives outside React.
+// One at a time.
 
-export type Overlay = "command" | "shortcuts" | "signOutAll";
+export type Overlay = "command" | "shortcuts" | "signOutAll" | "incoming";
 
 let current: Overlay | null = null;
 const listeners = new Set<() => void>();

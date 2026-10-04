@@ -22,6 +22,7 @@ import { Link } from "@/i18n/navigation";
 import { useLiveOrders, useLiveReservations } from "@/lib/live/store";
 import type { LiveOrder } from "@/lib/live/types";
 import { notices, type Notice } from "@/lib/notifications";
+import { openOverlay } from "@/lib/overlays";
 import { PAGE_PATHS } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
 import { useFormat } from "@/lib/use-format";
@@ -73,7 +74,7 @@ const ICONS: Record<Notice["kind"], Icon> = {
   request: CalendarDotsIcon,
 };
 
-// Guest orders and food to serve open the order itself; the chef works from the board.
+// Food to serve opens the order itself; the chef works from the board.
 const href = (notice: Notice) => {
   switch (notice.kind) {
     case "incoming":
@@ -166,12 +167,10 @@ function NoticeRow({ notice, onOpen }: { notice: Notice; onOpen: () => void }) {
           where: where(notice.order),
         });
 
-  return (
-    <Link
-      href={href(notice)}
-      onClick={onOpen}
-      className="flex items-start gap-3 rounded-md px-3 py-2.5 outline-none hover:bg-foreground/6 focus-visible:bg-foreground/6"
-    >
+  const rowClass =
+    "flex w-full items-start gap-3 rounded-md px-3 py-2.5 text-left outline-none hover:bg-foreground/6 focus-visible:bg-foreground/6";
+  const content = (
+    <>
       <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-md bg-primary-soft text-primary-soft-foreground">
         <Icon weight="duotone" className="size-[18px]" />
       </span>
@@ -185,6 +184,27 @@ function NoticeRow({ notice, onOpen }: { notice: Notice; onOpen: () => void }) {
           {format.relative(notice.at, now)}
         </span>
       </span>
+    </>
+  );
+
+  // Guest orders are answered from the incoming panel, right where you are.
+  if (notice.kind === "incoming") {
+    return (
+      <button
+        type="button"
+        className={rowClass}
+        onClick={() => {
+          onOpen();
+          openOverlay("incoming");
+        }}
+      >
+        {content}
+      </button>
+    );
+  }
+  return (
+    <Link href={href(notice)} onClick={onOpen} className={rowClass}>
+      {content}
     </Link>
   );
 }

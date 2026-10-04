@@ -3,6 +3,7 @@
 import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { IncomingButton } from "@/components/incoming/incoming-button";
 import { LiveChip } from "@/components/live-chip";
 import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -75,6 +76,7 @@ export function PageHeader({ title, parent, crumb, meta, actions, className }: P
         {phone && (
           <div className="-mr-2 flex shrink-0 items-center gap-1 pt-1">
             <LiveChip />
+            <IncomingButton compact />
             <NotificationBell />
           </div>
         )}

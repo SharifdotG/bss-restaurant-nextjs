@@ -3,6 +3,7 @@
 import { ListIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { IncomingButton } from "@/components/incoming/incoming-button";
 import { LiveChip } from "@/components/live-chip";
 import { LanguageSwitch, ThemeToggle } from "@/components/preferences";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,7 @@ export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
       <SearchButton />
       <LanguageSwitch short />
       <ThemeToggle />
+      <IncomingButton />
       <NotificationBell />
     </header>
   );

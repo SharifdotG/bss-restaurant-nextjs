@@ -10,6 +10,19 @@ export type Notice =
   | { kind: "ready"; key: string; at: string; order: LiveOrder }
   | { kind: "request"; key: string; at: string; reservation: LiveReservation };
 
+/** Guests ordering from a QR code or online need someone to say yes before the kitchen sees it. */
+export const isIncoming = (role: Role, order: LiveOrder) =>
+  order.status === "pending" &&
+  order.source !== "staff" &&
+  orderMoves(role, order).includes("confirmed");
+
+/** Waiting guest orders this person may accept, longest waiting first. */
+export const incomingOrders = (role: Role, orders: readonly LiveOrder[]) =>
+  orders.filter((order) => isIncoming(role, order));
+
+/** After this long unanswered, the Incoming button turns amber. */
+export const INCOMING_LATE_MINUTES = 5;
+
 export function notices(
   role: Role,
   orders: readonly LiveOrder[],
@@ -19,8 +32,7 @@ export function notices(
 
   for (const order of orders) {
     const moves = orderMoves(role, order);
-    // Guests ordering from a QR code or online need someone to say yes.
-    if (order.status === "pending" && order.source !== "staff" && moves.includes("confirmed")) {
+    if (isIncoming(role, order)) {
       list.push({ kind: "incoming", key: `incoming:${order.id}`, at: order.createdAt, order });
     }
     // Confirmed tickets are the kitchen's queue; managers see those on the board instead.

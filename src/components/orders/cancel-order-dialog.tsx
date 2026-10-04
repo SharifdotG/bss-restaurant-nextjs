@@ -24,10 +24,20 @@ import { useFormat } from "@/lib/use-format";
 import { useOrderStatus } from "@/lib/use-order-actions";
 import { cn } from "@/lib/utils";
 
-const QUICK_REASONS = ["guestLeft", "mistake", "outOfStock", "duplicate"] as const;
+const QUICK_REASONS = {
+  cancel: ["guestLeft", "mistake", "outOfStock", "duplicate"],
+  // Turning down a guest's QR or online order before anyone has started on it.
+  decline: ["soldOut", "closing", "noAnswer", "duplicate"],
+} as const;
+
+type CancellableOrder = Pick<OrderOut, "id" | "orderNumber" | "status" | "total" | "balanceDue"> & {
+  amountPaid?: number;
+};
 
 type CancelOrderDialogProps = {
-  order: OrderOut;
+  order: CancellableOrder;
+  /** Wording for turning down a guest's order rather than cancelling one. */
+  decline?: boolean;
   role: UserRole;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -37,7 +47,13 @@ type CancelOrderDialogProps = {
  * Cancelling asks why, since the API keeps the reason. Money already taken has to go back
  * first, so then the dialog explains that and points to the refund instead.
  */
-export function CancelOrderDialog({ order, role, open, onOpenChange }: CancelOrderDialogProps) {
+export function CancelOrderDialog({
+  order,
+  decline = false,
+  role,
+  open,
+  onOpenChange,
+}: CancelOrderDialogProps) {
   const t = useTranslations("orders.cancel");
   const format = useFormat();
   const errorText = useErrorText();
@@ -78,7 +94,9 @@ export function CancelOrderDialog({ order, role, open, onOpenChange }: CancelOrd
             )}
           </span>
           <div className="min-w-0 pt-1.5 pr-8">
-            <DialogTitle>{blocked ? t("refundFirstTitle") : t("title", { n })}</DialogTitle>
+            <DialogTitle>
+              {blocked ? t("refundFirstTitle") : t(decline ? "declineTitle" : "title", { n })}
+            </DialogTitle>
           </div>
         </DialogHeader>
 
@@ -106,10 +124,10 @@ export function CancelOrderDialog({ order, role, open, onOpenChange }: CancelOrd
           <>
             <DialogBody>
               <DialogDescription>
-                {t("body", { total: format.money(order.total) })}
+                {decline ? t("declineBody") : t("body", { total: format.money(order.total) })}
               </DialogDescription>
               <div className="flex flex-wrap gap-2" role="group" aria-label={t("quickLabel")}>
-                {QUICK_REASONS.map((key) => {
+                {QUICK_REASONS[decline ? "decline" : "cancel"].map((key) => {
                   const text = t(`reasons.${key}`);
                   const picked = reason === text;
                   return (
@@ -152,7 +170,9 @@ export function CancelOrderDialog({ order, role, open, onOpenChange }: CancelOrd
                 {t("keep")}
               </DialogClose>
               <Button variant="destructive" onClick={confirm} disabled={!ready || move.isPending}>
-                {move.isPending ? t("cancelling") : t("confirm")}
+                {move.isPending
+                  ? t(decline ? "declining" : "cancelling")
+                  : t(decline ? "decline" : "confirm")}
               </Button>
             </DialogFooter>
           </>

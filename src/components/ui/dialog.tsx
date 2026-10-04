@@ -41,7 +41,8 @@ function DialogContent({
   const t = useTranslations("common");
   return (
     <DialogPrimitive.Portal>
-      <DialogOverlay />
+      {/* Also over a sheet, so a dialog opened from one still reads as on top. */}
+      <DialogOverlay forceRender />
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
