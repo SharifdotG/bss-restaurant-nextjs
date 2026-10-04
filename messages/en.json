@@ -849,5 +849,99 @@
       "online": "Online takeaway, {items, plural, one {# item} other {# items}}"
     },
     "review": "Review"
+  },
+  "billing": {
+    "takings": {
+      "label": "Today",
+      "sales": "Sales",
+      "orders": "{n, plural, one {# paid order} other {# paid orders}}",
+      "refunds": "Refunds"
+    },
+    "groups": {
+      "waiting": "Waiting to pay",
+      "kitchen": "Still in the kitchen",
+      "paid": "Paid today"
+    },
+    "queueLabel": "Bills",
+    "emptyTitle": "No bills waiting",
+    "empty": "Orders show up here once they're served, ready for payment.",
+    "kitchenHint": "Takeaways can pay before the food is ready.",
+    "nonePaid": "Nothing settled yet today.",
+    "left": "{amount} left",
+    "paidPart": "{amount} paid",
+    "notServed": "Not served yet",
+    "waited": "{time}",
+    "pickTitle": "Pick a bill",
+    "pick": "Choose an order from the list to see its bill and take payment.",
+    "bill": {
+      "items": "{n, plural, one {# item} other {# items}}",
+      "paidSoFar": "Paid so far",
+      "leftToPay": "Left to pay",
+      "settled": "Settled",
+      "printBill": "Print bill",
+      "printReceipt": "Print receipt",
+      "refund": "Refund",
+      "openOrder": "Open order",
+      "prepaid": "Paid before serving. It closes once the waiter marks it served.",
+      "closed": "Paid {time}",
+      "failed": "The bill didn't load"
+    },
+    "till": {
+      "title": "Take payment",
+      "method": "How they're paying",
+      "methods": {
+        "cash": "Cash",
+        "card": "Card",
+        "mobile": "Mobile"
+      },
+      "amount": "Paying",
+      "of": "of {amount}",
+      "received": "Cash received",
+      "change": "Change",
+      "exact": "Exact",
+      "split": "Split",
+      "splitWays": "÷{n}",
+      "splitLabel": "Split what's left {n} ways",
+      "share": "Share {i} of {n}",
+      "wallet": "Wallet",
+      "txid": "Transaction ID",
+      "txidHint": "From the guest's confirmation SMS",
+      "slip": "Card slip no.",
+      "optional": "optional",
+      "take": "Take {amount}",
+      "taking": "Taking…",
+      "problems": {
+        "noAmount": "Enter how much they're paying",
+        "tooMuch": "Only {amount} is left to pay",
+        "notEnoughCash": "Cash received is less than the amount",
+        "needsReference": "Add the transaction ID"
+      },
+      "failed": "The payment didn't go through",
+      "partial": "{amount} taken. {left} left to pay.",
+      "keypad": "Keypad",
+      "clear": "Clear",
+      "delete": "Delete"
+    },
+    "done": {
+      "title": "Paid in full",
+      "body": "Order {n} is settled.",
+      "giveBack": "Give back",
+      "noChange": "No change to give",
+      "print": "Print receipt",
+      "next": "Next bill",
+      "close": "Done"
+    },
+    "receipt": {
+      "bill": "Bill · Order {n}",
+      "receipt": "Receipt · Order {n}",
+      "hint": "80 mm, as it comes out of the printer",
+      "print": "Print",
+      "failed": "The receipt didn't load",
+      "frame": "Receipt preview"
+    },
+    "phone": {
+      "back": "Bills",
+      "pay": "Take payment"
+    }
   }
 }

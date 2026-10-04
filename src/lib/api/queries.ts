@@ -115,3 +115,28 @@ export const dayBookingsQuery = (day: string) =>
       ),
     select: (page) => page.items,
   });
+
+// Billing
+
+/** Bills settled today, newest first, for the bottom of the billing queue. */
+export const paidTodayQuery = (day: string) =>
+  ordersQuery({ status: ["paid"], dateFrom: day, dateTo: day, sort: "-createdAt", size: 30 });
+
+/**
+ * The API's printable bill or receipt. It needs the bearer token, so it's fetched as text
+ * and shown in a sandboxed frame instead of opening the URL.
+ */
+export const receiptQuery = (id: number, status: string) =>
+  queryOptions({
+    // The status is in the key because a bill turns into a receipt once it's paid.
+    queryKey: ["order", id, "receipt", status],
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/orders/{order_id}/receipt", {
+          params: { path: { order_id: id } },
+          parseAs: "text",
+          signal,
+        }),
+      ),
+    staleTime: 30_000,
+  });
