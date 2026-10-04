@@ -795,6 +795,30 @@
       },
       "action": "Start service",
       "note": "Tickets update either way. Press Esc to leave full screen."
+    },
+    "dishes": {
+      "button": "Dishes",
+      "chip": "Sold out: {name}{more, plural, =0 {} other { +#}}",
+      "title": "Dishes",
+      "description": "Switch off anything the kitchen has run out of. It can't be ordered until it's back on.",
+      "search": "Search dishes",
+      "filter": "Show",
+      "all": "All {n, number}",
+      "soldOutTab": "Sold out {n, number}",
+      "soldOut": "Sold out",
+      "prep": "{m, number} min",
+      "availableLabel": "{name} available",
+      "uncategorised": "Other",
+      "noneSoldOut": "Everything's available",
+      "noneSoldOutHint": "Dishes you switch off show up here.",
+      "noMatch": "No dishes match"
+    }
+  },
+  "menu": {
+    "availability": {
+      "soldOut": "{name} is sold out",
+      "backOn": "{name} is back on",
+      "failed": "Couldn't update {name}"
     }
   }
 }

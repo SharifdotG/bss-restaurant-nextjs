@@ -795,6 +795,30 @@
       },
       "action": "সার্ভিস শুরু",
       "note": "টিকিট যেভাবেই হোক আপডেট হবে। পুরো স্ক্রিন বন্ধ করতে Esc চাপুন।"
+    },
+    "dishes": {
+      "button": "খাবার",
+      "chip": "শেষ: {name}{more, plural, =0 {} other { +#}}",
+      "title": "খাবার",
+      "description": "রান্নাঘরে যা শেষ হয়ে গেছে তা বন্ধ করুন। আবার চালু না করা পর্যন্ত সেটি অর্ডার করা যাবে না।",
+      "search": "খাবার খুঁজুন",
+      "filter": "দেখান",
+      "all": "সব {n, number}",
+      "soldOutTab": "শেষ {n, number}",
+      "soldOut": "শেষ",
+      "prep": "{m, number} মিনিট",
+      "availableLabel": "{name} পাওয়া যাচ্ছে",
+      "uncategorised": "অন্যান্য",
+      "noneSoldOut": "সব খাবারই আছে",
+      "noneSoldOutHint": "যে খাবার বন্ধ করবেন তা এখানে দেখাবে।",
+      "noMatch": "কোনো খাবার মেলেনি"
+    }
+  },
+  "menu": {
+    "availability": {
+      "soldOut": "{name} শেষ হয়ে গেছে",
+      "backOn": "{name} আবার পাওয়া যাচ্ছে",
+      "failed": "{name} আপডেট করা গেল না"
     }
   }
 }

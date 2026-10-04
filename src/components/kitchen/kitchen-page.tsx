@@ -9,10 +9,12 @@ import { kitchenBoard, prepByName, type KitchenColumn } from "@/lib/kitchen";
 import { syncTickets } from "@/lib/kitchen-tickets";
 import { useLiveOrders, useLiveSynced, useServerNow } from "@/lib/live/store";
 import type { LiveOrder } from "@/lib/live/types";
+import { can } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
 import { playChime, primeSound, unlockSound } from "@/lib/sound";
 import { useFullscreen, useWakeLock } from "@/lib/use-screen";
 import { useShellLayout } from "@/lib/use-shell-layout";
+import { KitchenDishes } from "./dishes-sheet";
 import { KitchenBoard } from "./kitchen-board";
 import { KitchenHeader } from "./kitchen-header";
 import { StartService } from "./start-service";
@@ -54,7 +56,9 @@ export function KitchenPage() {
 
   return (
     <div className="flex h-dvh flex-col">
-      <KitchenHeader role={user.role} name={user.fullName} />
+      <KitchenHeader role={user.role} name={user.fullName}>
+        {can(user.role, "menu.soldOut") && <KitchenDishes />}
+      </KitchenHeader>
       <ConnectionBanner kitchen />
       {/* Read out when a ticket lands, for anyone not watching the screen. */}
       <p aria-live="polite" className="sr-only">
