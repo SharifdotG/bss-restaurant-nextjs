@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowUUpLeftIcon, ProhibitIcon } from "@phosphor-icons/react";
 import { useTranslations } from "next-intl";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Chip } from "@/components/ui/chip";
 import {
   Dialog,
   DialogBody,
@@ -131,20 +132,9 @@ export function CancelOrderDialog({
                   const text = t(`reasons.${key}`);
                   const picked = reason === text;
                   return (
-                    <button
-                      key={key}
-                      type="button"
-                      aria-pressed={picked}
-                      onClick={() => setReason(picked ? "" : text)}
-                      className={cn(
-                        "h-8 rounded-full border px-3 text-sm font-medium transition-colors duration-(--duration-fast) outline-none focus-visible:ring-3 focus-visible:ring-ring/40",
-                        picked
-                          ? "border-primary/30 bg-primary-soft text-primary-soft-foreground"
-                          : "border-border bg-card hover:bg-muted",
-                      )}
-                    >
+                    <Chip key={key} pressed={picked} onClick={() => setReason(picked ? "" : text)}>
                       {text}
-                    </button>
+                    </Chip>
                   );
                 })}
               </div>

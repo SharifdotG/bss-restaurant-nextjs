@@ -9,7 +9,7 @@ import { toggleSidebar } from "@/lib/use-shell-layout";
 // "G" has to be followed by the page letter within this window.
 const CHORD_MS = 1200;
 
-const isTyping = (target: EventTarget | null) =>
+export const isTyping = (target: EventTarget | null) =>
   target instanceof HTMLElement &&
   (target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName));
 

@@ -11,6 +11,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { goShortcuts } from "@/lib/navigation";
+import { canOpen } from "@/lib/permissions";
 import { useModKey, useOverlay, withMod } from "@/lib/overlays";
 import { useSession } from "@/lib/session/client";
 
@@ -56,6 +57,28 @@ export function ShortcutsSheet() {
               </Row>
             </dl>
           </section>
+          {canOpen(session.user.role, "billing") && (
+            <section>
+              <h3 className="mb-1 text-sm font-bold text-muted-foreground">{t("till")}</h3>
+              <dl className="divide-y divide-border">
+                <Row label={t("tillAmount")}>
+                  <Kbd>0–9</Kbd>
+                </Row>
+                <Row label={t("tillMethod")}>
+                  <Kbd>C</Kbd>
+                  <Kbd>K</Kbd>
+                  <Kbd>M</Kbd>
+                </Row>
+                <Row label={t("tillTake")}>
+                  <Kbd>Enter</Kbd>
+                </Row>
+                <Row label={t("tillQueue")}>
+                  <Kbd>↑</Kbd>
+                  <Kbd>↓</Kbd>
+                </Row>
+              </dl>
+            </section>
+          )}
           <section>
             <h3 className="mb-1 text-sm font-bold text-muted-foreground">{t("goTo")}</h3>
             <dl className="divide-y divide-border">

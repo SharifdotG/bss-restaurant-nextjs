@@ -1,12 +1,14 @@
 "use client";
 
 import { ReceiptIcon, WarningCircleIcon } from "@phosphor-icons/react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
 import { EmptyState } from "@/components/empty-state";
 import { PageFrame } from "@/components/shell/page-frame";
 import { ShellAside } from "@/components/shell/shell-aside";
+import { isTyping } from "@/components/shell/use-shortcuts";
 import { StepBar, StepHeader } from "@/components/step-bits";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -23,6 +25,8 @@ import { useShellLayout } from "@/lib/use-shell-layout";
 import { BillPanel, BillSkeleton } from "./bill-panel";
 import { BillQueueList } from "./bill-queue";
 import { TakingsStrip } from "./takings-strip";
+import type { Settled } from "./till";
+import { TillPanel } from "./till-panel";
 
 const STEPS = ["pay"] as const;
 
@@ -43,21 +47,44 @@ export function BillingPage() {
     "step",
     parseAsStringLiteral(STEPS).withOptions({ history: "push" }),
   );
+  const [settled, setSettled] = useState<Settled | null>(null);
   const now = useNow(30_000);
   const queue = billQueue(useLiveOrders());
   const paid = useQuery(paidTodayQuery(businessDate(now))).data?.items;
   const bill = useQuery({ ...orderQuery(orderId ?? 0), enabled: orderId !== null });
+
+  // Top to bottom as the queue shows them, for the arrow keys.
+  const order = [...queue.waiting, ...queue.kitchen, ...queue.prepaid, ...(paid ?? [])].map(
+    (entry) => entry.id,
+  );
+  const nextWaiting = queue.waiting.find((entry) => entry.id !== orderId)?.id;
+
+  const select = (id: number | null) => {
+    setSettled(null);
+    void setOrderId(id);
+  };
+
+  useEffect(() => {
+    if (!wide) return;
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
+      if (isTyping(event.target) || document.querySelector("[role=dialog]")) return;
+      if (order.length === 0) return;
+      event.preventDefault();
+      const at = orderId === null ? -1 : order.indexOf(orderId);
+      const next = event.key === "ArrowDown" ? at + 1 : at - 1;
+      select(order[Math.min(Math.max(next, 0), order.length - 1)]);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  });
+
   if (session.status !== "authenticated") return null;
   const { role } = session.user;
 
   const list = (
-    <BillQueueList
-      queue={queue}
-      paid={paid}
-      selected={orderId}
-      onSelect={(id) => void setOrderId(id)}
-      now={now}
-    />
+    <BillQueueList queue={queue} paid={paid} selected={orderId} onSelect={select} now={now} />
   );
 
   if (!wide) {
@@ -76,8 +103,22 @@ export function BillingPage() {
         bill={bill}
         role={role}
         step={step}
-        onBack={() => void (step ? setStep(null) : setOrderId(null))}
+        settled={settled}
+        onSettled={setSettled}
+        onBack={() => void (step ? setStep(null) : select(null))}
         onPay={() => void setStep("pay")}
+        onNext={
+          nextWaiting === undefined
+            ? undefined
+            : () => {
+                select(nextWaiting);
+                void setStep(null);
+              }
+        }
+        onDone={() => {
+          select(null);
+          void setStep(null);
+        }}
       />
     );
   }
@@ -93,7 +134,16 @@ export function BillingPage() {
       </div>
       <ShellAside>
         <aside className="sticky top-0 flex h-dvh w-[340px] shrink-0 flex-col border-l border-border bg-card xl:w-[380px]">
-          <TillSlot />
+          <TillPanel
+            order={bill.data}
+            selected={orderId !== null}
+            role={role}
+            keypad
+            settled={settled}
+            onSettled={setSettled}
+            onNext={nextWaiting === undefined ? undefined : () => select(nextWaiting)}
+            onDone={() => setSettled(null)}
+          />
         </aside>
       </ShellAside>
     </BillingFrame>
@@ -133,28 +183,21 @@ function BillArea({ bill, selected }: { bill: BillQueryState; selected: boolean 
   return <BillSkeleton />;
 }
 
-// Filled in by the till; until a bill is picked it says what to do.
-function TillSlot() {
-  const t = useTranslations("billing");
-  return (
-    <div className="grid flex-1 place-items-center">
-      <EmptyState icon={ReceiptIcon} tone="slate" title={t("till.title")}>
-        {t("pick")}
-      </EmptyState>
-    </div>
-  );
-}
-
 type BillStepsProps = {
   bill: BillQueryState;
   role: UserRole;
   step: (typeof STEPS)[number] | null;
+  settled: Settled | null;
+  onSettled: (settled: Settled) => void;
   onBack: () => void;
   onPay: () => void;
+  onNext?: () => void;
+  onDone: () => void;
 };
 
 /** Phone flow: the bill, then the till. */
-function BillSteps({ bill, role, step, onBack, onPay }: BillStepsProps) {
+function BillSteps(props: BillStepsProps) {
+  const { bill, role, step, onBack, onPay } = props;
   const t = useTranslations("billing");
   const tOrders = useTranslations("orders");
   const format = useFormat();
@@ -167,7 +210,9 @@ function BillSteps({ bill, role, step, onBack, onPay }: BillStepsProps) {
     return (
       <div className="flex flex-1 flex-col">
         <StepHeader title={t("phone.pay")} subtitle={title} onBack={onBack} />
-        <TillSlot />
+        <div className="-mx-4 -mb-5 flex flex-1 flex-col bg-card md:-mx-6">
+          <TillPanel {...props} order={order} selected keypad={false} />
+        </div>
       </div>
     );
   }

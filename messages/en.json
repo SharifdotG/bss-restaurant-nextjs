@@ -260,7 +260,12 @@
       "search": "Search orders, dishes and tables",
       "sidebar": "Collapse or expand the sidebar",
       "help": "Show this list",
-      "goTo": "Go to"
+      "goTo": "Go to",
+      "till": "At the till",
+      "tillAmount": "Type the amount",
+      "tillMethod": "Cash, card or mobile",
+      "tillTake": "Take the payment",
+      "tillQueue": "Previous or next bill"
     },
     "signOutAll": {
       "title": "Sign out on every device?",
@@ -919,7 +924,9 @@
       "partial": "{amount} taken. {left} left to pay.",
       "keypad": "Keypad",
       "clear": "Clear",
-      "delete": "Delete"
+      "delete": "Delete",
+      "whole": "Whole bill",
+      "partialChange": "Give back {amount}."
     },
     "done": {
       "title": "Paid in full",
@@ -941,6 +948,9 @@
     "phone": {
       "back": "Bills",
       "pay": "Take payment"
-    }
+    },
+    "cancelledTitle": "Cancelled",
+    "cancelledBody": "This order was cancelled, so there's nothing to pay.",
+    "paidBody": "This bill is settled. The receipt can still be printed."
   }
 }

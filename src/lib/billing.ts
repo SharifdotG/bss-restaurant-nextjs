@@ -105,3 +105,25 @@ export const tillChange = (input: TillInput) =>
 
 /** Due on a bill in paisa, from the API's taka. */
 export const duePaisa = (order: Pick<LiveOrder, "balanceDue">) => toPaisa(order.balanceDue);
+
+// Keypad
+
+export type PadKey = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "." | "back" | "clear";
+
+/** An amount as it sits in a field, "406.35"; empty for nothing. */
+export const amountText = (paisa: number | null) =>
+  paisa === null || paisa <= 0 ? "" : (paisa / 100).toFixed(2).replace(/\.00$/, "");
+
+/**
+ * What a money field reads after a keypad press: one decimal point, two places after it,
+ * no leading zeros and at most eight digits of taka.
+ */
+export function pressKey(text: string, key: PadKey): string {
+  if (key === "clear") return "";
+  if (key === "back") return text.slice(0, -1);
+  const [whole, fraction] = text.split(".");
+  if (key === ".") return fraction === undefined ? (whole || "0") + "." : text;
+  if (fraction !== undefined) return fraction.length >= 2 ? text : text + key;
+  if (whole === "0") return key;
+  return whole.length >= 8 ? text : text + key;
+}

@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
 import type { LiveOrder } from "@/lib/live/types";
-import { billQueue, quickCash, shares, tillChange, tillProblem, type TillInput } from "./billing";
+import {
+  amountText,
+  billQueue,
+  pressKey,
+  quickCash,
+  shares,
+  tillChange,
+  tillProblem,
+  type PadKey,
+  type TillInput,
+} from "./billing";
 
 const order = (
   id: number,
@@ -86,5 +96,33 @@ describe("till", () => {
       tillProblem({ method: "mobile", amount: 100, tendered: null, reference: " " }, 500),
     ).toBe("needsReference");
     expect(tillProblem(cash(50_000, 50_000), 50_000)).toBeNull();
+  });
+});
+
+describe("pressKey", () => {
+  const type = (keys: PadKey[]) => keys.reduce(pressKey, "");
+
+  it("builds an amount the way a calculator does", () => {
+    expect(type(["5", "0", "0"])).toBe("500");
+    expect(type([".", "5"])).toBe("0.5");
+    expect(type(["0", "7"])).toBe("7");
+  });
+
+  it("stops at two decimal places and a single point", () => {
+    expect(type(["1", ".", "2", "5", "9", "."])).toBe("1.25");
+  });
+
+  it("deletes and clears", () => {
+    expect(type(["1", "2", "back"])).toBe("1");
+    expect(type(["1", "2", "clear"])).toBe("");
+  });
+});
+
+describe("amountText", () => {
+  it("drops .00 and leaves empty for nothing", () => {
+    expect(amountText(40_635)).toBe("406.35");
+    expect(amountText(50_000)).toBe("500");
+    expect(amountText(5_050)).toBe("50.50");
+    expect(amountText(0)).toBe("");
   });
 });
