@@ -40,6 +40,8 @@ export function AppShell({ children, lost = false }: AppShellProps) {
   const aside = useAsideSlot();
   // The POS and the till need the width for their side panels, so they keep to the rail.
   const compact = current === "newOrder" || current === "billing";
+  // The phone POS is a full-screen flow with its own way out, so it has no bottom tabs.
+  const flow = current === "newOrder";
 
   // One socket for the whole signed-in app.
   useEffect(() => {
@@ -97,7 +99,7 @@ export function AppShell({ children, lost = false }: AppShellProps) {
             className={cn(
               "flex flex-1 flex-col px-4 pt-5 md:px-6 md:pt-2 xl:px-8",
               // Room for the bottom tabs; the POS has its own bar down there instead.
-              compact ? "pb-0 md:pb-6" : "pb-28 md:pb-10",
+              flow ? "pb-0 md:pb-6" : "pb-28 md:pb-10",
             )}
           >
             <AsideProvider value={aside.node}>{children}</AsideProvider>
@@ -119,8 +121,7 @@ export function AppShell({ children, lost = false }: AppShellProps) {
             </SheetContent>
           </Sheet>
         )}
-        {/* The phone POS is a full-screen flow with its own way out. */}
-        {layout === "phone" && !compact && <BottomTabs role={role} current={current} />}
+        {layout === "phone" && !flow && <BottomTabs role={role} current={current} />}
         {overlays}
       </div>
     </TooltipProvider>

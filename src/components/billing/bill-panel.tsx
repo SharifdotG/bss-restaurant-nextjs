@@ -34,7 +34,7 @@ export function BillPanel({ order, actions, className }: BillPanelProps) {
   const prepaid = !paid && order.status !== "cancelled" && order.balanceDue <= 0;
 
   return (
-    <article className={cn("rounded-xl bg-card shadow-md", className)}>
+    <article className={cn("@container/bill rounded-xl bg-card shadow-md", className)}>
       <header className="flex items-start gap-3.5 border-b border-border p-5 xl:p-6">
         <span className="grid size-12 shrink-0 place-items-center rounded-lg bg-primary-soft text-base font-bold text-primary-soft-foreground">
           {order.table ? (
@@ -50,8 +50,10 @@ export function BillPanel({ order, actions, className }: BillPanelProps) {
           <p className="truncate text-sm text-muted-foreground">
             {[where.title, where.detail, order.waiter?.fullName].filter(Boolean).join(" · ")}
           </p>
+          {/* On a narrow bill the pill sits under the title instead of squeezing it. */}
+          <OrderStatusPill status={order.status} className="mt-1.5 @sm/bill:hidden" />
         </div>
-        <OrderStatusPill status={order.status} />
+        <OrderStatusPill status={order.status} className="@max-sm/bill:hidden" />
       </header>
 
       <div className="p-5 xl:p-6">

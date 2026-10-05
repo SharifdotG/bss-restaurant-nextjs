@@ -240,7 +240,11 @@ function BillSteps(props: BillStepsProps) {
       <div className="flex flex-1 flex-col">
         <StepHeader
           title={refunding ? t("refund.title") : t("phone.pay")}
-          subtitle={title}
+          subtitle={`${title} · ${
+            refunding
+              ? t("refund.sub", { amount: format.money(order.amountPaid) })
+              : t("left", { amount: format.money(order.balanceDue) })
+          }`}
           onBack={onBack}
         />
         <div className="-mx-4 -mb-5 flex flex-1 flex-col bg-card md:-mx-6">
@@ -249,6 +253,7 @@ function BillSteps(props: BillStepsProps) {
             order={order}
             selected
             keypad={false}
+            bare
             refunding={refunding}
             onRefundDone={onBack}
           />
@@ -266,7 +271,7 @@ function BillSteps(props: BillStepsProps) {
         onRefund={order && canRefund(role, order) ? onRefund : undefined}
       />
       {order && canTakePayment(role, order) && (
-        <StepBar>
+        <StepBar aboveTabs>
           <Button size="lg" className="w-full" onClick={onPay}>
             {t("phone.pay")}
             <span className="ml-auto tabular-nums">{format.money(order.balanceDue)}</span>

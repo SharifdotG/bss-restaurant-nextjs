@@ -57,10 +57,26 @@ export function StepHeader({
   );
 }
 
-/** A bar pinned to the bottom of the screen for the step's main action. */
-export function StepBar({ children }: { children: React.ReactNode }) {
+/**
+ * A bar pinned to the bottom of the screen for the step's main action. On pages that keep
+ * the phone's bottom tabs it sits just above them.
+ */
+export function StepBar({
+  children,
+  aboveTabs,
+}: {
+  children: React.ReactNode;
+  aboveTabs?: boolean;
+}) {
   return (
-    <div className="sticky bottom-0 z-20 -mx-4 mt-6 border-t border-border bg-background/95 px-4 pt-3 pb-[max(env(safe-area-inset-bottom),16px)] backdrop-blur-sm md:-mx-6 md:px-6">
+    <div
+      className={cn(
+        "sticky z-20 -mx-4 mt-6 border-t border-border bg-background/95 px-4 pt-3 backdrop-blur-sm md:-mx-6 md:px-6",
+        aboveTabs
+          ? "bottom-[calc(76px+env(safe-area-inset-bottom))] pb-3 md:bottom-0 md:pb-4"
+          : "bottom-0 pb-[max(env(safe-area-inset-bottom),16px)]",
+      )}
+    >
       {children}
     </div>
   );

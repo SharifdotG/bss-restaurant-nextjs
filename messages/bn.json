@@ -902,7 +902,7 @@
       "of": "{amount}-এর মধ্যে",
       "received": "নগদ পাওয়া গেছে",
       "change": "ফেরত",
-      "exact": "ঠিক ঠিক",
+      "exact": "খুচরা ছাড়া",
       "split": "ভাগ",
       "splitWays": "÷{n, number}",
       "splitLabel": "বাকিটা {n, number} ভাগে ভাগ করুন",

@@ -30,6 +30,8 @@ type TillPanelProps = {
   /** A manager asked to give money back on this bill. */
   refunding?: boolean;
   onRefundDone?: () => void;
+  /** Leaves out the panel's own heading when the page already has one (phones). */
+  bare?: boolean;
   className?: string;
 };
 
@@ -56,7 +58,12 @@ export function TillPanel(props: TillPanelProps) {
   if (props.refunding && props.onRefundDone) {
     return (
       <div className={cn("flex min-h-0 flex-1 flex-col", className)}>
-        <header className="flex items-start gap-3 border-b border-border px-5 py-4 xl:px-6">
+        <header
+          className={cn(
+            "flex items-start gap-3 border-b border-border px-5 py-4 xl:px-6",
+            props.bare && "hidden",
+          )}
+        >
           <div className="min-w-0 flex-1">
             <h2 className="text-lg font-bold">{t("refund.title")}</h2>
             <p className="text-sm text-muted-foreground">
@@ -78,7 +85,7 @@ export function TillPanel(props: TillPanelProps) {
 
   return (
     <div className={cn("flex min-h-0 flex-1 flex-col", className)}>
-      <header className="border-b border-border px-5 py-4 xl:px-6">
+      <header className={cn("border-b border-border px-5 py-4 xl:px-6", props.bare && "hidden")}>
         <h2 className="text-lg font-bold">{t("till.title")}</h2>
         <p className="text-sm text-muted-foreground">
           {tOrders("orderN", { n: format.orderNo(order.orderNumber) })} ·{" "}

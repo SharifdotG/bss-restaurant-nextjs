@@ -313,7 +313,13 @@ export function Till({ order, pay, keypad, onSettled }: TillProps) {
         {keypad && <Keypad onKey={type} />}
       </div>
 
-      <div className="grid gap-3 border-t border-border bg-muted/60 p-5 xl:p-6">
+      <div
+        className={cn(
+          "grid gap-3 border-t border-border bg-muted p-5 xl:p-6",
+          // Phones keep the button in reach, above the bottom tabs.
+          !keypad && "sticky bottom-[calc(76px+env(safe-area-inset-bottom))] z-10 md:bottom-0",
+        )}
+      >
         {method === "cash" && (
           <div className="flex items-baseline justify-between gap-4">
             <span className="font-bold">{t("change")}</span>
