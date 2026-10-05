@@ -13,6 +13,7 @@ import { canTakePayment } from "@/lib/permissions";
 import { useTakePayment } from "@/lib/use-billing-actions";
 import { useFormat } from "@/lib/use-format";
 import { cn } from "@/lib/utils";
+import { RefundForm } from "./refund-form";
 import { Till, type Settled } from "./till";
 
 type TillPanelProps = {
@@ -26,6 +27,9 @@ type TillPanelProps = {
   /** Opens the next bill waiting, when there is one. */
   onNext?: () => void;
   onDone: () => void;
+  /** A manager asked to give money back on this bill. */
+  refunding?: boolean;
+  onRefundDone?: () => void;
   className?: string;
 };
 
@@ -47,6 +51,27 @@ export function TillPanel(props: TillPanelProps) {
     );
   }
   if (!order) return <TillSkeleton />;
+  // Checked before anything else: a full refund leaves nothing paid, and the form has to stay
+  // up long enough to say it worked.
+  if (props.refunding && props.onRefundDone) {
+    return (
+      <div className={cn("flex min-h-0 flex-1 flex-col", className)}>
+        <header className="flex items-start gap-3 border-b border-border px-5 py-4 xl:px-6">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg font-bold">{t("refund.title")}</h2>
+            <p className="text-sm text-muted-foreground">
+              {tOrders("orderN", { n: format.orderNo(order.orderNumber) })} ·{" "}
+              {t("refund.sub", { amount: format.money(order.amountPaid) })}
+            </p>
+          </div>
+          <Button variant="ghost" size="sm" className="-mr-2" onClick={props.onRefundDone}>
+            {t("refund.back")}
+          </Button>
+        </header>
+        <RefundForm key={order.id} order={order} onDone={props.onRefundDone} />
+      </div>
+    );
+  }
   if (settled?.orderId === order.id)
     return <TillDone {...props} order={order} change={settled.change} />;
   if (!canTakePayment(role, order)) return <NothingToPay {...props} order={order} />;

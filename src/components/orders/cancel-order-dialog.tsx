@@ -112,7 +112,10 @@ export function CancelOrderDialog({
               <DialogClose render={<Button variant="outline" />}>{t("close")}</DialogClose>
               {can(role, "order.refund") && (
                 <Link
-                  href={{ pathname: PAGE_PATHS.billing, query: { order: order.id } }}
+                  href={{
+                    pathname: PAGE_PATHS.billing,
+                    query: { order: order.id, step: "refund" },
+                  }}
                   className={buttonVariants()}
                 >
                   <ArrowUUpLeftIcon />

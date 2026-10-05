@@ -950,6 +950,39 @@
     },
     "cancelledTitle": "Cancelled",
     "cancelledBody": "This order was cancelled, so there's nothing to pay.",
-    "paidBody": "This bill is settled. The receipt can still be printed."
+    "paidBody": "This bill is settled. The receipt can still be printed.",
+    "refund": {
+      "title": "Refund",
+      "sub": "Up to {amount} can go back",
+      "amount": "Refund amount",
+      "all": "All {amount}",
+      "paidBy": "{method} {amount}",
+      "method": "How it goes back",
+      "reference": "Reference",
+      "optional": "optional",
+      "reason": "Reason",
+      "reasonPlaceholder": "What went wrong, for the records",
+      "quickLabel": "Quick reasons",
+      "reasons": {
+        "wrongItem": "Wrong dish served",
+        "complaint": "Guest complaint",
+        "overcharged": "Charged too much",
+        "cancelling": "Order being cancelled"
+      },
+      "submit": "Refund {amount}",
+      "back": "Go back",
+      "problems": {
+        "noAmount": "Enter how much goes back",
+        "tooMuch": "At most {amount} can be refunded",
+        "needsReason": "Give a reason"
+      },
+      "confirmTitle": "Refund {amount} by {method}?",
+      "confirmBody": "The money goes back to the guest and the refund can't be undone. Order {n} keeps its status.",
+      "confirm": "Refund",
+      "refunding": "Refunding…",
+      "done": "{amount} refunded on order {n}",
+      "failed": "The refund didn't go through",
+      "dialogTitle": "Refund on order {n}"
+    }
   }
 }

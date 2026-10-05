@@ -108,7 +108,8 @@ export const duePaisa = (order: Pick<LiveOrder, "balanceDue">) => toPaisa(order.
 
 // Keypad
 
-export type PadKey = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "." | "back" | "clear";
+export type PadKey =
+  "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "." | "back" | "clear";
 
 /** An amount as it sits in a field, "406.35"; empty for nothing. */
 export const amountText = (paisa: number | null) =>
@@ -126,4 +127,16 @@ export function pressKey(text: string, key: PadKey): string {
   if (fraction !== undefined) return fraction.length >= 2 ? text : text + key;
   if (whole === "0") return key;
   return whole.length >= 8 ? text : text + key;
+}
+
+// Refunds
+
+export type RefundProblem = "noAmount" | "tooMuch" | "needsReason";
+
+/** Same checks as the API: something to give back, no more than was paid, and why. */
+export function refundProblem(amount: number | null, refundable: number, reason: string) {
+  if (!amount || amount <= 0) return "noAmount";
+  if (amount > refundable) return "tooMuch";
+  if (reason.trim().length < 3) return "needsReason";
+  return null;
 }

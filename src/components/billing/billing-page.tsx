@@ -1,6 +1,6 @@
 "use client";
 
-import { ReceiptIcon, WarningCircleIcon } from "@phosphor-icons/react";
+import { ArrowUUpLeftIcon, ReceiptIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -17,7 +17,7 @@ import type { OrderDetailOut, UserRole } from "@/lib/api/schema";
 import { billQueue } from "@/lib/billing";
 import { businessDate } from "@/lib/format";
 import { useLiveOrders } from "@/lib/live/store";
-import { canOpen, canTakePayment } from "@/lib/permissions";
+import { canOpen, canRefund, canTakePayment } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
 import { useFormat } from "@/lib/use-format";
 import { useNow } from "@/lib/use-now";
@@ -28,7 +28,7 @@ import { TakingsStrip } from "./takings-strip";
 import type { Settled } from "./till";
 import { TillPanel } from "./till-panel";
 
-const STEPS = ["pay"] as const;
+const STEPS = ["pay", "refund"] as const;
 
 /**
  * The cashier's desk: bills on the left, the selected bill in the middle, the till down the
@@ -61,6 +61,8 @@ export function BillingPage() {
 
   const select = (id: number | null) => {
     setSettled(null);
+    // A refund is for the bill it was opened on.
+    if (step === "refund") void setStep(null);
     void setOrderId(id);
   };
 
@@ -107,6 +109,7 @@ export function BillingPage() {
         onSettled={setSettled}
         onBack={() => void (step ? setStep(null) : select(null))}
         onPay={() => void setStep("pay")}
+        onRefund={() => void setStep("refund")}
         onNext={
           nextWaiting === undefined
             ? undefined
@@ -130,7 +133,13 @@ export function BillingPage() {
           <TakingsStrip />
           {list}
         </div>
-        <BillArea bill={bill} selected={orderId !== null} />
+        <BillArea
+          bill={bill}
+          selected={orderId !== null}
+          onRefund={
+            bill.data && canRefund(role, bill.data) ? () => void setStep("refund") : undefined
+          }
+        />
       </div>
       <ShellAside>
         <aside className="sticky top-0 flex h-dvh w-[340px] shrink-0 flex-col border-l border-border bg-card xl:w-[380px]">
@@ -143,6 +152,8 @@ export function BillingPage() {
             onSettled={setSettled}
             onNext={nextWaiting === undefined ? undefined : () => select(nextWaiting)}
             onDone={() => setSettled(null)}
+            refunding={step === "refund"}
+            onRefundDone={() => void setStep(null)}
           />
         </aside>
       </ShellAside>
@@ -165,7 +176,9 @@ type BillQueryState = {
   isError: boolean;
 };
 
-function BillArea({ bill, selected }: { bill: BillQueryState; selected: boolean }) {
+type BillAreaProps = { bill: BillQueryState; selected: boolean; onRefund?: () => void };
+
+function BillArea({ bill, selected, onRefund }: BillAreaProps) {
   const t = useTranslations("billing");
   if (!selected) {
     return (
@@ -176,7 +189,21 @@ function BillArea({ bill, selected }: { bill: BillQueryState; selected: boolean 
       </div>
     );
   }
-  if (bill.data) return <BillPanel order={bill.data} />;
+  if (bill.data) {
+    return (
+      <BillPanel
+        order={bill.data}
+        actions={
+          onRefund && (
+            <Button variant="outline" className="text-tone-red-text" onClick={onRefund}>
+              <ArrowUUpLeftIcon />
+              {t("bill.refund")}
+            </Button>
+          )
+        }
+      />
+    );
+  }
   if (bill.isError) {
     return <Alert tone="red" icon={WarningCircleIcon} title={t("bill.failed")} />;
   }
@@ -191,13 +218,14 @@ type BillStepsProps = {
   onSettled: (settled: Settled) => void;
   onBack: () => void;
   onPay: () => void;
+  onRefund: () => void;
   onNext?: () => void;
   onDone: () => void;
 };
 
 /** Phone flow: the bill, then the till. */
 function BillSteps(props: BillStepsProps) {
-  const { bill, role, step, onBack, onPay } = props;
+  const { bill, role, step, onBack, onPay, onRefund } = props;
   const t = useTranslations("billing");
   const tOrders = useTranslations("orders");
   const format = useFormat();
@@ -206,12 +234,24 @@ function BillSteps(props: BillStepsProps) {
     ? tOrders("orderN", { n: format.orderNo(order.orderNumber) })
     : t("phone.back");
 
-  if (step === "pay" && order) {
+  if (step && order) {
+    const refunding = step === "refund";
     return (
       <div className="flex flex-1 flex-col">
-        <StepHeader title={t("phone.pay")} subtitle={title} onBack={onBack} />
+        <StepHeader
+          title={refunding ? t("refund.title") : t("phone.pay")}
+          subtitle={title}
+          onBack={onBack}
+        />
         <div className="-mx-4 -mb-5 flex flex-1 flex-col bg-card md:-mx-6">
-          <TillPanel {...props} order={order} selected keypad={false} />
+          <TillPanel
+            {...props}
+            order={order}
+            selected
+            keypad={false}
+            refunding={refunding}
+            onRefundDone={onBack}
+          />
         </div>
       </div>
     );
@@ -220,7 +260,11 @@ function BillSteps(props: BillStepsProps) {
   return (
     <div className="flex flex-1 flex-col">
       <StepHeader title={title} onBack={onBack} />
-      <BillArea bill={bill} selected />
+      <BillArea
+        bill={bill}
+        selected
+        onRefund={order && canRefund(role, order) ? onRefund : undefined}
+      />
       {order && canTakePayment(role, order) && (
         <StepBar>
           <Button size="lg" className="w-full" onClick={onPay}>

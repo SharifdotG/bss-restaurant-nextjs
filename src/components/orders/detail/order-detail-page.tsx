@@ -27,6 +27,7 @@ import { forwardMove, STATUS_LOOK } from "@/lib/orders";
 import {
   canAddItems,
   canReplaceItems,
+  canRefund,
   canTakePayment,
   can,
   orderMoves,
@@ -221,13 +222,25 @@ function OrderDetail({ order, role, parent }: OrderDetailProps) {
             <OrderStepper order={order} now={now} />
           )}
           <OrderItems order={order} editable={canReplaceItems(role, order)} />
-          {!phone && <OrderPayments order={order} canTakePayment={canTakePayment(role, order)} />}
+          {!phone && (
+            <OrderPayments
+              order={order}
+              canTakePayment={canTakePayment(role, order)}
+              canRefund={canRefund(role, order)}
+            />
+          )}
         </div>
         <div className="grid grid-cols-1 gap-5">
           {!phone && <OrderHistory order={order} />}
           <OrderFacts order={order} canReassign={role === "manager" || role === "admin"} />
           {phone && <OrderHistory order={order} />}
-          {phone && <OrderPayments order={order} canTakePayment={canTakePayment(role, order)} />}
+          {phone && (
+            <OrderPayments
+              order={order}
+              canTakePayment={canTakePayment(role, order)}
+              canRefund={canRefund(role, order)}
+            />
+          )}
           {cancelBlock}
           {cooking && (
             <p className="px-1 text-xs text-pretty text-muted-foreground">

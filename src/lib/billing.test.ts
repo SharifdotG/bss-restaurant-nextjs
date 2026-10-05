@@ -5,6 +5,7 @@ import {
   billQueue,
   pressKey,
   quickCash,
+  refundProblem,
   shares,
   tillChange,
   tillProblem,
@@ -124,5 +125,14 @@ describe("amountText", () => {
     expect(amountText(50_000)).toBe("500");
     expect(amountText(5_050)).toBe("50.50");
     expect(amountText(0)).toBe("");
+  });
+});
+
+describe("refundProblem", () => {
+  it("wants an amount within what was paid, and a reason", () => {
+    expect(refundProblem(null, 1000, "cold")).toBe("noAmount");
+    expect(refundProblem(1200, 1000, "cold")).toBe("tooMuch");
+    expect(refundProblem(500, 1000, " a ")).toBe("needsReason");
+    expect(refundProblem(1000, 1000, "Cold rezala")).toBeNull();
   });
 });

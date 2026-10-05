@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   ArrowUUpLeftIcon,
   CashRegisterIcon,
@@ -10,8 +11,9 @@ import {
   type Icon,
 } from "@phosphor-icons/react";
 import { useTranslations } from "next-intl";
+import { RefundDialog } from "@/components/billing/refund-form";
 import { PrintReceiptButton } from "@/components/orders/receipt-dialog";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import type { OrderDetailOut, PaymentMethod, PaymentOut } from "@/lib/api/schema";
 import { PAGE_PATHS } from "@/lib/permissions";
@@ -24,11 +26,17 @@ const METHOD_ICONS: Record<PaymentMethod, Icon> = {
   mobile: DeviceMobileIcon,
 };
 
-type OrderPaymentsProps = { order: OrderDetailOut; canTakePayment: boolean };
+type OrderPaymentsProps = {
+  order: OrderDetailOut;
+  canTakePayment: boolean;
+  canRefund: boolean;
+};
 
 /** Money in and out so far. Taking payment itself happens at the till. */
-export function OrderPayments({ order, canTakePayment }: OrderPaymentsProps) {
+export function OrderPayments({ order, canTakePayment, canRefund }: OrderPaymentsProps) {
   const t = useTranslations("orders.detail");
+  const tBill = useTranslations("billing.bill");
+  const [refunding, setRefunding] = useState(false);
   const tillLink = canTakePayment && (
     <Link
       href={{ pathname: PAGE_PATHS.billing, query: { order: order.id } }}
@@ -61,7 +69,22 @@ export function OrderPayments({ order, canTakePayment }: OrderPaymentsProps) {
       ) : (
         <>
           <PaymentList payments={order.payments} className="mt-2" />
-          {tillLink && <div className="mt-3 flex justify-end">{tillLink}</div>}
+          {(tillLink || canRefund) && (
+            <div className="mt-3 flex flex-wrap justify-end gap-2">
+              {canRefund && (
+                <Button
+                  variant="ghost"
+                  className="text-tone-red-text hover:bg-tone-red-subtle"
+                  onClick={() => setRefunding(true)}
+                >
+                  <ArrowUUpLeftIcon />
+                  {tBill("refund")}
+                </Button>
+              )}
+              {tillLink}
+            </div>
+          )}
+          {canRefund && <RefundDialog order={order} open={refunding} onOpenChange={setRefunding} />}
         </>
       )}
     </section>
