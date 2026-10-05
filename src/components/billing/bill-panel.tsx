@@ -4,6 +4,7 @@ import { ArrowRightIcon, CheckCircleIcon, ShoppingBagIcon } from "@phosphor-icon
 import { useTranslations } from "next-intl";
 import { OrderTotals } from "@/components/orders/detail/order-items";
 import { PaymentList } from "@/components/orders/detail/order-payments";
+import { PrintReceiptButton } from "@/components/orders/receipt-dialog";
 import { useOrderWhere } from "@/components/orders/order-bits";
 import { OrderStatusPill } from "@/components/orders/order-status";
 import { Alert } from "@/components/ui/alert";
@@ -110,6 +111,7 @@ export function BillPanel({ order, actions, className }: BillPanelProps) {
       </div>
 
       <footer className="flex flex-wrap items-center gap-2 border-t border-border px-5 py-4 xl:px-6">
+        <PrintReceiptButton order={order} />
         {actions}
         <Link
           href={`${PAGE_PATHS.orders}/${order.id}`}

@@ -10,6 +10,7 @@ import {
   type Icon,
 } from "@phosphor-icons/react";
 import { useTranslations } from "next-intl";
+import { PrintReceiptButton } from "@/components/orders/receipt-dialog";
 import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import type { OrderDetailOut, PaymentMethod, PaymentOut } from "@/lib/api/schema";
@@ -40,7 +41,10 @@ export function OrderPayments({ order, canTakePayment }: OrderPaymentsProps) {
 
   return (
     <section className="rounded-xl bg-card p-5 shadow-md sm:p-6">
-      <h2 className="text-lg font-bold">{t("payments")}</h2>
+      <header className="flex items-center justify-between gap-3">
+        <h2 className="text-lg font-bold">{t("payments")}</h2>
+        <PrintReceiptButton order={order} variant="ghost" size="sm" className="-mr-2" />
+      </header>
       {order.payments.length === 0 ? (
         <div className="mt-3 flex flex-wrap items-center gap-3.5">
           <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-muted text-muted-foreground">

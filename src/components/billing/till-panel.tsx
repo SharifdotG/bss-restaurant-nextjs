@@ -1,9 +1,10 @@
 "use client";
 
-import { CheckIcon, PrinterIcon, ReceiptIcon, SealCheckIcon } from "@phosphor-icons/react";
+import { CheckIcon, ReceiptIcon, SealCheckIcon } from "@phosphor-icons/react";
 import * as m from "motion/react-m";
 import { useTranslations } from "next-intl";
 import { EmptyState } from "@/components/empty-state";
+import { PrintReceiptButton } from "@/components/orders/receipt-dialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { OrderDetailOut, UserRole } from "@/lib/api/schema";
@@ -22,7 +23,6 @@ type TillPanelProps = {
   keypad: boolean;
   settled: Settled | null;
   onSettled: (settled: Settled) => void;
-  onPrint?: () => void;
   /** Opens the next bill waiting, when there is one. */
   onNext?: () => void;
   onDone: () => void;
@@ -68,7 +68,6 @@ export function TillPanel(props: TillPanelProps) {
 function TillDone({
   order,
   change,
-  onPrint,
   onNext,
   onDone,
 }: TillPanelProps & { order: OrderDetailOut; change: number }) {
@@ -110,13 +109,8 @@ function TillDone({
           </Button>
         )}
         <div className="grid grid-cols-2 gap-2">
-          {onPrint && (
-            <Button variant="outline" onClick={onPrint}>
-              <PrinterIcon />
-              {t("print")}
-            </Button>
-          )}
-          <Button variant="outline" onClick={onDone} className={cn(!onPrint && "col-span-2")}>
+          <PrintReceiptButton order={order} />
+          <Button variant="outline" onClick={onDone}>
             {t("close")}
           </Button>
         </div>
@@ -125,7 +119,7 @@ function TillDone({
   );
 }
 
-function NothingToPay({ order, onPrint }: TillPanelProps & { order: OrderDetailOut }) {
+function NothingToPay({ order }: TillPanelProps & { order: OrderDetailOut }) {
   const t = useTranslations("billing");
   const paid = order.status === "paid";
   const cancelled = order.status === "cancelled";
@@ -136,15 +130,7 @@ function NothingToPay({ order, onPrint }: TillPanelProps & { order: OrderDetailO
         icon={SealCheckIcon}
         tone={cancelled ? "slate" : "brand"}
         title={cancelled ? t("cancelledTitle") : t("bill.settled")}
-        action={
-          onPrint &&
-          !cancelled && (
-            <Button variant="outline" onClick={onPrint}>
-              <PrinterIcon />
-              {t(paid ? "bill.printReceipt" : "bill.printBill")}
-            </Button>
-          )
-        }
+        action={<PrintReceiptButton order={order} />}
       >
         {cancelled ? t("cancelledBody") : paid ? t("paidBody") : t("bill.prepaid")}
       </EmptyState>

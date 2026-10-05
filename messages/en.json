@@ -933,7 +933,6 @@
       "body": "Order {n} is settled.",
       "giveBack": "Give back",
       "noChange": "No change to give",
-      "print": "Print receipt",
       "next": "Next bill",
       "close": "Done"
     },
