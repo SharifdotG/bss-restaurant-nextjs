@@ -54,6 +54,20 @@ export const formatWeekday = (value: DateInput, locale: Locale) =>
 export const formatClock = (time: string, locale: Locale) =>
   formatTime(dhakaDateTime(businessDate(), time), locale);
 
+/** "1–11 Oct 2026", or "1–11 October 2026" when there's room. Days are API dates. */
+export function formatDayRange(from: string, to: string, locale: Locale, long = false) {
+  const format = dateFormat(locale, {
+    day: "numeric",
+    month: long ? "long" : "short",
+    year: "numeric",
+  });
+  const noon = (day: string) => new Date(`${day}T12:00:00${DHAKA_OFFSET}`);
+  return from === to ? format.format(noon(from)) : format.formatRange(noon(from), noon(to));
+}
+
+/** An API date as a Date at noon in Dhaka, safe to hand to a calendar. */
+export const dayToDate = (day: string) => new Date(`${day}T12:00:00${DHAKA_OFFSET}`);
+
 /** A date-only value from the API ("2026-10-11"), shown without slipping a day. */
 export const formatDay = (day: string, locale: Locale) =>
   formatDate(`${day}T12:00:00${DHAKA_OFFSET}`, locale);
@@ -77,6 +91,13 @@ const dayKey = new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE });
 
 /** Today's date in Dhaka as the API writes it: "2026-10-11". */
 export const businessDate = (now: DateInput = new Date()) => dayKey.format(toDate(now));
+
+/** A business day moved by whole days: shiftDay("2026-10-01", -1) is "2026-09-30". */
+export function shiftDay(day: string, days: number) {
+  const date = new Date(`${day}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
 
 /** A Dhaka wall-clock time for the API, which wants an explicit offset. */
 export const dhakaDateTime = (day: string, time: string) =>

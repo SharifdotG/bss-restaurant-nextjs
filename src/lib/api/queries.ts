@@ -1,5 +1,6 @@
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import type { OrdersQuery } from "@/lib/orders";
+import type { GroupBy, OrderSource } from "./schema";
 import { api, unwrap } from "./client";
 
 // Keys start with the resource: ["orders", filters], ["order", id], ["reservations", …],
@@ -139,4 +140,79 @@ export const receiptQuery = (id: number, status: string) =>
         }),
       ),
     staleTime: 30_000,
+  });
+
+// Reports (managers only). Past days don't change, so they stay fresh for a while; ranges
+// that reach today get refetched when the tab comes back into focus.
+
+type ReportRange = { from: string; to: string };
+const REPORT_STALE = 60_000;
+
+export const salesReportQuery = ({ from, to, groupBy }: ReportRange & { groupBy: GroupBy }) =>
+  queryOptions({
+    queryKey: ["reports", "sales", { from, to, groupBy }],
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/reports/sales", {
+          params: { query: { dateFrom: from, dateTo: to, groupBy } },
+          signal,
+        }),
+      ),
+    staleTime: REPORT_STALE,
+    placeholderData: keepPreviousData,
+  });
+
+export const topFoodsQuery = ({ from, to, limit = 10 }: ReportRange & { limit?: number }) =>
+  queryOptions({
+    queryKey: ["reports", "top-foods", { from, to, limit }],
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/reports/top-foods", {
+          params: { query: { dateFrom: from, dateTo: to, limit } },
+          signal,
+        }),
+      ),
+    staleTime: REPORT_STALE,
+    placeholderData: keepPreviousData,
+  });
+
+export const expenseReportQuery = ({ from, to }: ReportRange) =>
+  queryOptions({
+    queryKey: ["reports", "expenses", { from, to }],
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/reports/expenses", {
+          params: { query: { dateFrom: from, dateTo: to } },
+          signal,
+        }),
+      ),
+    staleTime: REPORT_STALE,
+    placeholderData: keepPreviousData,
+  });
+
+export const staffReportQuery = ({ from, to }: ReportRange) =>
+  queryOptions({
+    queryKey: ["reports", "staff", { from, to }],
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/reports/staff", {
+          params: { query: { dateFrom: from, dateTo: to } },
+          signal,
+        }),
+      ),
+    staleTime: REPORT_STALE,
+    placeholderData: keepPreviousData,
+  });
+
+/** How many of today's orders came in one way; only the page total is read. */
+export const sourceCountQuery = (day: string, source: OrderSource) =>
+  queryOptions({
+    ...ordersQuery({
+      source: [source],
+      dateFrom: day,
+      dateTo: day,
+      status: ["pending", "confirmed", "preparing", "ready", "served", "paid"],
+      size: 1,
+    }),
+    select: (page) => page.total,
   });

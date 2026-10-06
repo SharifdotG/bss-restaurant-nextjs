@@ -30,7 +30,17 @@
       "remove": "সরিয়ে দিন"
     },
     "back": "পেছনে",
-    "stepOf": "{total}-এর {step}"
+    "stepOf": "{total}-এর {step}",
+    "download": {
+      "working": "ডাউনলোড হচ্ছে…",
+      "failed": "ডাউনলোড শুরু হয়নি"
+    },
+    "range": {
+      "hint": "প্রথম আর শেষ দিন বেছে নিন",
+      "summary": "{range} · {n, number} দিন",
+      "apply": "প্রয়োগ করুন",
+      "cancel": "বাতিল"
+    }
   },
   "nav": {
     "overview": "ওভারভিউ",
@@ -410,9 +420,7 @@
       "done": "হয়েছে"
     },
     "export": {
-      "button": "CSV নামান",
-      "working": "নামানো হচ্ছে…",
-      "failed": "ফাইলটি নামানো যায়নি"
+      "button": "CSV নামান"
     },
     "takeaway": "টেকঅ্যাওয়ে",
     "counter": "কাউন্টার",

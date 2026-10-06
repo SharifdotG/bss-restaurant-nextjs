@@ -9,7 +9,7 @@ import {
   WalletIcon,
 } from "@phosphor-icons/react";
 import type { OrderSource, OrderStatus, paths } from "@/lib/api/schema";
-import { businessDate } from "@/lib/format";
+import { businessDate, shiftDay } from "@/lib/format";
 import type { Tone } from "@/lib/tones";
 
 export type OrdersQuery = NonNullable<paths["/api/v1/orders"]["get"]["parameters"]["query"]>;
@@ -54,12 +54,6 @@ export type OrderFilters = {
 
 /** Open orders and bills due need attention whatever day they were placed on. */
 export const tabIgnoresDate = (tab: OrderTab) => tab === "open" || tab === "billsDue";
-
-const shiftDay = (day: string, days: number) => {
-  const date = new Date(`${day}T00:00:00Z`);
-  date.setUTCDate(date.getUTCDate() + days);
-  return date.toISOString().slice(0, 10);
-};
 
 /** The API's dateFrom/dateTo for a range, in Dhaka business days, both ends included. */
 export function rangeDates(range: DateRange, now: Date | number = Date.now()) {

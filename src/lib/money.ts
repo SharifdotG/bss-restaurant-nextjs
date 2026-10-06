@@ -37,9 +37,30 @@ const amountFormats: Record<Locale, Intl.NumberFormat> = {
   bn: new Intl.NumberFormat("bn-BD", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
 };
 
+const wholeFormats: Record<Locale, Intl.NumberFormat> = {
+  en: new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }),
+  bn: new Intl.NumberFormat("bn-BD", { maximumFractionDigits: 0 }),
+};
+
+// Lakh and crore in compact form too: 80K, 1.5L.
+const compactFormats: Record<Locale, Intl.NumberFormat> = {
+  en: new Intl.NumberFormat("en-IN", { notation: "compact", maximumFractionDigits: 1 }),
+  bn: new Intl.NumberFormat("bn-BD", { notation: "compact", maximumFractionDigits: 1 }),
+};
+
 /** ৳1,23,456.50 in English, ৳১,২৩,৪৫৬.৫০ in Bangla. The symbol always leads. */
 export function formatMoney(taka: number, locale: Locale, symbol = "৳") {
   const paisa = toPaisa(taka);
   const amount = amountFormats[locale].format(Math.abs(paisa) / 100);
   return `${paisa < 0 ? "−" : ""}${symbol}${amount}`;
 }
+
+/** Rounded to the taka for headline figures: ৳21,380. */
+export function formatMoneyWhole(taka: number, locale: Locale, symbol = "৳") {
+  const amount = wholeFormats[locale].format(Math.abs(Math.round(taka)));
+  return `${taka <= -0.5 ? "−" : ""}${symbol}${amount}`;
+}
+
+/** Chart axes: 80K, 1.5L; no symbol, the chart title already says it's money. */
+export const formatMoneyCompact = (taka: number, locale: Locale) =>
+  compactFormats[locale].format(taka);

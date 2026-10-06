@@ -6,6 +6,7 @@ import {
   formatDate,
   formatDateTime,
   formatDay,
+  formatDayRange,
   formatNumber,
   formatPercent,
   formatRelative,
@@ -14,7 +15,7 @@ import {
   formatWeekday,
   shortOrderNumber,
 } from "@/lib/format";
-import { formatMoney } from "@/lib/money";
+import { formatMoney, formatMoneyCompact, formatMoneyWhole } from "@/lib/money";
 import { useSession } from "@/lib/session/client";
 
 type DateInput = Date | string | number;
@@ -32,6 +33,8 @@ export function useFormat() {
   return {
     locale,
     money: (taka: number) => formatMoney(taka, locale, symbol),
+    moneyWhole: (taka: number) => formatMoneyWhole(taka, locale, symbol),
+    moneyCompact: (taka: number) => formatMoneyCompact(taka, locale),
     time: (value: DateInput) => formatTime(value, locale),
     clock: (time: string) => formatClock(time, locale),
     weekday: (value: DateInput) => formatWeekday(value, locale),
@@ -39,6 +42,7 @@ export function useFormat() {
     shortDate: (value: DateInput) => formatShortDate(value, locale),
     dateTime: (value: DateInput) => formatDateTime(value, locale),
     day: (value: string) => formatDay(value, locale),
+    dayRange: (from: string, to: string, long?: boolean) => formatDayRange(from, to, locale, long),
     relative: (value: DateInput, now?: number) => formatRelative(value, locale, now),
     number: (value: number, options?: Intl.NumberFormatOptions) =>
       formatNumber(value, locale, options),

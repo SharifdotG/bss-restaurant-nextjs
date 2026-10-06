@@ -30,7 +30,17 @@
       "remove": "Remove"
     },
     "back": "Back",
-    "stepOf": "{step} of {total}"
+    "stepOf": "{step} of {total}",
+    "download": {
+      "working": "Downloading…",
+      "failed": "The download didn't start"
+    },
+    "range": {
+      "hint": "Pick the first and last day",
+      "summary": "{range} · {n, plural, one {# day} other {# days}}",
+      "apply": "Apply",
+      "cancel": "Cancel"
+    }
   },
   "nav": {
     "overview": "Overview",
@@ -410,9 +420,7 @@
       "done": "Done"
     },
     "export": {
-      "button": "Export CSV",
-      "working": "Exporting…",
-      "failed": "The export didn't download"
+      "button": "Export CSV"
     },
     "takeaway": "Takeaway",
     "counter": "Counter",
