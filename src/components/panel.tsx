@@ -27,7 +27,8 @@ export function Panel({ title, subtitle, action, children, className, flush }: P
           flush && "px-5 sm:px-6",
         )}
       >
-        <div className="min-w-0">
+        {/* A link stays beside the title on phones; a wider switch drops below it. */}
+        <div className="min-w-0 flex-[1_1_10rem]">
           <h2 className="text-md font-bold text-balance">{title}</h2>
           {subtitle && <p className="text-sm text-muted-foreground tabular-nums">{subtitle}</p>}
         </div>

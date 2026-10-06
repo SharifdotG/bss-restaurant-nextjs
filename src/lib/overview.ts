@@ -1,5 +1,4 @@
 import type { OrderStatus } from "@/lib/api/schema";
-import type { LiveOrder } from "@/lib/live/types";
 
 export const PIPELINE = [
   "pending",
@@ -10,27 +9,38 @@ export const PIPELINE = [
 ] as const satisfies OrderStatus[];
 export type PipelineStatus = (typeof PIPELINE)[number];
 
-const oldest = (key: "createdAt" | "updatedAt") => (a: LiveOrder, b: LiveOrder) =>
+// Works on full orders and on the live feed's slimmer ones alike.
+type OpenOrder = {
+  status: OrderStatus;
+  source: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+const oldest = (key: "createdAt" | "updatedAt") => (a: OpenOrder, b: OpenOrder) =>
   Date.parse(a[key]) - Date.parse(b[key]);
 
 /** Open orders by where they are, oldest first in each. */
-export function pipeline(orders: LiveOrder[]) {
+export function pipeline<T extends OpenOrder>(orders: T[]) {
   return Object.fromEntries(
     PIPELINE.map((status) => [
       status,
       orders.filter((order) => order.status === status).sort(oldest("createdAt")),
     ]),
-  ) as Record<PipelineStatus, LiveOrder[]>;
+  ) as Record<PipelineStatus, T[]>;
 }
 
 export type AttentionReason = "guest" | "ready" | "kitchen";
-export type AttentionPick = { order: LiveOrder; reason: AttentionReason };
+export type AttentionPick<T> = { order: T; reason: AttentionReason };
 
 /**
  * What a manager should look at first: guests waiting for someone to accept their order,
  * then food going cold at the pass, then whatever has been in the kitchen longest.
  */
-export function attentionPicks(orders: LiveOrder[], count: number): AttentionPick[] {
+export function attentionPicks<T extends OpenOrder>(
+  orders: T[],
+  count: number,
+): AttentionPick<T>[] {
   const guest = orders
     .filter((order) => order.status === "pending" && order.source !== "staff")
     .sort(oldest("createdAt"));

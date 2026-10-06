@@ -55,7 +55,7 @@ export function KpiCard({
               />
               {badge}
             </p>
-            {note && <p className="truncate text-xs text-muted-foreground">{note}</p>}
+            {note && <p className="line-clamp-2 text-xs text-muted-foreground">{note}</p>}
           </>
         )}
       </div>

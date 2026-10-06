@@ -1001,5 +1001,82 @@
     "period": "Period",
     "against": "{change} on {when}",
     "tableCaption": "Sales by period"
+  },
+  "overview": {
+    "todayReport": "Today's report",
+    "newOrder": "New order",
+    "kpis": {
+      "sales": "Today's sales",
+      "salesNote": "VAT and service charge included",
+      "lastWeek": "{amount} on this day last week",
+      "refunds": "{amount} refunded today",
+      "orders": "Orders today",
+      "ordersNote": "{open, plural, =0 {None open} other {# still open}}{cancelled, plural, =0 {} other { · # cancelled}}",
+      "average": "Average bill",
+      "averageNote": "{n, plural, =0 {No bills paid yet} one {# bill paid} other {# bills paid}}",
+      "tables": "Tables in use",
+      "tablesValue": "{used, number} / {total, number}",
+      "bookingsSoon": "{n, plural, one {# booking} other {# bookings}} in the next hour",
+      "tablesFree": "{n, plural, =0 {No tables free} one {# table free} other {# tables free}}"
+    },
+    "sales": {
+      "title": "Sales by day",
+      "spanLabel": "How far back",
+      "span": {
+        "days14": "14 days",
+        "month": "Month",
+        "year": "Year"
+      },
+      "sub": {
+        "days14": "Paid orders, last 14 days · {amount}",
+        "month": "Paid orders this month · {amount}",
+        "year": "Paid orders this year, by month · {amount}"
+      },
+      "failed": "Sales didn't load. They'll try again shortly."
+    },
+    "open": {
+      "title": "Open orders",
+      "sub": "{n, plural, one {# open} other {# open}} · {amount} on the tables",
+      "none": "Nothing open right now",
+      "all": "All orders"
+    },
+    "attention": {
+      "title": "Needs attention",
+      "sub": "Most urgent first",
+      "board": "Orders board",
+      "reasons": {
+        "guest": "Guest waiting for a yes",
+        "ready": "Ready at the pass",
+        "kitchen": "Longest in the kitchen"
+      },
+      "emptyTitle": "All caught up",
+      "empty": "No guest is waiting and nothing is sitting at the pass."
+    },
+    "bookings": {
+      "title": "Today's bookings",
+      "sub": "{n, plural, one {# still to come} other {# still to come}} · {guests, plural, one {# guest} other {# guests}}",
+      "none": "Nobody else is booked today",
+      "all": "Reservations",
+      "emptyTitle": "No more bookings today",
+      "request": "Asked online · needs a yes",
+      "noTable": "No table yet",
+      "more": "{n, plural, one {and # more} other {and # more}}"
+    },
+    "dishes": {
+      "title": "Top dishes this month",
+      "sub": "By plates sold, paid orders only",
+      "report": "Dishes report",
+      "plates": "{n, plural, one {# plate} other {# plates}}",
+      "emptyTitle": "Nothing sold yet this month",
+      "empty": "The best sellers show up here once orders are paid."
+    },
+    "sources": {
+      "title": "Where orders came from",
+      "sub": "Today, cancelled orders left out",
+      "caption": "{n, plural, one {order today} other {orders today}}",
+      "staff": "Taken by staff",
+      "qr": "QR at the table",
+      "online": "Online"
+    }
   }
 }

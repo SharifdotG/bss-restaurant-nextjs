@@ -17,13 +17,23 @@ import { ageTone, forwardMove, minutesSince, STATUS_LOOK } from "@/lib/orders";
 import { orderMoves } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
 import { useFormat } from "@/lib/use-format";
+import { cn } from "@/lib/utils";
 import { useOrderStatus } from "@/lib/use-order-actions";
 import { useOrderWhere, useWaitText } from "./order-bits";
 
 const SHOWN_LINES = 3;
 
 /** A board card: what's on the order, who has it, how long it's waited, and the next step. */
-export function OrderCard({ order, now }: { order: OrderOut; now: number }) {
+export function OrderCard({
+  order,
+  now,
+  className,
+}: {
+  order: OrderOut;
+  now: number;
+  /** Inside another card it sits flat on a hairline instead of floating. */
+  className?: string;
+}) {
   const t = useTranslations("orders");
   const format = useFormat();
   const where = useOrderWhere()(order);
@@ -52,7 +62,12 @@ export function OrderCard({ order, now }: { order: OrderOut; now: number }) {
   const NextIcon = next ? STATUS_LOOK[next].icon : null;
 
   return (
-    <article className="relative rounded-xl bg-card p-4 shadow-sm transition-shadow duration-(--duration-fast) hover:shadow-md">
+    <article
+      className={cn(
+        "relative rounded-xl bg-card p-4 shadow-sm transition-shadow duration-(--duration-fast) hover:shadow-md",
+        className,
+      )}
+    >
       <Link
         href={`/orders/${order.id}`}
         className="block text-md font-bold outline-none after:absolute after:inset-0 after:rounded-xl focus-visible:after:ring-3 focus-visible:after:ring-ring/40"
