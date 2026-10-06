@@ -992,5 +992,14 @@
       "failed": "The refund didn't go through",
       "dialogTitle": "Refund on order {n}"
     }
+  },
+  "charts": {
+    "paidSales": "Paid sales",
+    "stillOpen": "Today, still open",
+    "soFar": "So far",
+    "orders": "Paid orders",
+    "period": "Period",
+    "against": "{change} on {when}",
+    "tableCaption": "Sales by period"
   }
 }

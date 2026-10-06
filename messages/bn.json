@@ -992,5 +992,14 @@
       "failed": "রিফান্ডটি হয়নি",
       "dialogTitle": "অর্ডার {n}-এ রিফান্ড"
     }
+  },
+  "charts": {
+    "paidSales": "পরিশোধিত বিক্রি",
+    "stillOpen": "আজ, এখনও চলছে",
+    "soFar": "এখন পর্যন্ত",
+    "orders": "পরিশোধিত অর্ডার",
+    "period": "সময়",
+    "against": "{when}-এর তুলনায় {change}",
+    "tableCaption": "সময় অনুযায়ী বিক্রি"
   }
 }

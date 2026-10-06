@@ -8,6 +8,7 @@ import {
   formatDay,
   formatDayRange,
   formatNumber,
+  formatPeriod,
   formatPercent,
   formatRelative,
   formatShortDate,
@@ -42,6 +43,12 @@ export function useFormat() {
     shortDate: (value: DateInput) => formatShortDate(value, locale),
     dateTime: (value: DateInput) => formatDateTime(value, locale),
     day: (value: string) => formatDay(value, locale),
+    period: (
+      start: string,
+      end: string,
+      groupBy: Parameters<typeof formatPeriod>[2],
+      size: "tick" | "full" = "full",
+    ) => formatPeriod(start, end, groupBy, locale, size),
     dayRange: (from: string, to: string, long?: boolean) => formatDayRange(from, to, locale, long),
     relative: (value: DateInput, now?: number) => formatRelative(value, locale, now),
     number: (value: number, options?: Intl.NumberFormatOptions) =>

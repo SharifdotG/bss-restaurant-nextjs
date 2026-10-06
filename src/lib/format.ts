@@ -65,6 +65,40 @@ export function formatDayRange(from: string, to: string, locale: Locale, long = 
   return from === to ? format.format(noon(from)) : format.formatRange(noon(from), noon(to));
 }
 
+type Period = "day" | "week" | "month" | "year";
+
+const PERIOD_TICK: Record<Period, Intl.DateTimeFormatOptions> = {
+  day: { day: "numeric" },
+  week: DAY,
+  month: { month: "short" },
+  year: { year: "numeric" },
+};
+
+const PERIOD_FULL: Record<Period, Intl.DateTimeFormatOptions> = {
+  day: { weekday: "short", day: "numeric", month: "short" },
+  week: DAY,
+  month: { month: "long", year: "numeric" },
+  year: { year: "numeric" },
+};
+
+/**
+ * A report period for a chart: "28" or "Oct" on the axis, "Fri, Oct 9" or "Sep 28 – Oct 4"
+ * in the tooltip. Days are API dates.
+ */
+export function formatPeriod(
+  start: string,
+  end: string,
+  groupBy: Period,
+  locale: Locale,
+  size: "tick" | "full",
+) {
+  const noon = (day: string) => new Date(`${day}T12:00:00${DHAKA_OFFSET}`);
+  const format = dateFormat(locale, (size === "tick" ? PERIOD_TICK : PERIOD_FULL)[groupBy]);
+  return groupBy === "week" && size === "full" && start !== end
+    ? format.formatRange(noon(start), noon(end))
+    : format.format(noon(start));
+}
+
 /** An API date as a Date at noon in Dhaka, safe to hand to a calendar. */
 export const dayToDate = (day: string) => new Date(`${day}T12:00:00${DHAKA_OFFSET}`);
 
