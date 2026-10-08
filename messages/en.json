@@ -1078,5 +1078,86 @@
       "qr": "QR at the table",
       "online": "Online"
     }
+  },
+  "reports": {
+    "meta": "{range}, compared with {compare} · paid orders only",
+    "ordersCsv": "All orders CSV",
+    "newOrder": "New order",
+    "csv": "Download CSV",
+    "tabs": {
+      "sales": "Sales & profit",
+      "dishes": "Dishes",
+      "expenses": "Expenses",
+      "staff": "Staff"
+    },
+    "range": {
+      "label": "Dates",
+      "groupLabel": "Group rows by",
+      "presets": {
+        "today": "Today",
+        "week": "7 days",
+        "month": "This month",
+        "lastMonth": "Last month",
+        "year": "This year"
+      },
+      "groups": {
+        "day": "By day",
+        "week": "By week",
+        "month": "By month",
+        "year": "By year"
+      }
+    },
+    "sales": {
+      "nothing": "Nothing recorded in this range",
+      "kpis": {
+        "sales": "Sales",
+        "salesNote": "Against {amount} on {range}",
+        "orders": "Paid orders",
+        "ordersNote": "{amount} average order",
+        "expenses": "Expenses",
+        "expensesNote": "Everything logged under Expenses",
+        "profit": "Profit",
+        "profitNote": "After VAT, refunds and expenses"
+      },
+      "chart": {
+        "day": "Sales by day",
+        "week": "Sales by week",
+        "month": "Sales by month",
+        "year": "Sales by year",
+        "sub": "Paid orders, VAT included",
+        "against": "on {range}"
+      },
+      "emptyTitle": "No sales from {range}",
+      "empty": "No paid orders were recorded on these days. Pick another range above."
+    },
+    "split": {
+      "title": "Where the money went",
+      "sub": "Of every {amount} in sales, {range}",
+      "vat": "VAT collected",
+      "refunds": "Refunds",
+      "expenses": "Expenses",
+      "profit": "Profit",
+      "note": "Big bills like rent and salaries land on the day they're paid, so profit evens out over a whole month.",
+      "loss": "Expenses are ahead of sales on these dates. Rent or salaries paid early in the range often do this."
+    },
+    "table": {
+      "title": {
+        "day": "Day by day",
+        "week": "Week by week",
+        "month": "Month by month",
+        "year": "Year by year"
+      },
+      "sub": "Sales include VAT and service charge. Profit is sales less VAT, refunds and expenses.",
+      "period": "Period",
+      "orders": "Orders",
+      "sales": "Sales",
+      "discounts": "Discounts",
+      "vat": "VAT",
+      "refunds": "Refunds",
+      "expenses": "Expenses",
+      "profit": "Profit",
+      "total": "Total",
+      "soFar": "so far"
+    }
   }
 }
