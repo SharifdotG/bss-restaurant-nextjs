@@ -13,6 +13,8 @@ type KpiCardProps = {
   /** Undefined while loading. */
   value: number | undefined;
   format: (value: number) => string;
+  /** A word instead of a figure, e.g. the best seller's name; shown as is. */
+  text?: string;
   /** Sits next to the value, usually a Delta. */
   badge?: React.ReactNode;
   note?: React.ReactNode;
@@ -26,6 +28,7 @@ export function KpiCard({
   icon: Icon,
   value,
   format,
+  text,
   badge,
   note,
   className,
@@ -47,12 +50,18 @@ export function KpiCard({
         ) : (
           <>
             <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-              <CountUp
-                id={id}
-                value={value}
-                format={format}
-                className="text-2xl font-bold tracking-tight tabular-nums"
-              />
+              {text !== undefined ? (
+                <span className="line-clamp-2 min-w-0 text-xl leading-7 font-bold tracking-tight break-words">
+                  {text}
+                </span>
+              ) : (
+                <CountUp
+                  id={id}
+                  value={value}
+                  format={format}
+                  className="text-2xl font-bold tracking-tight tabular-nums"
+                />
+              )}
               {badge}
             </p>
             {note && <p className="line-clamp-2 text-xs text-muted-foreground">{note}</p>}

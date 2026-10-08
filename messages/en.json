@@ -1158,6 +1158,101 @@
       "profit": "Profit",
       "total": "Total",
       "soFar": "so far"
+    },
+    "dishes": {
+      "nothing": "Nothing sold in this range",
+      "plates": "{n, plural, one {# plate} other {# plates}}",
+      "kpis": {
+        "plates": "Plates sold",
+        "platesNote": "Against {n, number} on {range}",
+        "revenue": "Food revenue",
+        "revenueNote": "Before VAT and service charge",
+        "best": "Best seller",
+        "bestNote": "{n, plural, one {# plate} other {# plates}} · {amount}"
+      },
+      "top": {
+        "title": "Top dishes",
+        "sub": "By plates sold, paid orders only",
+        "dish": "Dish",
+        "plates": "Plates",
+        "orders": "Orders",
+        "revenue": "Revenue",
+        "share": "Share of food"
+      },
+      "categories": {
+        "title": "By category",
+        "sub": "Food revenue, worked out from every dish",
+        "none": "No category"
+      },
+      "slow": {
+        "title": "Selling slowly",
+        "sub": "Fewest plates, {range}",
+        "note": "Worth a look before the next menu change."
+      },
+      "emptyTitle": "No dishes sold from {range}",
+      "empty": "Paid orders show up here once they're settled. Pick another range above."
+    },
+    "expenses": {
+      "nothing": "Nothing logged in this range",
+      "kpis": {
+        "total": "Spent",
+        "totalNote": "Against {amount} on {range}",
+        "biggest": "Biggest cost",
+        "biggestNote": "{amount} · {share} of all spending",
+        "ratio": "Spent per ৳100 sold",
+        "ratioNote": "Expenses against paid sales",
+        "noSales": "No sales to compare with"
+      },
+      "table": {
+        "title": "By category",
+        "sub": "{n, plural, one {# entry} other {# entries}} in this range",
+        "category": "Category",
+        "entries": "Entries",
+        "amount": "Amount",
+        "share": "Share",
+        "change": "Change",
+        "new": "New"
+      },
+      "emptyTitle": "No expenses logged",
+      "empty": "Nothing was entered under Expenses for these dates."
+    },
+    "staff": {
+      "nothing": "No waiter sales in this range",
+      "kpis": {
+        "sales": "Sold by waiters",
+        "salesNote": "{n, plural, one {# waiter} other {# waiters}} on paid orders",
+        "top": "Top seller",
+        "topNote": "{amount} · {share} of the total",
+        "average": "Average order",
+        "averageNote": "Across {n, plural, one {# paid order} other {# paid orders}}",
+        "cancelled": "Cancelled",
+        "cancelledNote": "Orders cancelled on their tables"
+      },
+      "table": {
+        "title": "Waiters",
+        "sub": "Best seller first. Orders count once they're paid.",
+        "waiter": "Waiter",
+        "orders": "Orders",
+        "items": "Items",
+        "sales": "Sales",
+        "average": "Average",
+        "cancelled": "Cancelled",
+        "share": "Share",
+        "left": "left"
+      },
+      "compareNote": "Changes next to each waiter's sales are against {range}.",
+      "emptyTitle": "No waiter sales",
+      "empty": "Only paid orders with a waiter count here. Pick another range above."
     }
+  },
+  "expenseCategories": {
+    "ingredients": "Ingredients",
+    "utilities": "Utilities",
+    "supplies": "Supplies",
+    "maintenance": "Maintenance",
+    "salary": "Salaries",
+    "rent": "Rent",
+    "marketing": "Marketing",
+    "other": "Other"
   }
 }

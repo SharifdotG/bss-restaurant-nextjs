@@ -12,9 +12,12 @@ import { useSession } from "@/lib/session/client";
 import { useFormat } from "@/lib/use-format";
 import { useNow } from "@/lib/use-now";
 import { useShellLayout } from "@/lib/use-shell-layout";
+import { DishesTab } from "./dishes-tab";
+import { ExpensesTab } from "./expenses-tab";
 import { RangeBar } from "./range-bar";
 import { ReportCsv } from "./report-csv";
 import { SalesTab } from "./sales-tab";
+import { StaffTab } from "./staff-tab";
 import { REPORT_TABS, useReportUrl, type ReportTab } from "./use-report-url";
 
 /** Managers only: sales and profit, dishes, expenses and staff for any range of days. */
@@ -62,11 +65,15 @@ export function ReportsPage() {
         <TabsPanel value="sales">
           <SalesTab url={url} today={today} />
         </TabsPanel>
-        {(["dishes", "expenses", "staff"] as const).map((tab) => (
-          <TabsPanel key={tab} value={tab}>
-            <p className="text-sm text-muted-foreground">{t(`tabs.${tab}`)}</p>
-          </TabsPanel>
-        ))}
+        <TabsPanel value="dishes">
+          <DishesTab url={url} />
+        </TabsPanel>
+        <TabsPanel value="expenses">
+          <ExpensesTab url={url} />
+        </TabsPanel>
+        <TabsPanel value="staff">
+          <StaffTab url={url} />
+        </TabsPanel>
       </Tabs>
     </PageFrame>
   );
