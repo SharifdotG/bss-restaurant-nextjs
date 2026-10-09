@@ -339,6 +339,15 @@
       "served": "Served",
       "paid": "Paid",
       "cancelled": "Cancelled"
+    },
+    "reservation": {
+      "requested": "Requested",
+      "confirmed": "Confirmed",
+      "seated": "Seated",
+      "completed": "Done",
+      "cancelled": "Cancelled",
+      "declined": "Declined",
+      "no_show": "No-show"
     }
   },
   "orders": {
@@ -1254,5 +1263,32 @@
     "rent": "Rent",
     "marketing": "Marketing",
     "other": "Other"
+  },
+  "reservations": {
+    "moved": {
+      "confirmed": "{name}'s booking is confirmed at {table}.",
+      "seated": "{name} is seated at {table}.",
+      "completed": "{name} has left, {table} is free again.",
+      "cancelled": "{name}'s booking is cancelled.",
+      "declined": "{name}'s request was declined.",
+      "no_show": "{name} is marked as a no-show.",
+      "startOrder": "Start order",
+      "failed": "Couldn't update {name}'s booking"
+    },
+    "sheet": {
+      "created": "Booked {table} for {name}.",
+      "saved": "Saved {name}'s booking."
+    }
+  },
+  "tables": {
+    "toasts": {
+      "created": "{table} added. Its QR card is ready to print.",
+      "saved": "{table} saved.",
+      "staffSaved": "Staff saved for {n, plural, one {# table} other {# tables}}.",
+      "staffFailed": "Couldn't save the staff",
+      "newCode": "{table} has a new QR code. Print its card again.",
+      "newCodeFailed": "Couldn't make a new code for {table}",
+      "deleted": "{table} deleted."
+    }
   }
 }

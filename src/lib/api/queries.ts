@@ -1,6 +1,6 @@
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import type { OrdersQuery } from "@/lib/orders";
-import type { GroupBy, OrderSource } from "./schema";
+import type { GroupBy, OrderSource, ReservationStatus, paths } from "./schema";
 import { api, unwrap } from "./client";
 
 // Keys start with the resource: ["orders", filters], ["order", id], ["reservations", …],
@@ -116,6 +116,76 @@ export const dayBookingsQuery = (day: string) =>
       ),
     select: (page) => page.items,
   });
+
+/** Everything booked for one day, whatever happened to it; the reservations grid draws it. */
+export const dayReservationsQuery = (day: string) =>
+  queryOptions({
+    queryKey: ["reservations", { day }],
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/reservations", {
+          params: { query: { dateFrom: day, dateTo: day, sort: "startsAt", size: 100 } },
+          signal,
+        }),
+      ),
+    select: (page) => page.items,
+    placeholderData: keepPreviousData,
+  });
+
+/** Bookings still to come on any day: requests waiting for a yes and confirmed tables. */
+export const upcomingReservationsQuery = (
+  range: { dateFrom: string; dateTo: string },
+  status: ReservationStatus[],
+) =>
+  queryOptions({
+    queryKey: ["reservations", { ...range, status }],
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/reservations", {
+          params: { query: { ...range, status, sort: "startsAt", size: 100 } },
+          signal,
+        }),
+      ),
+    select: (page) => page.items,
+  });
+
+/** Name, phone or booking code across every date, latest first. */
+export const reservationSearchQuery = (search: string) =>
+  queryOptions({
+    queryKey: ["reservations", { search }],
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/reservations", {
+          params: { query: { search, sort: "-startsAt", size: 50 } },
+          signal,
+        }),
+      ),
+    placeholderData: keepPreviousData,
+    enabled: search.trim().length > 1,
+  });
+
+type AvailabilityQuery = NonNullable<
+  paths["/api/v1/reservations/availability"]["get"]["parameters"]["query"]
+>;
+
+/** Tables free for a party at a time, smallest first. */
+export const availabilityQuery = (query: AvailabilityQuery, enabled = true) =>
+  queryOptions({
+    queryKey: ["reservations", "availability", query],
+    queryFn: ({ signal }) =>
+      unwrap(api.GET("/api/v1/reservations/availability", { params: { query }, signal })),
+    staleTime: 30_000,
+    placeholderData: keepPreviousData,
+    enabled,
+  });
+
+/** Every table including switched-off ones, for the Tables page. */
+export const allTablesQuery = queryOptions({
+  queryKey: ["tables", "all"],
+  queryFn: ({ signal }) =>
+    unwrap(api.GET("/api/v1/tables", { params: { query: { size: 100 } }, signal })),
+  select: (page) => page.items,
+});
 
 // Billing
 

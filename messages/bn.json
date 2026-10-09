@@ -339,6 +339,15 @@
       "served": "পরিবেশিত",
       "paid": "পরিশোধিত",
       "cancelled": "বাতিল"
+    },
+    "reservation": {
+      "requested": "অনুরোধ",
+      "confirmed": "নিশ্চিত",
+      "seated": "বসেছেন",
+      "completed": "শেষ",
+      "cancelled": "বাতিল",
+      "declined": "ফিরিয়ে দেওয়া",
+      "no_show": "আসেননি"
     }
   },
   "orders": {
@@ -1254,5 +1263,32 @@
     "rent": "ভাড়া",
     "marketing": "মার্কেটিং",
     "other": "অন্যান্য"
+  },
+  "reservations": {
+    "moved": {
+      "confirmed": "{name}-এর বুকিং {table}-এ নিশ্চিত হয়েছে।",
+      "seated": "{name} {table}-এ বসেছেন।",
+      "completed": "{name} চলে গেছেন, {table} আবার খালি।",
+      "cancelled": "{name}-এর বুকিং বাতিল হয়েছে।",
+      "declined": "{name}-এর অনুরোধ ফিরিয়ে দেওয়া হয়েছে।",
+      "no_show": "{name} আসেননি বলে চিহ্নিত হয়েছে।",
+      "startOrder": "অর্ডার শুরু",
+      "failed": "{name}-এর বুকিং বদলানো যায়নি"
+    },
+    "sheet": {
+      "created": "{name}-এর জন্য {table} বুক হয়েছে।",
+      "saved": "{name}-এর বুকিং সেভ হয়েছে।"
+    }
+  },
+  "tables": {
+    "toasts": {
+      "created": "{table} যোগ হয়েছে। এর QR কার্ড প্রিন্ট করা যাবে।",
+      "saved": "{table} সেভ হয়েছে।",
+      "staffSaved": "{n, plural, other {#টি টেবিলের স্টাফ সেভ হয়েছে।}}",
+      "staffFailed": "স্টাফ সেভ করা যায়নি",
+      "newCode": "{table}-এর নতুন QR কোড তৈরি হয়েছে। কার্ডটি আবার প্রিন্ট করুন।",
+      "newCodeFailed": "{table}-এর নতুন কোড তৈরি করা যায়নি",
+      "deleted": "{table} মুছে ফেলা হয়েছে।"
+    }
   }
 }

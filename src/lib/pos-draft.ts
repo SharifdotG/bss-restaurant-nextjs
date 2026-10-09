@@ -39,6 +39,10 @@ export function saveDraft(userId: number, draft: Draft) {
   listeners.forEach((listener) => listener());
 }
 
+/** Points the draft at a table, keeping anything already in the cart; "Start order" uses it. */
+export const draftForTable = (userId: number, tableId: number) =>
+  saveDraft(userId, { ...read(keyFor(userId)), orderType: "dine_in", tableId });
+
 export const clearDraft = (userId: number) => saveDraft(userId, EMPTY_DRAFT);
 
 /** Every saved draft on this device; called when someone signs out. */

@@ -1,4 +1,5 @@
 import type { OrderOut, ReservationOut, TableOut } from "@/lib/api/schema";
+import { groupByArea } from "@/lib/reservations";
 
 // The API has no table status: a table is busy while it has an open order, and a booking
 // holds it from shortly before the guests are due.
@@ -53,19 +54,8 @@ export function floorTables(
 }
 
 /** Tables grouped by where they are, areas in the order the room was set up. */
-export function byArea(tables: readonly FloorTable[]) {
-  const areas = new Map<string, FloorTable[]>();
-  for (const entry of tables.toSorted((a, b) => a.table.id - b.table.id)) {
-    const area = entry.table.location?.trim() || "";
-    areas.set(area, [...(areas.get(area) ?? []), entry]);
-  }
-  return [...areas].map(([area, entries]) => ({
-    area,
-    tables: entries.toSorted((a, b) =>
-      a.table.number.localeCompare(b.table.number, "en", { numeric: true }),
-    ),
-  }));
-}
+export const byArea = (tables: readonly FloorTable[]) =>
+  groupByArea(tables, (entry) => entry.table).map(({ area, items }) => ({ area, tables: items }));
 
 export const FLOOR_VIEWS = ["all", "inUse", "free", "booked", "mine"] as const;
 export type FloorView = (typeof FLOOR_VIEWS)[number];

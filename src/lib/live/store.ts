@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { api, unwrap } from "@/lib/api/client";
-import type { OrderOut } from "@/lib/api/schema";
+import type { OrderOut, ReservationOut } from "@/lib/api/schema";
 import { useNow } from "@/lib/use-now";
 import { getLiveStatus, onLiveEvent, subscribeLiveStatus } from "./socket";
 import { applyMessage, EMPTY, sortedOrders, sortedReservations, type LiveState } from "./state";
@@ -42,6 +42,20 @@ export const toLiveOrder = (order: OrderOut): LiveOrder => ({
   balanceDue: order.balanceDue,
   createdAt: order.createdAt,
   updatedAt: order.updatedAt,
+});
+
+export const toLiveReservation = (booking: ReservationOut): LiveReservation => ({
+  id: booking.id,
+  source: booking.source,
+  status: booking.status,
+  table: booking.table,
+  partySize: booking.partySize,
+  startsAt: booking.startsAt,
+  endsAt: booking.endsAt,
+  customerName: booking.customerName,
+  customerPhone: booking.customerPhone,
+  notes: booking.notes,
+  updatedAt: booking.updatedAt,
 });
 
 async function fetchOrder(id: number) {
