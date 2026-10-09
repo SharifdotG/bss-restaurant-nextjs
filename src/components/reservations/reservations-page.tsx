@@ -8,6 +8,7 @@ import {
   CaretRightIcon,
   CloudSlashIcon,
   CursorClickIcon,
+  PlusIcon,
 } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -53,6 +54,7 @@ import { useWideScreen } from "@/lib/use-shell-layout";
 import { BookingDecisionDialog, type Decision } from "./booking-decision-dialog";
 import { BookingDetails } from "./booking-details";
 import { BookingGrid } from "./booking-grid";
+import { BookingSheet, type SheetStart } from "./booking-sheet";
 import { SHOW, useDeskUrl, type Show } from "./use-desk-url";
 import { WaitingPanel } from "./waiting-panel";
 
@@ -76,6 +78,7 @@ export function ReservationsPage() {
   const now = useNow(30_000);
   const today = businessDate(now);
   const url = useDeskUrl(today);
+  const [sheet, setSheet] = useState<SheetStart | null>(null);
   const [deciding, setDeciding] = useState<{ booking: ReservationOut; decision: Decision } | null>(
     null,
   );
@@ -118,6 +121,7 @@ export function ReservationsPage() {
       paid={paidButSeated(selected, open ?? [], paid ?? [])}
       onClose={() => url.open(null)}
       onDecide={(decision) => setDeciding({ booking: selected, decision })}
+      onEdit={() => setSheet({ booking: selected })}
     />
   );
 
@@ -138,6 +142,14 @@ export function ReservationsPage() {
         ]
           .filter(Boolean)
           .join(" · ")
+      }
+      actions={
+        canManage && (
+          <Button onClick={() => setSheet({})}>
+            <PlusIcon weight="bold" />
+            {t("newBooking")}
+          </Button>
+        )
       }
     >
       <div className="mb-5 flex flex-wrap items-center gap-2">
@@ -268,6 +280,9 @@ export function ReservationsPage() {
                   selected={url.booking}
                   now={now}
                   onOpen={openBooking}
+                  onBook={
+                    canManage ? (table, at) => setSheet({ tableId: table.id, at }) : undefined
+                  }
                 />
                 {onGrid.length === 0 && (
                   <div className="pointer-events-none absolute inset-0 grid place-items-center p-6">
@@ -277,6 +292,14 @@ export function ReservationsPage() {
                         tone="brand"
                         title={t("empty.title")}
                         className="py-8"
+                        action={
+                          canManage && (
+                            <Button onClick={() => setSheet({})}>
+                              <PlusIcon weight="bold" />
+                              {t("newBooking")}
+                            </Button>
+                          )
+                        }
                       >
                         {t("empty.body")}
                       </EmptyState>
@@ -316,6 +339,17 @@ export function ReservationsPage() {
           </SheetContent>
         </Sheet>
       )}
+
+      <BookingSheet
+        start={sheet}
+        today={today}
+        now={now}
+        onClose={() => setSheet(null)}
+        onSaved={(booking) => {
+          setSheet(null);
+          url.open(booking.id, businessDate(booking.startsAt));
+        }}
+      />
 
       {deciding && (
         <BookingDecisionDialog

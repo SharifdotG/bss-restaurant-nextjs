@@ -208,7 +208,7 @@ export function BookingDetails({
             {t("left")}
           </Button>
         )}
-        <div className="grid grid-cols-2 gap-2 empty:hidden">
+        <div className="flex flex-wrap gap-2 *:flex-1 empty:hidden">
           {editable && (
             <Button variant="outline" onClick={onEdit}>
               <PencilSimpleIcon />

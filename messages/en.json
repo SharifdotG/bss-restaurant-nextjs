@@ -1277,7 +1277,41 @@
     },
     "sheet": {
       "created": "Booked {table} for {name}.",
-      "saved": "Saved {name}'s booking."
+      "saved": "Saved {name}'s booking.",
+      "newTitle": "New booking",
+      "newSub": "Staff bookings are confirmed straight away.",
+      "editTitle": "Edit {name}'s booking",
+      "editSub": "The time and table are checked again when you save.",
+      "date": "Date",
+      "time": "Time",
+      "guests": "Guests",
+      "length": "Length",
+      "minutes": "{n, number} min",
+      "table": "Table",
+      "fit": "{n, plural, =0 {none fit} one {# fits} other {# fit}} {guests, plural, one {# guest} other {# guests}}, {range}",
+      "noneFree": "No table fits {guests, plural, one {# guest} other {# guests}} then. Try another time or a shorter stay.",
+      "seats": "{n, plural, one {# seat} other {# seats}}",
+      "busyNow": "Open order at the table now",
+      "smallest": "Smallest that fits",
+      "more": "Show {n, number} more",
+      "fewer": "Show fewer",
+      "taken": "The table you picked isn't free at that time.",
+      "name": "Guest name",
+      "phone": "Phone",
+      "email": "Email",
+      "optional": "Optional",
+      "notes": "Notes",
+      "notesPlaceholder": "High chair, birthday, allergies…",
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "save": "Save changes",
+      "book": "Book {table} for {time}",
+      "bookPlain": "Book",
+      "errors": {
+        "name": "Add the guest's name.",
+        "phone": "Add a phone number to call, like 01712 345 678.",
+        "table": "Pick a table."
+      }
     },
     "today": "Today",
     "late": "Late",
@@ -1323,7 +1357,7 @@
     },
     "empty": {
       "title": "No bookings yet",
-      "body": "Every table is free all day."
+      "body": "Every table is free all day. Click a slot on the grid to book it."
     },
     "when": {
       "tonight": "Tonight {time}",
@@ -1414,7 +1448,8 @@
         "plansChanged": "Plans changed",
         "duplicate": "Booked twice by mistake"
       }
-    }
+    },
+    "newBooking": "New booking"
   },
   "tables": {
     "toasts": {

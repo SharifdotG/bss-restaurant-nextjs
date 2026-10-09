@@ -153,6 +153,10 @@ export function shiftDay(day: string, days: number) {
   return date.toISOString().slice(0, 10);
 }
 
+/** A moment as Dhaka wall-clock time with its offset, the way the API likes datetimes. */
+export const toDhakaIso = (at: number) =>
+  `${new Date(at + 6 * 3_600_000).toISOString().slice(0, 19)}${DHAKA_OFFSET}`;
+
 /** A Dhaka wall-clock time for the API, which wants an explicit offset. */
 export const dhakaDateTime = (day: string, time: string) =>
   `${day}T${time.length === 5 ? `${time}:00` : time}${DHAKA_OFFSET}`;

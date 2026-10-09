@@ -57,7 +57,23 @@ export function BookingGrid({
     nowAt ?? (Number.isFinite(firstStart) ? (firstStart - window.from) / 60_000 : 0);
   useEffect(() => {
     scroller.current?.scrollTo({ left: Math.max(0, focusMinute * PX_PER_MINUTE - HOUR_PX * 1.5) });
-  }, [window.from, focusMinute]);
+    // Only when the day changes; later ticks of the clock shouldn't move the grid.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [window.from]);
+
+  // A booking opened from elsewhere (search, the waiting list, a save) is brought into view.
+  useEffect(() => {
+    const block = scroller.current?.querySelector<HTMLElement>(`[data-booking="${selected}"]`);
+    const view = scroller.current;
+    if (!block || !view) return;
+    const left = block.offsetLeft + LABEL_PX;
+    if (
+      left < view.scrollLeft + LABEL_PX ||
+      left + block.offsetWidth > view.scrollLeft + view.clientWidth
+    ) {
+      view.scrollTo({ left: Math.max(0, left - LABEL_PX - HOUR_PX), behavior: "smooth" });
+    }
+  }, [selected]);
 
   const row = (
     key: string,
@@ -246,6 +262,7 @@ function Block({ booking, window, lane, late, selected, onOpen }: BlockProps) {
       type="button"
       onClick={onOpen}
       aria-pressed={selected}
+      data-booking={booking.id}
       aria-label={t("grid.blockLabel", {
         name: booking.customerName,
         n: booking.partySize,
