@@ -54,6 +54,7 @@ export function DateRangePicker({ value, onChange, today, className }: DateRange
           selected={draft}
           onSelect={setDraft}
           resetOnSelect
+          showOutsideDays={false}
           numberOfMonths={phone ? 1 : 2}
           // Two months side by side end on the range's last month.
           defaultMonth={dayToDate(phone ? value.to : shiftDay(value.to.slice(0, 8) + "01", -1))}
