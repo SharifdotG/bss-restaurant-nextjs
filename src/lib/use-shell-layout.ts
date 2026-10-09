@@ -78,3 +78,11 @@ export function toggleSidebar() {
   if (!window.matchMedia(QUERIES.full).matches) return;
   setSidebarCollapsed(!readCollapsed());
 }
+
+/** 1280 and up, whether the sidebar is open or not: room for a side column next to the page. */
+export const useWideScreen = () =>
+  useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(QUERIES.full).matches,
+    () => true,
+  );

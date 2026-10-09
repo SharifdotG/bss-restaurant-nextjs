@@ -34,6 +34,26 @@ const DAY: Intl.DateTimeFormatOptions = { day: "numeric", month: "short" };
 export const formatTime = (value: DateInput, locale: Locale) =>
   dateFormat(locale, TIME).format(toDate(value));
 
+/** 7:00 – 8:30 PM, the shared half written once. */
+export const formatTimeRange = (from: DateInput, to: DateInput, locale: Locale) =>
+  dateFormat(locale, TIME).formatRange(toDate(from), toDate(to));
+
+/** 7 PM, for hour marks. */
+export const formatHour = (value: DateInput, locale: Locale) =>
+  dateFormat(locale, { hour: "numeric", hour12: true }).format(toDate(value));
+
+/** Monday */
+export const formatWeekdayName = (value: DateInput, locale: Locale) =>
+  dateFormat(locale, { weekday: "long" }).format(toDate(value));
+
+/** Mon */
+export const formatWeekdayShort = (value: DateInput, locale: Locale) =>
+  dateFormat(locale, { weekday: "short" }).format(toDate(value));
+
+/** Sun, 11 Oct 2026, for a day picker's button. Days are API dates. */
+export const formatDayWithWeekday = (day: string, locale: Locale) =>
+  dateFormat(locale, { weekday: "short", ...DAY, year: "numeric" }).format(dayToDate(day));
+
 /** Oct 11, 2026 */
 export const formatDate = (value: DateInput, locale: Locale) =>
   dateFormat(locale, { ...DAY, year: "numeric" }).format(toDate(value));

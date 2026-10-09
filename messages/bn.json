@@ -1278,6 +1278,142 @@
     "sheet": {
       "created": "{name}-এর জন্য {table} বুক হয়েছে।",
       "saved": "{name}-এর বুকিং সেভ হয়েছে।"
+    },
+    "today": "আজ",
+    "late": "দেরি",
+    "failed": "বুকিং লোড করা যায়নি",
+    "retry": "আবার চেষ্টা করুন",
+    "nothingSelected": "কিছু বাছাই করা নেই",
+    "pickOne": "গ্রিডে একটি বুকিং বেছে নিন: অতিথি, টেবিল আর পরের কাজ এখানে দেখাবে।",
+    "meta": {
+      "day": "{n, plural, other {#টি বুকিং}}, {guests, plural, other {# জন অতিথি}}",
+      "none": "এখনো কোনো বুকিং নেই",
+      "waiting": "{n, number}টি অনুরোধ অপেক্ষায়"
+    },
+    "toolbar": {
+      "previous": "আগের দিন",
+      "next": "পরের দিন",
+      "day": "দিন বেছে নিন",
+      "today": "আজ",
+      "show": "দেখান",
+      "area": "জায়গা",
+      "allAreas": "সব জায়গা"
+    },
+    "show": {
+      "all": "সব বুকিং",
+      "coming": "এখনো আসবেন",
+      "seated": "এখন বসে আছেন",
+      "finished": "শেষ ও আসেননি"
+    },
+    "grid": {
+      "label": "টেবিল ও সময় অনুযায়ী বুকিং",
+      "table": "টেবিল",
+      "requests": "অনলাইন অনুরোধ",
+      "noTable": "টেবিল নেই",
+      "needsYes": "হ্যাঁ বলা বাকি",
+      "noArea": "অন্যান্য টেবিল",
+      "tables": "{n, plural, other {#টি টেবিল}}",
+      "seats": "{n, plural, other {# আসন}}",
+      "switchedOff": "বন্ধ করা",
+      "bookAt": "{time}-এ নতুন বুকিং",
+      "hours": "খোলা {from} – {to}",
+      "noShowAt": "{time} · আসেননি",
+      "lateAt": "{time} · দেরি",
+      "blockLabel": "{name}, {n, plural, other {# জন}}, {when}, {status}"
+    },
+    "empty": {
+      "title": "এখনো কোনো বুকিং নেই",
+      "body": "সারা দিন সব টেবিল খালি।"
+    },
+    "when": {
+      "tonight": "আজ রাত {time}",
+      "today": "আজ {time}",
+      "tomorrow": "আগামীকাল {time}",
+      "weekday": "{day} {time}",
+      "date": "{date}, {time}"
+    },
+    "waiting": {
+      "title": "হ্যাঁ-এর অপেক্ষায়",
+      "sub": "নিশ্চিত করলে সবচেয়ে ছোট খালি টেবিলটি দেওয়া হয়।",
+      "empty": "কোনো অনুরোধ অপেক্ষায় নেই।",
+      "guests": "{n, plural, other {# জন}}",
+      "source": {
+        "online": "অনলাইন",
+        "staff": "স্টাফ"
+      },
+      "freeTable": "{table} খালি",
+      "noneFree": "কোনো টেবিল খালি নেই",
+      "decline": "ফিরিয়ে দিন",
+      "confirm": "নিশ্চিত করুন",
+      "confirming": "নিশ্চিত হচ্ছে…",
+      "all": "সব {n, number}টি দেখুন",
+      "fewer": "কম দেখান"
+    },
+    "details": {
+      "close": "বন্ধ",
+      "when": "সময়",
+      "minutes": "{n, number} মিনিট",
+      "arrivesIn": "{time} পরে আসবেন",
+      "lateBy": "{time} দেরি",
+      "guestsLabel": "অতিথি",
+      "guests": "{n, plural, other {# জন অতিথি}}",
+      "email": "ইমেইল",
+      "table": "টেবিল",
+      "seats": "{n, plural, other {# আসন}}",
+      "staff": "দায়িত্বে {names}",
+      "noTable": "এখনো টেবিল নেই",
+      "wouldGet": "নিশ্চিত করলে {table} পাবেন",
+      "noneFree": "তখন কোনো টেবিল খালি নেই",
+      "notes": "নোট",
+      "reason": "কারণ",
+      "lateHint": "তাঁরা {time} দেরি করছেন। ফোন করুন, অথবা টেবিল খালি করতে 'আসেননি' দিন।",
+      "paidHint": "{table}-এর বিল দেওয়া হয়েছে, কিছু খোলা নেই। তাঁরা চলে গিয়ে থাকলে টেবিলটি খালি করুন।",
+      "confirm": "নিশ্চিত করুন",
+      "confirmAt": "{table}-এ নিশ্চিত করুন",
+      "seat": "অতিথিদের বসান",
+      "left": "অতিথিরা চলে গেছেন",
+      "edit": "বদলান",
+      "decline": "ফিরিয়ে দিন",
+      "noShow": "আসেননি",
+      "cancel": "বুকিং বাতিল",
+      "fromWebsite": "অনলাইনে বুক করা, {date}",
+      "bookedBy": "{name} বুক করেছেন, {date}",
+      "code": "কোড {code}"
+    },
+    "decide": {
+      "guests": "{n, plural, other {# জন}}",
+      "lateBy": "{time} দেরি",
+      "online": "অনলাইনে বুক করা",
+      "quickLabel": "দ্রুত কারণ",
+      "reasonLabel": "কারণ (আবশ্যক)",
+      "reasonPlaceholder": "অতিথির কী জানা দরকার?",
+      "guestSees": "অতিথি তাঁর বুকিং পেজে এই কারণটি দেখবেন।",
+      "saving": "সেভ হচ্ছে…",
+      "declined": {
+        "title": "{name}-এর অনুরোধ ফিরিয়ে দেবেন?",
+        "keep": "ফিরে যান",
+        "confirm": "অনুরোধ ফিরিয়ে দিন"
+      },
+      "cancelled": {
+        "title": "{name}-এর বুকিং বাতিল করবেন?",
+        "keep": "বুকিং রাখুন",
+        "confirm": "বুকিং বাতিল করুন"
+      },
+      "no_show": {
+        "title": "{name} আসেননি বলে চিহ্নিত করবেন?",
+        "body": "{table} সঙ্গে সঙ্গে ওয়াক-ইন অতিথিদের জন্য খালি হবে। এটি আর ফেরানো যাবে না।",
+        "keep": "আরও অপেক্ষা করুন",
+        "confirm": "আসেননি দিন"
+      },
+      "reasons": {
+        "fullyBooked": "ওই সময়ে সব টেবিল বুক করা",
+        "closed": "সেদিন আমরা বন্ধ",
+        "tooLarge": "দলটি আমাদের টেবিলের জন্য বড়",
+        "noAnswer": "নিশ্চিত করতে আপনাকে পাওয়া যায়নি",
+        "guestCalled": "অতিথি ফোন করে বাতিল করেছেন",
+        "plansChanged": "পরিকল্পনা বদলেছে",
+        "duplicate": "ভুল করে দুবার বুক করা"
+      }
     }
   },
   "tables": {

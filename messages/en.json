@@ -1278,6 +1278,142 @@
     "sheet": {
       "created": "Booked {table} for {name}.",
       "saved": "Saved {name}'s booking."
+    },
+    "today": "Today",
+    "late": "Late",
+    "failed": "Couldn't load the bookings",
+    "retry": "Try again",
+    "nothingSelected": "Nothing selected",
+    "pickOne": "Pick a booking on the grid to see the guest, the table and what to do next.",
+    "meta": {
+      "day": "{n, plural, one {# booking} other {# bookings}}, {guests, plural, one {# guest} other {# guests}}",
+      "none": "no bookings yet",
+      "waiting": "{n, number} waiting for a yes"
+    },
+    "toolbar": {
+      "previous": "Previous day",
+      "next": "Next day",
+      "day": "Pick a day",
+      "today": "Today",
+      "show": "Show",
+      "area": "Area",
+      "allAreas": "All areas"
+    },
+    "show": {
+      "all": "All bookings",
+      "coming": "Still to come",
+      "seated": "Seated now",
+      "finished": "Done and no-shows"
+    },
+    "grid": {
+      "label": "Bookings by table and time",
+      "table": "Table",
+      "requests": "Online requests",
+      "noTable": "No table",
+      "needsYes": "Needs a yes",
+      "noArea": "Other tables",
+      "tables": "{n, plural, one {# table} other {# tables}}",
+      "seats": "{n, plural, one {# seat} other {# seats}}",
+      "switchedOff": "Switched off",
+      "bookAt": "New booking at {time}",
+      "hours": "Open {from} – {to}",
+      "noShowAt": "{time} · no-show",
+      "lateAt": "{time} · late",
+      "blockLabel": "{name}, {n, plural, one {# guest} other {# guests}}, {when}, {status}"
+    },
+    "empty": {
+      "title": "No bookings yet",
+      "body": "Every table is free all day."
+    },
+    "when": {
+      "tonight": "Tonight {time}",
+      "today": "Today {time}",
+      "tomorrow": "Tomorrow {time}",
+      "weekday": "{day} {time}",
+      "date": "{date}, {time}"
+    },
+    "waiting": {
+      "title": "Waiting for a yes",
+      "sub": "Confirming puts them on the smallest free table.",
+      "empty": "No requests waiting.",
+      "guests": "{n, plural, one {# guest} other {# guests}}",
+      "source": {
+        "online": "Online",
+        "staff": "Staff"
+      },
+      "freeTable": "{table} is free",
+      "noneFree": "No table free",
+      "decline": "Decline",
+      "confirm": "Confirm",
+      "confirming": "Confirming…",
+      "all": "Show all {n, number}",
+      "fewer": "Show fewer"
+    },
+    "details": {
+      "close": "Close",
+      "when": "When",
+      "minutes": "{n, number} min",
+      "arrivesIn": "arrives in {time}",
+      "lateBy": "{time} late",
+      "guestsLabel": "Guests",
+      "guests": "{n, plural, one {# guest} other {# guests}}",
+      "email": "Email",
+      "table": "Table",
+      "seats": "{n, plural, one {# seat} other {# seats}}",
+      "staff": "served by {names}",
+      "noTable": "No table yet",
+      "wouldGet": "Confirming puts them on {table}",
+      "noneFree": "No table is free then",
+      "notes": "Notes",
+      "reason": "Reason",
+      "lateHint": "They're {time} late. Give them a call, or mark a no-show to free the table.",
+      "paidHint": "{table} has paid and has nothing open. If they've left, free the table.",
+      "confirm": "Confirm",
+      "confirmAt": "Confirm at {table}",
+      "seat": "Seat guests",
+      "left": "Guests left",
+      "edit": "Edit",
+      "decline": "Decline",
+      "noShow": "No-show",
+      "cancel": "Cancel booking",
+      "fromWebsite": "Booked online {date}",
+      "bookedBy": "Booked by {name}, {date}",
+      "code": "Code {code}"
+    },
+    "decide": {
+      "guests": "{n, plural, one {# guest} other {# guests}}",
+      "lateBy": "{time} late",
+      "online": "booked online",
+      "quickLabel": "Quick reasons",
+      "reasonLabel": "Reason (required)",
+      "reasonPlaceholder": "What should the guest know?",
+      "guestSees": "The guest sees this on their booking page.",
+      "saving": "Saving…",
+      "declined": {
+        "title": "Decline {name}'s request?",
+        "keep": "Back",
+        "confirm": "Decline request"
+      },
+      "cancelled": {
+        "title": "Cancel {name}'s booking?",
+        "keep": "Keep booking",
+        "confirm": "Cancel booking"
+      },
+      "no_show": {
+        "title": "Mark {name} as a no-show?",
+        "body": "{table} opens up for walk-ins straight away. A no-show can't be changed back.",
+        "keep": "Wait longer",
+        "confirm": "Mark no-show"
+      },
+      "reasons": {
+        "fullyBooked": "Fully booked at that time",
+        "closed": "We're closed that day",
+        "tooLarge": "Party too large for our tables",
+        "noAnswer": "Couldn't reach you to confirm",
+        "guestCalled": "Guest called to cancel",
+        "plansChanged": "Plans changed",
+        "duplicate": "Booked twice by mistake"
+      }
     }
   },
   "tables": {

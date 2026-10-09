@@ -35,7 +35,7 @@ type StatusInput = { booking: BookingRef; status: BookingMove; tableId?: number;
  * Confirm, seat, finish, cancel, decline or no-show. Nothing here can be undone, so it waits for
  * the API; seating offers to start the table's order straight from the toast.
  */
-export function useReservationStatus() {
+export function useReservationStatus({ toastErrors = true } = {}) {
   const client = useQueryClient();
   const t = useTranslations("reservations.moved");
   const errorText = useErrorText();
@@ -72,6 +72,7 @@ export function useReservationStatus() {
     },
     onError: (error, { booking }) => {
       void client.invalidateQueries({ queryKey: ["reservations"] });
+      if (!toastErrors) return;
       toast.error(t("failed", { name: booking.customerName }), {
         description: errorText.message(error),
       });
