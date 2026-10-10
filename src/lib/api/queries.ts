@@ -1,6 +1,6 @@
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import type { OrdersQuery } from "@/lib/orders";
-import type { GroupBy, OrderSource, ReservationStatus, paths } from "./schema";
+import type { ExpenseOut, GroupBy, OrderSource, ReservationStatus, paths } from "./schema";
 import { api, unwrap } from "./client";
 
 // Keys start with the resource: ["orders", filters], ["order", id], ["reservations", …],
@@ -87,6 +87,15 @@ export const categoriesQuery = queryOptions({
   queryFn: ({ signal }) => unwrap(api.GET("/api/v1/categories", { signal })),
   select: (categories) => categories.toSorted((a, b) => a.sortOrder - b.sortOrder),
   staleTime: 5 * 60_000,
+});
+
+/** Switched-off categories too, for the Menu page. */
+export const allCategoriesQuery = queryOptions({
+  queryKey: ["categories", "all"],
+  queryFn: ({ signal }) =>
+    unwrap(api.GET("/api/v1/categories", { params: { query: { includeInactive: true } }, signal })),
+  select: (categories) =>
+    categories.toSorted((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name)),
 });
 
 /** Staff who can take a table. Managers only: the API keeps the staff list to them. */
@@ -300,4 +309,65 @@ export const sourceCountQuery = (day: string, source: OrderSource) =>
       size: 1,
     }),
     select: (page) => page.total,
+  });
+
+// Staff
+
+/** Everyone on the books, including people who left; a restaurant's staff fits one page. */
+export const employeesQuery = queryOptions({
+  queryKey: ["employees", "all"],
+  queryFn: ({ signal }) =>
+    unwrap(
+      api.GET("/api/v1/employees", { params: { query: { size: 100, sort: "firstName" } }, signal }),
+    ),
+  select: (page) => page.items,
+});
+
+export const employeeQuery = (id: number) =>
+  queryOptions({
+    queryKey: ["employees", id],
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/employees/{employee_id}", {
+          params: { path: { employee_id: id } },
+          signal,
+        }),
+      ),
+  });
+
+export const usersQuery = queryOptions({
+  queryKey: ["users"],
+  queryFn: ({ signal }) =>
+    unwrap(api.GET("/api/v1/users", { params: { query: { size: 100 } }, signal })),
+  select: (page) => page.items,
+});
+
+export const meQuery = queryOptions({
+  queryKey: ["me"],
+  queryFn: ({ signal }) => unwrap(api.GET("/api/v1/auth/me", { signal })),
+});
+
+// Expenses
+
+/**
+ * Every expense in a range, a page of 100 at a time; a month is usually one or two pages.
+ * The summary needs them all, so filtering and paging happen on this side.
+ */
+export const expensesQuery = ({ from, to }: ReportRange) =>
+  queryOptions({
+    queryKey: ["expenses", { from, to }],
+    queryFn: async ({ signal }) => {
+      const items: ExpenseOut[] = [];
+      for (let page = 1; ; page++) {
+        const result = await unwrap(
+          api.GET("/api/v1/expenses", {
+            params: { query: { dateFrom: from, dateTo: to, size: 100, page } },
+            signal,
+          }),
+        );
+        items.push(...result.items);
+        if (page >= result.pages) return items;
+      }
+    },
+    placeholderData: keepPreviousData,
   });

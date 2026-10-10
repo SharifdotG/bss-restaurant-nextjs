@@ -848,6 +848,17 @@
       "soldOut": "{name} শেষ হয়ে গেছে",
       "backOn": "{name} আবার পাওয়া যাচ্ছে",
       "failed": "{name} আপডেট করা গেল না"
+    },
+    "toasts": {
+      "foodCreated": "{name} মেনুতে যোগ হয়েছে",
+      "foodSaved": "{name} সেভ হয়েছে",
+      "foodDeleted": "{name} মেনু থেকে সরানো হয়েছে",
+      "categoryCreated": "{name} যোগ হয়েছে",
+      "categorySaved": "{name} সেভ হয়েছে",
+      "categoryHidden": "{name} অতিথিদের কাছ থেকে লুকানো",
+      "categoryShown": "{name} আবার দেখা যাচ্ছে",
+      "categoryDeleted": "{name} মুছে ফেলা হয়েছে",
+      "reorderFailed": "নতুন ক্রম সেভ করা যায়নি"
     }
   },
   "incoming": {
@@ -1616,5 +1627,48 @@
     "hours": "আজ খোলা {from} – {to}",
     "deadTitle": "এই QR কোডটি আর কাজ করে না",
     "deadBody": "টেবিলটির হয়তো নতুন কোড আছে। ওয়েটারকে বলুন, তিনি অর্ডার নেবেন।"
+  },
+  "inputs": {
+    "photo": {
+      "add": "ছবি যোগ করুন",
+      "replace": "বদলান",
+      "remove": "সরান",
+      "hint": "এখানে ছবি ছেড়ে দিন বা বেছে নিন। JPG, PNG বা WebP।",
+      "uploading": "আপলোড হচ্ছে…",
+      "wrongType": "এই ফাইলটি ব্যবহার করা যাবে না। JPG, PNG বা WebP দিন।",
+      "unreadable": "ছবিটি পড়া গেল না। অন্য একটি দিন।"
+    },
+    "crop": {
+      "title": "ছবি কাটুন",
+      "hint": "টেনে সরান, আর জুম করে খাবারটি চৌকোর ভেতরে আনুন।",
+      "zoom": "জুম",
+      "cancel": "বাতিল",
+      "use": "এই ছবি নিন"
+    },
+    "password": {
+      "show": "পাসওয়ার্ড দেখান",
+      "hide": "পাসওয়ার্ড লুকান",
+      "generate": "একটি বানিয়ে দিন",
+      "copy": "কপি",
+      "copied": "কপি হয়েছে"
+    }
+  },
+  "staff": {
+    "toasts": {
+      "added": "{name} যোগ হয়েছেন",
+      "saved": "{name} সেভ হয়েছে",
+      "accountCreated": "{name} এখন সাইন ইন করতে পারবেন",
+      "signInOff": "{name} আর সাইন ইন করতে পারবেন না",
+      "signInOn": "{name} আবার সাইন ইন করতে পারবেন",
+      "roleSaved": "{name}-এর ভূমিকা বদলেছে",
+      "left": "{name} চলে গেছেন বলে চিহ্নিত"
+    }
+  },
+  "expenses": {
+    "toasts": {
+      "added": "{title} যোগ হয়েছে",
+      "saved": "{title} সেভ হয়েছে",
+      "deleted": "{title} মুছে ফেলা হয়েছে"
+    }
   }
 }

@@ -848,6 +848,17 @@
       "soldOut": "{name} is sold out",
       "backOn": "{name} is back on",
       "failed": "Couldn't update {name}"
+    },
+    "toasts": {
+      "foodCreated": "{name} is on the menu",
+      "foodSaved": "{name} saved",
+      "foodDeleted": "{name} is off the menu",
+      "categoryCreated": "{name} added",
+      "categorySaved": "{name} saved",
+      "categoryHidden": "{name} is hidden from guests",
+      "categoryShown": "{name} is showing again",
+      "categoryDeleted": "{name} deleted",
+      "reorderFailed": "Couldn't save the new order"
     }
   },
   "incoming": {
@@ -1616,5 +1627,48 @@
     "hours": "Open today {from} – {to}",
     "deadTitle": "This QR code doesn't work anymore",
     "deadBody": "The table may have a new code. Ask your waiter and they'll take your order."
+  },
+  "inputs": {
+    "photo": {
+      "add": "Add photo",
+      "replace": "Replace",
+      "remove": "Remove",
+      "hint": "Drop a photo here or pick one. JPG, PNG or WebP.",
+      "uploading": "Uploading…",
+      "wrongType": "That file isn't a photo we can use. Try a JPG, PNG or WebP.",
+      "unreadable": "Couldn't read that photo. Try another one."
+    },
+    "crop": {
+      "title": "Crop the photo",
+      "hint": "Drag to move it, and zoom so the dish fills the square.",
+      "zoom": "Zoom",
+      "cancel": "Cancel",
+      "use": "Use photo"
+    },
+    "password": {
+      "show": "Show password",
+      "hide": "Hide password",
+      "generate": "Make one up",
+      "copy": "Copy",
+      "copied": "Copied"
+    }
+  },
+  "staff": {
+    "toasts": {
+      "added": "{name} added",
+      "saved": "{name} saved",
+      "accountCreated": "{name} can sign in now",
+      "signInOff": "{name} can't sign in any more",
+      "signInOn": "{name} can sign in again",
+      "roleSaved": "{name}'s role changed",
+      "left": "{name} is marked as left"
+    }
+  },
+  "expenses": {
+    "toasts": {
+      "added": "{title} added",
+      "saved": "{title} saved",
+      "deleted": "{title} deleted"
+    }
   }
 }
