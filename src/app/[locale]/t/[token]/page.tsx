@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { TableWelcome } from "@/components/guest/table-welcome";
@@ -19,5 +20,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 export default async function TableRoute({ params }: Params) {
   const { locale, token } = await params;
   setRequestLocale(asLocale(locale));
-  return <TableWelcome token={token} />;
+  return (
+    <Suspense>
+      <TableWelcome token={token} />
+    </Suspense>
+  );
 }
