@@ -38,6 +38,7 @@ export function useFormat() {
 
   return {
     locale,
+    symbol,
     money: (taka: number) => formatMoney(taka, locale, symbol),
     moneyWhole: (taka: number) => formatMoneyWhole(taka, locale, symbol),
     moneyCompact: (taka: number) => formatMoneyCompact(taka, locale),

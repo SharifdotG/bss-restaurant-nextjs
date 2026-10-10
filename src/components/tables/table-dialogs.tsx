@@ -19,6 +19,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogTile,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { upcomingReservationsQuery } from "@/lib/api/queries";
@@ -35,25 +36,7 @@ import {
   useSaveTable,
   useSetTableStaff,
 } from "@/lib/use-table-actions";
-import { cn } from "@/lib/utils";
 import { StaffPicker } from "./staff-picker";
-
-type Tile = "red" | "amber" | "brand";
-
-function DialogTile({ icon: Icon, tone }: { icon: typeof TrashIcon; tone: Tile }) {
-  return (
-    <span
-      className={cn(
-        "grid size-10 shrink-0 place-items-center rounded-lg",
-        tone === "red" && "bg-tone-red-subtle text-tone-red-text",
-        tone === "amber" && "bg-tone-amber-subtle text-tone-amber-text",
-        tone === "brand" && "bg-primary-soft text-primary-soft-foreground",
-      )}
-    >
-      <Icon weight="duotone" className="size-5" />
-    </span>
-  );
-}
 
 type TableDialogProps = { table: TableOut; onClose: () => void };
 

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
-import { XIcon } from "@phosphor-icons/react";
+import { XIcon, type Icon } from "@phosphor-icons/react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -120,6 +120,24 @@ function DialogDescription({ className, ...props }: DialogPrimitive.Description.
   );
 }
 
+type TileTone = "brand" | "red" | "amber" | "green";
+
+const TILE_TONES: Record<TileTone, string> = {
+  brand: "bg-primary-soft text-primary-soft-foreground",
+  red: "bg-tone-red-subtle text-tone-red-text",
+  amber: "bg-tone-amber-subtle text-tone-amber-text",
+  green: "bg-tone-green-subtle text-tone-green-text",
+};
+
+/** The icon square at the start of a dialog's header; its tone says how serious the step is. */
+function DialogTile({ icon: TileIcon, tone = "brand" }: { icon: Icon; tone?: TileTone }) {
+  return (
+    <span className={cn("grid size-10 shrink-0 place-items-center rounded-lg", TILE_TONES[tone])}>
+      <TileIcon weight="duotone" className="size-5" />
+    </span>
+  );
+}
+
 export {
   Dialog,
   DialogBody,
@@ -129,6 +147,7 @@ export {
   DialogFooter,
   DialogHeader,
   DialogOverlay,
+  DialogTile,
   DialogTitle,
   DialogTrigger,
 };

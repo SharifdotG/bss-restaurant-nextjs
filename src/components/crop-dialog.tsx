@@ -12,6 +12,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogTile,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { renderImage, type Area } from "@/lib/image-file";
@@ -45,9 +46,7 @@ export function CropDialog({ src, onCancel, onDone }: CropDialogProps) {
     <Dialog open={src !== null} onOpenChange={(open) => !open && !busy && onCancel()}>
       <DialogContent className="max-w-[480px]">
         <DialogHeader>
-          <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary-soft-foreground">
-            <CropIcon weight="duotone" className="size-5" />
-          </span>
+          <DialogTile icon={CropIcon} />
           <div className="min-w-0 pt-1.5 pr-8">
             <DialogTitle>{t("title")}</DialogTitle>
             <DialogDescription className="mt-1">{t("hint")}</DialogDescription>

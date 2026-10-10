@@ -20,6 +20,8 @@ type ImageFieldProps = {
   /** The photo on show: the saved one, or one just uploaded. */
   url: string | null | undefined;
   onChange: (change: ImageChange) => void;
+  /** So the form can hold its Save button until the upload lands. */
+  onUploading?: (uploading: boolean) => void;
   label: string;
   hint?: string;
   /** Square crop before upload; receipts skip it so nothing gets cut off. */
@@ -38,6 +40,7 @@ export function ImageField({
   folder,
   url,
   onChange,
+  onUploading,
   label,
   hint,
   crop = true,
@@ -58,11 +61,14 @@ export function ImageField({
 
   useEffect(() => () => void (picked && URL.revokeObjectURL(picked)), [picked]);
 
-  const send = (photo: Blob) =>
+  const send = (photo: Blob) => {
+    onUploading?.(true);
     upload.mutate(photo, {
       onSuccess: ({ key, url }) => onChange({ key, url }),
       onError: (error) => setProblem(errorText.message(error)),
+      onSettled: () => onUploading?.(false),
     });
+  };
 
   async function take(file: File | undefined) {
     if (!file || disabled || busy) return;

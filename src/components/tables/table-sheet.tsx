@@ -18,7 +18,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Switch } from "@/components/ui/switch";
+import { SwitchRow } from "@/components/ui/switch-row";
 import { Link } from "@/i18n/navigation";
 import { upcomingReservationsQuery } from "@/lib/api/queries";
 import type { TableOut } from "@/lib/api/schema";
@@ -174,13 +174,12 @@ function TableForm({ table, areas, now, onClose }: TableFormProps) {
           )}
         </Field>
 
-        <label className="flex items-start justify-between gap-4 rounded-lg border border-border p-4">
-          <span>
-            <span className="block text-sm font-bold">{t("active")}</span>
-            <span className="mt-0.5 block text-xs text-muted-foreground">{t("activeHint")}</span>
-          </span>
-          <Switch checked={active} onCheckedChange={setActive} />
-        </label>
+        <SwitchRow
+          title={t("active")}
+          hint={t("activeHint")}
+          checked={active}
+          onChange={setActive}
+        />
 
         {affected.length > 0 && (
           <div className="grid gap-2 rounded-lg bg-tone-amber-subtle px-4 py-3 text-sm text-tone-amber-text">
