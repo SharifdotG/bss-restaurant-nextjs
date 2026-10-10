@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowsClockwiseIcon,
   CloudSlashIcon,
   MagnifyingGlassIcon,
   PlusIcon,
+  PrinterIcon,
   UsersThreeIcon,
 } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
@@ -22,13 +23,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { allTablesQuery, waitersQuery } from "@/lib/api/queries";
+import { allTablesQuery, restaurantQuery, waitersQuery } from "@/lib/api/queries";
 import type { TableOut } from "@/lib/api/schema";
 import { useErrorText } from "@/lib/api/use-error-text";
 import { groupByArea } from "@/lib/reservations";
 import { areaNames, matchesTable, seatCount } from "@/lib/tables";
 import { useNow } from "@/lib/use-now";
 import { useSaveTable } from "@/lib/use-table-actions";
+import { QrCardsSheet } from "./qr-cards-sheet";
 import { TableCard, type TableAction } from "./table-card";
 import {
   AssignStaffDialog,
@@ -53,6 +55,18 @@ export function TablesPage() {
   const [selected, setSelected] = useState<Set<number>>(() => new Set());
   const [sheet, setSheet] = useState<TableSheetStart>(null);
   const [dialog, setDialog] = useState<Dialog | null>(null);
+  const [printing, setPrinting] = useState<TableOut[] | null>(null);
+  const restaurant = useQuery(restaurantQuery).data?.name ?? "";
+
+  // The cards render first, then the browser's print dialog opens on them.
+  useEffect(() => {
+    if (!printing) return;
+    const frame = requestAnimationFrame(() => {
+      window.print();
+      setPrinting(null);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [printing]);
 
   const all = tables.data ?? [];
   const areas = areaNames(all);
@@ -80,6 +94,7 @@ export function TablesPage() {
 
   const act = (table: TableOut, action: TableAction) => {
     if (action === "edit") setSheet({ table });
+    else if (action === "print") setPrinting([table]);
     else if (action === "newCode") setDialog({ kind: "newCode", table });
     else if (action === "delete") setDialog({ kind: "delete", table });
     else if (action === "toggle") {
@@ -152,10 +167,23 @@ export function TablesPage() {
           .join(" · ")
       }
       actions={
-        <Button onClick={() => setSheet({})}>
-          <PlusIcon weight="bold" />
-          {t("new")}
-        </Button>
+        <>
+          {live.length > 0 && (
+            <Button
+              variant="outline"
+              onClick={() =>
+                setPrinting(groupByArea(live, (table) => table).flatMap((g) => g.items))
+              }
+            >
+              <PrinterIcon />
+              {t("printAll")}
+            </Button>
+          )}
+          <Button onClick={() => setSheet({})}>
+            <PlusIcon weight="bold" />
+            {t("new")}
+          </Button>
+        </>
       }
     >
       <div className="mb-6 flex flex-wrap items-center gap-2">
@@ -222,6 +250,15 @@ export function TablesPage() {
               <UsersThreeIcon />
               {t("assignStaff")}
             </Button>
+            {picked.some((table) => table.isActive) && (
+              <Button
+                size="sm"
+                onClick={() => setPrinting(picked.filter((table) => table.isActive))}
+              >
+                <PrinterIcon />
+                {t("printSome", { n: picked.filter((table) => table.isActive).length })}
+              </Button>
+            )}
           </div>
         )}
       </div>
@@ -281,6 +318,7 @@ export function TablesPage() {
         </div>
       )}
 
+      {printing && <QrCardsSheet tables={printing} restaurant={restaurant} now={now} />}
       <TableSheet start={sheet} areas={areas} now={now} onClose={() => setSheet(null)} />
       {dialog?.kind === "newCode" && (
         <NewCodeDialog table={dialog.table} onClose={() => setDialog(null)} />

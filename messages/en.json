@@ -1596,6 +1596,25 @@
       "working": "Deleting…",
       "switchOff": "Switch off {table}"
     },
-    "assignStaff": "Assign staff"
+    "assignStaff": "Assign staff",
+    "printAll": "Print all QR cards",
+    "printSome": "Print {n, plural, one {# QR card} other {# QR cards}}",
+    "print": {
+      "header": "{restaurant} · QR cards for {n, plural, one {# table} other {# tables}}",
+      "printed": "Printed {date} · cut along the lines",
+      "qrLabel": "QR code for {table}",
+      "scanEn": "Scan to see the menu and order",
+      "scanBn": "স্ক্যান করে মেনু দেখুন, অর্ডার দিন",
+      "table": "Table {table}",
+      "footer": "If a table gets a new code in Tables, print its card again. The old card stops working."
+    }
+  },
+  "guest": {
+    "title": "Your table",
+    "atTable": "You're at table",
+    "soon": "Ordering from your phone is coming soon. For now, your waiter will take your order.",
+    "hours": "Open today {from} – {to}",
+    "deadTitle": "This QR code doesn't work anymore",
+    "deadBody": "The table may have a new code. Ask your waiter and they'll take your order."
   }
 }

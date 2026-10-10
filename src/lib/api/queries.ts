@@ -24,6 +24,21 @@ export const publicRestaurantQuery = queryOptions({
   staleTime: 10 * 60_000,
 });
 
+/** The table a guest's QR code belongs to; a 404 means the code was replaced or switched off. */
+export const publicTableQuery = (token: string) =>
+  queryOptions({
+    queryKey: ["public", "table", token],
+    queryFn: ({ signal }) =>
+      unwrap(
+        api.GET("/api/v1/public/tables/{qr_token}", {
+          params: { path: { qr_token: token } },
+          signal,
+        }),
+      ),
+    retry: false,
+    staleTime: 10 * 60_000,
+  });
+
 // Orders
 
 export const ordersQuery = (query: OrdersQuery) =>
