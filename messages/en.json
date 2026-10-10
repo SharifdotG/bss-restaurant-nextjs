@@ -1495,6 +1495,107 @@
       "newCode": "{table} has a new QR code. Print its card again.",
       "newCodeFailed": "Couldn't make a new code for {table}",
       "deleted": "{table} deleted."
-    }
+    },
+    "meta": "{n, plural, one {# table} other {# tables}}, {seats, plural, one {# seat} other {# seats}} · guests can order from these QR codes",
+    "metaOff": "{n, number} switched off",
+    "new": "New table",
+    "search": "Table number or area",
+    "allAreas": "All areas",
+    "areaFilter": "Area",
+    "allStaff": "All staff",
+    "staffFilter": "Staff",
+    "selected": "{n, number} selected",
+    "clear": "Clear",
+    "selectAll": "Select all",
+    "assign": {
+      "title": "Assign staff to {n, plural, one {# table} other {# tables}}",
+      "body": "{tables}. This replaces whoever is on them now.",
+      "cancel": "Cancel",
+      "confirm": "Assign to {n, plural, one {# table} other {# tables}}",
+      "working": "Saving…"
+    },
+    "areaCount": "{n, plural, one {# table} other {# tables}} · {seats, plural, one {# seat} other {# seats}}",
+    "add": "Add a table",
+    "addHint": "It gets its own QR code",
+    "noArea": "No area",
+    "offTitle": "Switched off",
+    "noMatch": "No tables match.",
+    "failed": "Couldn't load the tables",
+    "retry": "Try again",
+    "emptyTitle": "No tables yet",
+    "empty": "Add your tables and each one gets a QR code guests can order from.",
+    "card": {
+      "select": "Select {table}",
+      "menu": "More for {table}",
+      "edit": "Edit",
+      "print": "Print QR card",
+      "newCode": "New QR code",
+      "switchOff": "Switch off",
+      "switchOn": "Switch back on",
+      "delete": "Delete",
+      "qrLabel": "QR code for {table}",
+      "seats": "{n, plural, one {# seat} other {# seats}}",
+      "noArea": "No area",
+      "off": "Switched off",
+      "staffMany": "{name} +{n, number}",
+      "noStaff": "No one assigned",
+      "code": "Code {code}"
+    },
+    "staff": {
+      "none": "No waiters with a sign-in yet. Add them in Staff.",
+      "has": "has {tables}"
+    },
+    "sheet": {
+      "newTitle": "New table",
+      "newSub": "It gets a QR code as soon as it's saved.",
+      "editTitle": "Edit {table}",
+      "editSub": "Changes show on the floor, the POS and bookings straight away.",
+      "number": "Table number",
+      "numberPlaceholder": "T8",
+      "seats": "Seats",
+      "area": "Area",
+      "areaPlaceholder": "Ground floor, Window, Rooftop…",
+      "areaPick": "Areas in use",
+      "active": "Taking guests",
+      "activeHint": "Switched-off tables leave the floor, the POS and bookings, and their QR code stops working.",
+      "upcoming": "{table} has {n, plural, one {# booking} other {# bookings}} coming up",
+      "booking": "{when} · {name}, {n, plural, one {# guest} other {# guests}}",
+      "upcomingHint": "They keep {table} until you move them.",
+      "staff": "Staff",
+      "staffHint": "They see this table under My tables on the floor.",
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "save": "Save changes",
+      "saveAnyway": "Save anyway",
+      "create": "Add table",
+      "errors": {
+        "number": "Give the table a number or a name."
+      }
+    },
+    "newCode": {
+      "title": "Make a new QR code for {table}?",
+      "body": "The card on {table} stops working straight away. Print its new card after this.",
+      "keep": "Keep this code",
+      "confirm": "Make new code",
+      "working": "Making…"
+    },
+    "switchOff": {
+      "title": "Switch off {table}?",
+      "body": "It leaves the floor, the POS and bookings, and guests can't order from its QR code until it's back on.",
+      "upcoming": "{n, plural, one {# booking still points} other {# bookings still point}} at it. Move them to another table.",
+      "keep": "Keep it on",
+      "confirm": "Switch off {table}"
+    },
+    "delete": {
+      "title": "Delete {table}?",
+      "body": "{table} and its QR code go for good. This only works for a table that has never had an order or a booking.",
+      "inUseTitle": "{table} has history",
+      "inUseBody": "Orders or bookings used this table, so it stays on record. Switch it off instead: it leaves the floor, the POS and bookings, and its QR code stops working.",
+      "keep": "Keep it",
+      "confirm": "Delete table",
+      "working": "Deleting…",
+      "switchOff": "Switch off {table}"
+    },
+    "assignStaff": "Assign staff"
   }
 }

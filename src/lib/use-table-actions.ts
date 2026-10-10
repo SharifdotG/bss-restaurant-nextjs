@@ -13,24 +13,39 @@ const useRefreshTables = () => {
   return () => client.invalidateQueries({ queryKey: ["tables"] });
 };
 
-type SaveInput = { id?: undefined; body: TableCreate } | { id: number; body: TableUpdate };
+type SaveInput = ({ id?: undefined; body: TableCreate } | { id: number; body: TableUpdate }) & {
+  /** The table's staff, when they changed; saved right after the table. */
+  employeeIds?: number[];
+};
 
-/** Errors stay with the sheet so it can point at the field; the toast is for success. */
+/** A table and its staff in one go. Errors stay with the sheet so it can point at the field. */
 export function useSaveTable() {
   const refresh = useRefreshTables();
   const t = useTranslations("tables.toasts");
 
   return useMutation({
-    mutationFn: ({ id, body }: SaveInput) =>
-      id === undefined
-        ? unwrap(api.POST("/api/v1/tables", { body }))
-        : unwrap(
-            api.PATCH("/api/v1/tables/{table_id}", { params: { path: { table_id: id } }, body }),
-          ),
-    onSuccess: (table, { id }) => {
-      void refresh();
-      toast.success(t(id === undefined ? "created" : "saved", { table: table.number }));
+    mutationFn: async ({ id, body, employeeIds }: SaveInput) => {
+      const table =
+        id === undefined
+          ? await unwrap(api.POST("/api/v1/tables", { body }))
+          : await unwrap(
+              api.PATCH("/api/v1/tables/{table_id}", {
+                params: { path: { table_id: id } },
+                body,
+              }),
+            );
+      if (!employeeIds) return table;
+      return unwrap(
+        api.PUT("/api/v1/tables/{table_id}/employees", {
+          params: { path: { table_id: table.id } },
+          body: { employeeIds },
+        }),
+      );
     },
+    onSuccess: (table, { id }) =>
+      toast.success(t(id === undefined ? "created" : "saved", { table: table.number })),
+    // A new table may exist even if its staff failed to save.
+    onSettled: () => refresh(),
   });
 }
 

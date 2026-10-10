@@ -1,6 +1,7 @@
-import { plannedRoute } from "../app-route";
+import { TablesPage } from "@/components/tables/tables-page";
+import { pageRoute } from "../app-route";
 
-const route = plannedRoute("tables");
+const route = pageRoute("tables", TablesPage);
 
 export const generateMetadata = route.generateMetadata;
 export default route.Route;
