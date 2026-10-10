@@ -187,15 +187,17 @@ export function TablesPage() {
       }
     >
       <div className="mb-6 flex flex-wrap items-center gap-2">
-        <IconInput
-          icon={MagnifyingGlassIcon}
-          type="search"
-          value={url.search}
-          onChange={(event) => url.setSearch(event.target.value)}
-          placeholder={t("search")}
-          aria-label={t("search")}
-          className="w-full sm:w-72"
-        />
+        <div className="w-full sm:w-72">
+          <IconInput
+            icon={MagnifyingGlassIcon}
+            type="search"
+            value={url.search}
+            onChange={(event) => url.setSearch(event.target.value)}
+            placeholder={t("search")}
+            aria-label={t("search")}
+            className="w-full"
+          />
+        </div>
         {areas.length > 1 && (
           <Select
             value={url.area ?? ""}
