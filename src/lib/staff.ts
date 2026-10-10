@@ -1,4 +1,5 @@
 import type { EmployeeOut, UserOut, UserRole as Role } from "@/lib/api/schema";
+import { canManageAccount } from "@/lib/permissions";
 
 export const ROLES: Role[] = ["manager", "waiter", "chef", "cashier", "admin"];
 
@@ -17,6 +18,26 @@ export function accountsOnly(users: UserOut[], employees: EmployeeOut[]) {
   return users.filter((user) => !linked.has(user.id));
 }
 
+export type AccountAction = "account" | "password" | "role" | "signInOff" | "signInOn" | "left";
+
+type Actor = { id: number; role: Role };
+
+/**
+ * What this manager may do to someone's sign-in and record. Managers can't touch manager or
+ * admin sign-ins, and nobody changes their own here (that's what Profile is for).
+ */
+export function accountActions(actor: Actor, person: Pick<EmployeeOut, "account" | "isActive">) {
+  const { account } = person;
+  if (!person.isActive || account?.id === actor.id) return [];
+  if (!account) return ["account", "left"] satisfies AccountAction[];
+  const allowed = canManageAccount(actor.role, account.role);
+  const actions: AccountAction[] = [];
+  if (allowed) actions.push("password", "role", account.isActive ? "signInOff" : "signInOn");
+  // Leaving turns their sign-in off too, which needs the same right while it's on.
+  if (allowed || !account.isActive) actions.push("left");
+  return actions;
+}
+
 export type StaffShow = "current" | "left" | "noSignIn";
 
 export function matchesEmployee(
@@ -32,14 +53,6 @@ export function matchesEmployee(
     value?.toLowerCase().includes(query),
   );
 }
-
-export const initials = (name: string) =>
-  name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]!.toUpperCase())
-    .join("");
 
 // No look-alikes (l, 1, O, 0) so it can be read out over the counter.
 const CONSONANTS = "bcdfghjkmnprstvz";

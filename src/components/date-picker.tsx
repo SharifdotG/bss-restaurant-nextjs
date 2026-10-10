@@ -11,7 +11,7 @@ import { useFormat } from "@/lib/use-format";
 import { cn } from "@/lib/utils";
 
 type DatePickerProps = {
-  /** An API date, "2026-10-11". */
+  /** An API date, "2026-10-11", or "" for none picked yet. */
   value: string;
   onChange: (day: string) => void;
   /** Days before this can't be picked. */
@@ -20,6 +20,10 @@ type DatePickerProps = {
   to?: string;
   /** The button's text; the date with its weekday when left out. */
   label?: string;
+  /** Shown while nothing is picked. */
+  placeholder?: string;
+  /** Month and year dropdowns, for dates years away like a birthday. */
+  dropdowns?: boolean;
   className?: string;
   "aria-label"?: string;
 };
@@ -31,6 +35,8 @@ export function DatePicker({
   from,
   to,
   label,
+  placeholder,
+  dropdowns,
   className,
   ...props
 }: DatePickerProps) {
@@ -53,19 +59,24 @@ export function DatePicker({
         }
       >
         <CalendarBlankIcon />
-        <span className="flex-1 truncate text-left">{label ?? format.dayWithWeekday(value)}</span>
+        <span className={cn("flex-1 truncate text-left", !value && "text-muted-foreground")}>
+          {label ?? (value ? format.dayWithWeekday(value) : placeholder)}
+        </span>
         <CaretUpDownIcon className="size-3.5 text-muted-foreground" />
       </PopoverTrigger>
       <PopoverContent className="w-auto max-w-[calc(100vw-24px)]">
         <Calendar
           mode="single"
           required
-          selected={dayToDate(value)}
+          selected={value ? dayToDate(value) : undefined}
           onSelect={(date) => {
             onChange(businessDate(date));
             setOpen(false);
           }}
-          defaultMonth={dayToDate(value)}
+          defaultMonth={dayToDate(value || to || businessDate())}
+          captionLayout={dropdowns ? "dropdown" : "label"}
+          startMonth={dropdowns && from ? dayToDate(from) : undefined}
+          endMonth={dropdowns && to ? dayToDate(to) : undefined}
           disabled={disabled}
           timeZone={TIME_ZONE}
           locale={format.locale === "bn" ? bn : undefined}

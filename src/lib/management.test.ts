@@ -3,6 +3,7 @@ import type { CategoryOut, EmployeeOut, ExpenseOut, FoodOut, UserOut } from "@/l
 import { matchesExpense, monthRange, shiftMonth, spendByCategory } from "./expenses";
 import { discountProblem, finalPrice, matchesFood, moveId, reorderChanges } from "./menu";
 import {
+  accountActions,
   accountsOnly,
   generatePassword,
   grantableRoles,
@@ -133,6 +134,35 @@ describe("staff", () => {
     expect(matchesEmployee(chef, { ...query, role: "chef" })).toBe(true);
     expect(matchesEmployee(chef, { ...query, role: "waiter" })).toBe(false);
     expect(matchesEmployee(chef, { ...query, search: "head" })).toBe(true);
+  });
+});
+
+describe("accountActions", () => {
+  const manager = { id: 1, role: "manager" as const };
+
+  it("offers a sign-in to people without one", () => {
+    expect(accountActions(manager, person(2))).toEqual(["account", "left"]);
+  });
+
+  it("lets managers run floor sign-ins but not other managers'", () => {
+    expect(accountActions(manager, person(2, { account: account(9, "waiter") }))).toEqual([
+      "password",
+      "role",
+      "signInOff",
+      "left",
+    ]);
+    expect(accountActions(manager, person(2, { account: account(9, "manager") }))).toEqual([]);
+    expect(accountActions(manager, person(2, { account: account(9, "manager", false) }))).toEqual([
+      "left",
+    ]);
+    expect(
+      accountActions({ id: 1, role: "admin" }, person(2, { account: account(9, "manager") })),
+    ).toContain("role");
+  });
+
+  it("leaves your own record and people who left alone", () => {
+    expect(accountActions(manager, person(2, { account: account(1, "manager") }))).toEqual([]);
+    expect(accountActions(manager, person(2, { isActive: false }))).toEqual([]);
   });
 });
 

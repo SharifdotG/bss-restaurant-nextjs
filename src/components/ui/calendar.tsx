@@ -48,7 +48,18 @@ function Calendar({
           "flex h-(--cell-size) w-full items-center justify-center px-(--cell-size)",
           defaults.month_caption,
         ),
-        caption_label: cn("text-sm font-bold select-none", defaults.caption_label),
+        caption_label: cn(
+          "text-sm font-bold select-none",
+          // Inside a dropdown the label is what shows; the real select sits invisibly on top.
+          "in-[.rdp-dropdown_root]:flex in-[.rdp-dropdown_root]:h-8 in-[.rdp-dropdown_root]:items-center in-[.rdp-dropdown_root]:gap-1 in-[.rdp-dropdown_root]:pr-1.5 in-[.rdp-dropdown_root]:pl-2.5 [&>svg]:size-3.5 [&>svg]:text-muted-foreground",
+          defaults.caption_label,
+        ),
+        dropdowns: cn("flex items-center gap-1.5", defaults.dropdowns),
+        dropdown_root: cn(
+          "relative rounded-md border border-border bg-card has-focus-visible:ring-3 has-focus-visible:ring-ring/40",
+          defaults.dropdown_root,
+        ),
+        dropdown: cn("absolute inset-0 cursor-pointer opacity-0", defaults.dropdown),
         month_grid: cn("w-full border-collapse", defaults.month_grid),
         weekdays: cn("flex", defaults.weekdays),
         weekday: cn(

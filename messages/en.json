@@ -1801,7 +1801,223 @@
       "signInOn": "{name} can sign in again",
       "roleSaved": "{name}'s role changed",
       "left": "{name} is marked as left"
-    }
+    },
+    "title": "Staff",
+    "meta": "{n, plural, one {# person} other {# people}} · {signIn, plural, =0 {no one can sign in yet} one {# can sign in} other {# can sign in}}",
+    "add": "Add person",
+    "search": "Name, job, phone or email",
+    "allRoles": "All roles",
+    "roleFilter": "Role",
+    "showLabel": "Show",
+    "show": {
+      "current": "Working here",
+      "noSignIn": "No sign-in",
+      "left": "Left"
+    },
+    "failed": "Couldn't load your staff",
+    "retry": "Try again",
+    "emptyTitle": "No one on the books yet",
+    "empty": "Add the people who work here. Give them a sign-in and they can take orders, cook or settle bills.",
+    "noMatch": "No one matches",
+    "noneLeft": "Nobody has left yet.",
+    "noSignIn": "No sign-in",
+    "signInOff": {
+      "title": "Turn off {name}'s sign-in?",
+      "body": "{name} is signed out everywhere and can't sign in until it's turned back on. Their record and history stay.",
+      "keep": "Keep it on",
+      "confirm": "Turn off sign-in"
+    },
+    "lastIn": "Last in {when}",
+    "neverIn": "Hasn't signed in yet",
+    "columns": {
+      "person": "Person",
+      "phone": "Phone",
+      "signIn": "Sign-in",
+      "tables": "Tables",
+      "joined": "Joined",
+      "actions": "Actions"
+    },
+    "accountsOnly": {
+      "title": "Sign-ins without a staff record",
+      "body": "Usually the owner's account. They don't appear on rosters or reports."
+    },
+    "roles": {
+      "admin": {
+        "name": "Admin",
+        "hint": "Everything, including other managers' sign-ins."
+      },
+      "manager": {
+        "name": "Manager",
+        "hint": "Everything: menu, staff, money and settings."
+      },
+      "waiter": {
+        "name": "Waiter",
+        "hint": "Floor, orders and bookings. Lands on the floor plan."
+      },
+      "chef": {
+        "name": "Chef",
+        "hint": "The kitchen screen and sold-out dishes, nothing else."
+      },
+      "cashier": {
+        "name": "Cashier",
+        "hint": "Billing and expenses. Refunds need a manager."
+      }
+    },
+    "actions": {
+      "menu": "More for {name}",
+      "open": "Open their page",
+      "edit": "Edit details",
+      "account": "Give them a sign-in",
+      "password": "Set a new password",
+      "role": "Change role",
+      "signInOff": "Turn off sign-in",
+      "signInOn": "Turn sign-in back on",
+      "left": "Mark as left"
+    },
+    "account": {
+      "title": "A sign-in for {name}",
+      "body": "They'll sign in with {email} and the password below.",
+      "noEmail": "They need an email to sign in with. Add one in their details first.",
+      "role": "What they can do",
+      "password": "Password",
+      "problems": {
+        "short": "At least 8 characters.",
+        "long": "128 characters at most.",
+        "mix": "Use letters and at least one number."
+      },
+      "cancel": "Cancel",
+      "close": "Close",
+      "working": "Creating…",
+      "confirm": "Create sign-in"
+    },
+    "password": {
+      "title": "New password for {name}",
+      "body": "Their old password stops working. Devices already signed in drop off within 15 minutes.",
+      "doneTitle": "{name}'s new password is set",
+      "doneBody": "Tell it to them or copy it now. It won't be shown again; they can change it in Profile.",
+      "label": "New password",
+      "problems": {
+        "short": "At least 8 characters.",
+        "long": "128 characters at most.",
+        "mix": "Use letters and at least one number."
+      },
+      "done": "Done",
+      "cancel": "Cancel",
+      "working": "Saving…",
+      "confirm": "Set password"
+    },
+    "role": {
+      "title": "Change {name}'s role",
+      "body": "Their menu and landing page change the next time they open the app.",
+      "cancel": "Cancel",
+      "confirm": "Save role"
+    },
+    "left": {
+      "title": "Mark {name} as left?",
+      "signIn": "Their sign-in is turned off and they're signed out everywhere.",
+      "tables": "They come off {tables}.",
+      "history": "Their orders and sales stay in reports.",
+      "final": "This can't be undone. If they come back, add them again.",
+      "keep": "Keep them",
+      "working": "Saving…",
+      "confirm": "Mark as left"
+    },
+    "sheet": {
+      "newTitle": "Add a person",
+      "newSub": "Only the basics are needed. The rest can wait.",
+      "editTitle": "Edit {name}",
+      "editSub": "Name and phone changes carry over to their sign-in.",
+      "basics": "Basics",
+      "photo": "Photo",
+      "photoHint": "Helps the team put a face to the name.",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "designation": "Job title",
+      "designationPlaceholder": "Waiter, Head chef, Cashier…",
+      "designationPick": "Job titles in use",
+      "phone": "Phone",
+      "email": "Email",
+      "emailHint": "Changing it here doesn't change the email they sign in with.",
+      "joinDate": "Joined",
+      "pay": "Pay",
+      "salary": "Monthly salary",
+      "perMonth": "/ mo",
+      "salaryHint": "Only managers see this, and only on their page.",
+      "personal": "Personal",
+      "birthDate": "Date of birth",
+      "pickDate": "Pick a date",
+      "gender": "Gender",
+      "genders": {
+        "female": "Female",
+        "male": "Male",
+        "other": "Other"
+      },
+      "nid": "NID number",
+      "address": "Address",
+      "father": "Father's name",
+      "mother": "Mother's name",
+      "spouse": "Spouse's name",
+      "signIn": "Sign-in",
+      "giveSignIn": "Give them a sign-in now",
+      "giveSignInHint": "They'll use the email above. You can also do this later.",
+      "role": "What they can do",
+      "password": "Password",
+      "passwordHint": "Give it to them in person; they can change it in Profile.",
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "save": "Save changes",
+      "create": "Add person",
+      "errors": {
+        "required": "This one's needed.",
+        "phone": "A phone number like 01712 345678.",
+        "email": "That doesn't look like an email.",
+        "emailForSignIn": "A sign-in needs an email.",
+        "salary": "Enter an amount like 18000.",
+        "birthDate": "That's on or after the day they joined.",
+        "nid": "Between 5 and 30 characters.",
+        "password": {
+          "short": "At least 8 characters.",
+          "long": "128 characters at most.",
+          "mix": "Use letters and at least one number."
+        }
+      }
+    },
+    "person": {
+      "missingTitle": "We couldn't find this person",
+      "missingBody": "The link may be old. Everyone who works here is on the Staff page.",
+      "back": "Back to staff",
+      "failed": "Couldn't load their details",
+      "joined": "joined {date}",
+      "leftNote": "They've left. Their record stays so reports still add up.",
+      "tenure": "{n, plural, one {# year here} other {# years here}}",
+      "since": "since {date}",
+      "monthTitle": "This month",
+      "report": "Staff report",
+      "stats": {
+        "orders": "Paid orders",
+        "sales": "Sales",
+        "average": "Average bill",
+        "share": "Share of sales"
+      },
+      "work": "Work",
+      "salary": "{amount} a month",
+      "showSalary": "Show",
+      "personal": "Personal",
+      "personalHint": "For your records only.",
+      "birth": "{date} · {age, number}",
+      "noPersonal": "Nothing added yet.",
+      "signInTitle": "Sign-in",
+      "signInEmail": "Email",
+      "lastIn": "Last in",
+      "never": "Not yet",
+      "yourself": "This is you. Change your own password in Profile.",
+      "noSignIn": "They can't sign in. Give them one so they can use the app.",
+      "tablesTitle": "Their tables",
+      "manageTables": "Tables",
+      "noTables": "Not on any tables."
+    },
+    "stateOn": "Can sign in",
+    "stateOff": "Sign-in off"
   },
   "expenses": {
     "toasts": {
