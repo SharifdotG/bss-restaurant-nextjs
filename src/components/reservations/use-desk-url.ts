@@ -25,6 +25,7 @@ export function useDeskUrl(today: string) {
     isToday: day === today,
     booking: url.booking,
     search: url.q ?? "",
+    searching: (url.q ?? "").trim().length > 1,
     area: url.area,
     show: url.show,
     setDay: (next: string) => void setUrl({ day: next === today ? null : next, booking: null }),

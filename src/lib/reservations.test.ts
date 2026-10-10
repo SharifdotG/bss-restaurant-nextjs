@@ -110,6 +110,7 @@ describe("booking states", () => {
     expect(isLate(booking(1, 1, "20:39", "22:00"), NOW)).toBe(true);
     expect(isLate(booking(1, 1, "20:40", "22:00"), NOW)).toBe(false);
     expect(isLate(booking(1, 1, "20:00", "22:00", "seated"), NOW)).toBe(false);
+    expect(isLate(booking(1, 1, "19:00", "20:30"), NOW)).toBe(false);
   });
 
   it("lists requests that haven't ended, soonest first", () => {

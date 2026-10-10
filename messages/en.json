@@ -1331,7 +1331,9 @@
       "today": "Today",
       "show": "Show",
       "area": "Area",
-      "allAreas": "All areas"
+      "allAreas": "All areas",
+      "search": "Name, phone or booking code",
+      "clear": "Clear search"
     },
     "show": {
       "all": "All bookings",
@@ -1449,7 +1451,40 @@
         "duplicate": "Booked twice by mistake"
       }
     },
-    "newBooking": "New booking"
+    "newBooking": "New booking",
+    "printList": "Print list",
+    "newShort": "New",
+    "search": {
+      "none": "No bookings match “{search}”",
+      "noneHint": "Try part of the name, the last digits of the phone number, or the booking code.",
+      "count": "{n, plural, one {# booking} other {# bookings}} found",
+      "countMore": "Latest {n, number} of {total, number} bookings. Type more to narrow it down.",
+      "today": "Today",
+      "guests": "{n, plural, one {# guest} other {# guests}}",
+      "noTable": "No table"
+    },
+    "print": {
+      "title": "Bookings for {day}",
+      "summary": "{n, plural, one {# booking} other {# bookings}}, {guests, plural, one {# guest} other {# guests}}",
+      "printed": "Printed {at}",
+      "time": "Time",
+      "guest": "Guest",
+      "party": "Guests",
+      "table": "Table",
+      "phone": "Phone",
+      "notes": "Notes",
+      "here": "Here",
+      "none": "No bookings on this day."
+    },
+    "agenda": {
+      "previousWeek": "Previous week",
+      "nextWeek": "Next week",
+      "today": "Today",
+      "summary": "{n, number} still to come · {guests, plural, one {# guest} other {# guests}}",
+      "none": "No bookings on this day.",
+      "noTable": "No table",
+      "late": "late"
+    }
   },
   "tables": {
     "toasts": {

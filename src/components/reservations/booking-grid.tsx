@@ -23,7 +23,7 @@ const LABEL_PX = 128;
 const PX_PER_MINUTE = HOUR_PX / 60;
 
 type BookingGridProps = {
-  window: DayWindow;
+  span: DayWindow;
   unassigned: ReservationOut[];
   areas: { area: string; rows: GridRow<ReservationOut>[] }[];
   selected: number | null;
@@ -35,7 +35,7 @@ type BookingGridProps = {
 
 /** Tables down the side, the day's hours across, each booking a block where it falls. */
 export function BookingGrid({
-  window,
+  span,
   unassigned,
   areas,
   selected,
@@ -46,20 +46,20 @@ export function BookingGrid({
   const t = useTranslations("reservations.grid");
   const format = useFormat();
   const scroller = useRef<HTMLDivElement>(null);
-  const width = window.hours.length * HOUR_PX;
-  const nowAt = now >= window.from && now < window.to ? (now - window.from) / 60_000 : null;
+  const width = span.hours.length * HOUR_PX;
+  const nowAt = now >= span.from && now < span.to ? (now - span.from) / 60_000 : null;
 
   // Open on what matters: now on today, the first booking on other days.
   const firstStart = [...unassigned, ...areas.flatMap((a) => a.rows.flatMap((r) => r.bookings))]
     .map((booking) => Date.parse(booking.startsAt))
     .reduce((min, at) => Math.min(min, at), Infinity);
   const focusMinute =
-    nowAt ?? (Number.isFinite(firstStart) ? (firstStart - window.from) / 60_000 : 0);
+    nowAt ?? (Number.isFinite(firstStart) ? (firstStart - span.from) / 60_000 : 0);
   useEffect(() => {
     scroller.current?.scrollTo({ left: Math.max(0, focusMinute * PX_PER_MINUTE - HOUR_PX * 1.5) });
     // Only when the day changes; later ticks of the clock shouldn't move the grid.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [window.from]);
+  }, [span.from]);
 
   // A booking opened from elsewhere (search, the waiting list, a save) is brought into view.
   useEffect(() => {
@@ -103,7 +103,7 @@ export function BookingGrid({
         >
           {onBook &&
             table &&
-            window.hours.map((hour, i) =>
+            span.hours.map((hour, i) =>
               hour + 3_600_000 <= now ? null : (
                 <button
                   key={hour}
@@ -126,7 +126,7 @@ export function BookingGrid({
             <Block
               key={booking.id}
               booking={booking}
-              window={window}
+              span={span}
               lane={lane}
               late={isLate(booking, now)}
               selected={booking.id === selected}
@@ -158,7 +158,7 @@ export function BookingGrid({
             {t("table")}
           </div>
           <div className="relative shrink-0" style={{ width }}>
-            {window.hours.map((hour, i) => (
+            {span.hours.map((hour, i) => (
               <span
                 key={hour}
                 role="columnheader"
@@ -236,19 +236,19 @@ function AreaHeader({ children }: { children: React.ReactNode }) {
 
 type BlockProps = {
   booking: ReservationOut;
-  window: DayWindow;
+  span: DayWindow;
   lane: number;
   late: boolean;
   selected: boolean;
   onOpen: () => void;
 };
 
-function Block({ booking, window, lane, late, selected, onOpen }: BlockProps) {
+function Block({ booking, span, lane, late, selected, onOpen }: BlockProps) {
   const t = useTranslations("reservations");
   const status = useTranslations("status.reservation");
   const format = useFormat();
   const { tone, icon: Icon } = BOOKING_LOOK[booking.status];
-  const { offset, length } = blockSpan(booking, window);
+  const { offset, length } = blockSpan(booking, span);
   const time = format.time(booking.startsAt);
   const when =
     booking.status === "no_show"

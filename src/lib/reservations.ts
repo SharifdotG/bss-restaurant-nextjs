@@ -170,9 +170,14 @@ export function gridAreas<T extends BookingLike>(
   return { unassigned: shown.filter((booking) => !booking.table), areas };
 }
 
-/** Confirmed guests who haven't turned up 15 minutes after their time. */
-export const isLate = (booking: Pick<ReservationOut, "status" | "startsAt">, now: number) =>
-  booking.status === "confirmed" && now - start(booking) >= LATE_MINUTES * MINUTE;
+/** Confirmed guests who haven't turned up 15 minutes after their time, while it still matters. */
+export const isLate = (
+  booking: Pick<ReservationOut, "status" | "startsAt" | "endsAt">,
+  now: number,
+) =>
+  booking.status === "confirmed" &&
+  now - start(booking) >= LATE_MINUTES * MINUTE &&
+  now < end(booking);
 
 /** Requests still worth answering, soonest first. */
 export const waitingList = <T extends Pick<ReservationOut, "status" | "startsAt" | "endsAt">>(

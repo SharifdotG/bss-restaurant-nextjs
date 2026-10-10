@@ -163,3 +163,25 @@
     cursor: pointer;
   }
 }
+
+/* Printing shows only what a page hands to <PrintSheet>, on plain A4. */
+@media screen {
+  [data-print-sheet] {
+    display: none;
+  }
+}
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+  body > :not([data-print-sheet]) {
+    display: none !important;
+  }
+  body {
+    background: none;
+  }
+  [data-print-sheet] {
+    print-color-adjust: exact;
+  }
+}

@@ -1331,7 +1331,9 @@
       "today": "আজ",
       "show": "দেখান",
       "area": "জায়গা",
-      "allAreas": "সব জায়গা"
+      "allAreas": "সব জায়গা",
+      "search": "নাম, ফোন বা বুকিং কোড",
+      "clear": "খোঁজা মুছুন"
     },
     "show": {
       "all": "সব বুকিং",
@@ -1449,7 +1451,40 @@
         "duplicate": "ভুল করে দুবার বুক করা"
       }
     },
-    "newBooking": "নতুন বুকিং"
+    "newBooking": "নতুন বুকিং",
+    "printList": "তালিকা প্রিন্ট",
+    "newShort": "নতুন",
+    "search": {
+      "none": "“{search}”-এর সাথে কোনো বুকিং মেলেনি",
+      "noneHint": "নামের অংশ, ফোন নম্বরের শেষ কয়েকটি সংখ্যা বা বুকিং কোড দিয়ে চেষ্টা করুন।",
+      "count": "{n, plural, other {#টি বুকিং}} পাওয়া গেছে",
+      "countMore": "{total, number}টির মধ্যে সর্বশেষ {n, number}টি বুকিং। আরও লিখে খোঁজা ছোট করুন।",
+      "today": "আজ",
+      "guests": "{n, plural, other {# জন}}",
+      "noTable": "টেবিল নেই"
+    },
+    "print": {
+      "title": "{day}-এর বুকিং",
+      "summary": "{n, plural, other {#টি বুকিং}}, {guests, plural, other {# জন অতিথি}}",
+      "printed": "প্রিন্ট {at}",
+      "time": "সময়",
+      "guest": "অতিথি",
+      "party": "জন",
+      "table": "টেবিল",
+      "phone": "ফোন",
+      "notes": "নোট",
+      "here": "এসেছেন",
+      "none": "এই দিনে কোনো বুকিং নেই।"
+    },
+    "agenda": {
+      "previousWeek": "আগের সপ্তাহ",
+      "nextWeek": "পরের সপ্তাহ",
+      "today": "আজ",
+      "summary": "{n, number}টি বাকি · {guests, plural, other {# জন অতিথি}}",
+      "none": "এই দিনে কোনো বুকিং নেই।",
+      "noTable": "টেবিল নেই",
+      "late": "দেরি"
+    }
   },
   "tables": {
     "toasts": {
