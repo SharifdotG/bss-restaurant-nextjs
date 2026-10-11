@@ -36,7 +36,7 @@ export function useChangeLocale() {
 }
 
 /** English / Bangla. `short` gives EN / বাং for the top bar. */
-export function LanguageSwitch({ short = false }: { short?: boolean }) {
+export function LanguageSwitch({ short = false, fill }: { short?: boolean; fill?: boolean }) {
   const t = useTranslations("common");
   const locale = useLocale();
   const change = useChangeLocale();
@@ -46,6 +46,7 @@ export function LanguageSwitch({ short = false }: { short?: boolean }) {
       aria-label={t("language")}
       value={locale}
       onValueChange={change}
+      fill={fill}
       options={routing.locales.map((value) => ({
         value,
         label: t(short ? `localesShort.${value}` : `locales.${value}`),
@@ -55,7 +56,10 @@ export function LanguageSwitch({ short = false }: { short?: boolean }) {
   );
 }
 
-export function ThemeSwitch() {
+const THEME_ICONS = { light: SunIcon, dark: MoonIcon, system: DesktopIcon };
+
+/** Light, dark or follow the device. `labelled` swaps the icons for words. */
+export function ThemeSwitch({ labelled, fill }: { labelled?: boolean; fill?: boolean }) {
   const t = useTranslations("common");
   const { theme, setTheme } = useTheme();
   const mounted = useMounted();
@@ -65,23 +69,17 @@ export function ThemeSwitch() {
       aria-label={t("theme")}
       value={mounted ? (theme ?? "system") : "system"}
       onValueChange={setTheme}
-      options={[
-        {
-          value: "light",
-          label: <SunIcon weight="duotone" aria-hidden />,
-          ariaLabel: t("themes.light"),
-        },
-        {
-          value: "dark",
-          label: <MoonIcon weight="duotone" aria-hidden />,
-          ariaLabel: t("themes.dark"),
-        },
-        {
-          value: "system",
-          label: <DesktopIcon weight="duotone" aria-hidden />,
-          ariaLabel: t("themes.system"),
-        },
-      ]}
+      fill={fill}
+      options={(["light", "dark", "system"] as const).map((value) => {
+        const Icon = THEME_ICONS[value];
+        return labelled
+          ? { value, label: t(`themes.${value}`) }
+          : {
+              value,
+              label: <Icon weight="duotone" aria-hidden />,
+              ariaLabel: t(`themes.${value}`),
+            };
+      })}
     />
   );
 }

@@ -5,14 +5,13 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   ArrowsClockwiseIcon,
+  CheckCircleIcon,
   CloudSlashIcon,
   DoorOpenIcon,
-  EnvelopeSimpleIcon,
   EyeIcon,
   EyeSlashIcon,
   MagnifyingGlassIcon,
   PencilSimpleIcon,
-  PhoneIcon,
   PowerIcon,
   UserPlusIcon,
 } from "@phosphor-icons/react";
@@ -179,9 +178,31 @@ function Person({
       title={person.fullName}
       parent={parent}
       crumb={person.fullName}
-      meta={[person.designation, t("person.joined", { date: format.date(person.joinDate) })].join(
-        " · ",
-      )}
+      meta={[
+        person.designation,
+        t("person.joined", { date: format.date(person.joinDate) }),
+        years > 0 && t("person.tenure", { n: years }),
+      ]
+        .filter(Boolean)
+        .join(" · ")}
+      leading={
+        <PersonAvatar
+          name={person.fullName}
+          src={person.imageUrl}
+          className="hidden size-16 md:flex [&_[data-slot=avatar-fallback]]:text-xl"
+        />
+      }
+      badge={
+        person.isActive ? (
+          <Pill tone="green" icon={CheckCircleIcon}>
+            {t("show.current")}
+          </Pill>
+        ) : (
+          <Pill tone="slate" icon={DoorOpenIcon}>
+            {t("show.left")}
+          </Pill>
+        )
+      }
       actions={
         <>
           {person.isActive && (
@@ -203,42 +224,6 @@ function Person({
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="grid min-w-0 gap-6">
-          <section className="flex flex-wrap items-center gap-5 rounded-xl bg-card p-5 shadow-md sm:p-6">
-            <PersonAvatar
-              name={person.fullName}
-              src={person.imageUrl}
-              className="size-20 [&_[data-slot=avatar-fallback]]:text-2xl"
-            />
-            <div className="min-w-0 flex-1">
-              <p className="text-lg font-bold">{person.designation}</p>
-              <p className="text-sm text-muted-foreground">
-                {years > 0
-                  ? t("person.tenure", { n: years })
-                  : t("person.since", { date: format.date(person.joinDate) })}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {person.phone && (
-                  <a
-                    href={`tel:${person.phone}`}
-                    className={buttonVariants({ variant: "outline", size: "sm" })}
-                  >
-                    <PhoneIcon />
-                    <span className="tabular-nums">{person.phone}</span>
-                  </a>
-                )}
-                {person.email && (
-                  <a
-                    href={`mailto:${person.email}`}
-                    className={buttonVariants({ variant: "outline", size: "sm" })}
-                  >
-                    <EnvelopeSimpleIcon />
-                    <span className="max-w-56 truncate">{person.email}</span>
-                  </a>
-                )}
-              </div>
-            </div>
-          </section>
-
           {stats && (stats.orders > 0 || account?.role === "waiter") && (
             <Panel
               title={t("person.monthTitle")}

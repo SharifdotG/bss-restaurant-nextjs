@@ -20,12 +20,25 @@ type PageHeaderProps = {
   /** The last breadcrumb, when it's shorter than the title ("22" for "Order 22"). */
   crumb?: string;
   meta?: React.ReactNode;
+  /** Beside the title, e.g. a state pill. */
+  badge?: React.ReactNode;
+  /** Before the title block, e.g. a person's photo. */
+  leading?: React.ReactNode;
   actions?: React.ReactNode;
   className?: string;
 };
 
 /** Breadcrumb, title and the page's main actions, sitting on the ground above the cards. */
-export function PageHeader({ title, parent, crumb, meta, actions, className }: PageHeaderProps) {
+export function PageHeader({
+  title,
+  parent,
+  crumb,
+  meta,
+  badge,
+  leading,
+  actions,
+  className,
+}: PageHeaderProps) {
   const t = useTranslations("shell");
   const restaurant = useQuery(restaurantQuery).data;
   const phone = useShellLayout() === "phone";
@@ -37,7 +50,7 @@ export function PageHeader({ title, parent, crumb, meta, actions, className }: P
         className,
       )}
     >
-      <div className="flex min-w-0 items-start gap-3">
+      <div className="flex min-w-0 items-start gap-3 md:items-center md:gap-4">
         {parent && phone && (
           <Link
             href={parent.href}
@@ -47,6 +60,7 @@ export function PageHeader({ title, parent, crumb, meta, actions, className }: P
             <ArrowLeftIcon className="size-5" />
           </Link>
         )}
+        {leading}
         <div className="min-w-0 flex-1">
           <nav aria-label={t("breadcrumb")} className="mb-1.5 hidden md:block">
             <ol className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -69,7 +83,10 @@ export function PageHeader({ title, parent, crumb, meta, actions, className }: P
               </li>
             </ol>
           </nav>
-          <h1 className="text-2xl font-bold tracking-tight text-balance md:text-3xl">{title}</h1>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <h1 className="text-2xl font-bold tracking-tight text-balance md:text-3xl">{title}</h1>
+            {badge}
+          </div>
           {meta && <p className="mt-1 text-sm text-muted-foreground">{meta}</p>}
         </div>
         {/* Phones have no top bar, so the live state and the bell sit beside the title. */}

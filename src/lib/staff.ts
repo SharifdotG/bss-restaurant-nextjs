@@ -86,3 +86,23 @@ export function passwordProblem(password: string): "short" | "long" | "mix" | nu
   if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) return "mix";
   return null;
 }
+
+/** "T1–T7", "R1–R3, T9": runs of one letter and back-to-back numbers fold into a range. */
+export function tableRuns(numbers: string[]) {
+  const tables = numbers
+    .map((raw) => {
+      const match = /^(.*?)(\d+)$/.exec(raw);
+      return { raw, prefix: match ? match[1] : raw, n: match ? Number(match[2]) : NaN };
+    })
+    .sort((a, b) => a.prefix.localeCompare(b.prefix) || a.n - b.n);
+  const runs: string[] = [];
+  let start = 0;
+  for (let i = 1; i <= tables.length; i++) {
+    const prev = tables[i - 1];
+    const next = tables[i];
+    if (next && next.prefix === prev.prefix && next.n === prev.n + 1) continue;
+    runs.push(i - 1 > start ? `${tables[start].raw}–${prev.raw}` : tables[start].raw);
+    start = i;
+  }
+  return runs.join(", ");
+}

@@ -6,7 +6,7 @@
     "themes": {
       "light": "Light",
       "dark": "Dark",
-      "system": "System"
+      "system": "Match device"
     },
     "locales": {
       "en": "English",
@@ -1990,7 +1990,6 @@
       "joined": "joined {date}",
       "leftNote": "They've left. Their record stays so reports still add up.",
       "tenure": "{n, plural, one {# year here} other {# years here}}",
-      "since": "since {date}",
       "monthTitle": "This month",
       "report": "Staff report",
       "stats": {
@@ -2017,7 +2016,8 @@
       "noTables": "Not on any tables."
     },
     "stateOn": "Can sign in",
-    "stateOff": "Sign-in off"
+    "stateOff": "Sign-in off",
+    "tablesCount": "{n, plural, one {# table} other {# tables}}"
   },
   "expenses": {
     "toasts": {
@@ -2227,7 +2227,8 @@
       "theme": "Theme",
       "language": "Language",
       "sound": "Kitchen and order sounds",
-      "soundHint": "The chime for new tickets and guest orders."
+      "soundHint": "The chime for new tickets and guest orders.",
+      "themeHint": "The kitchen screen is always dark."
     }
   }
 }

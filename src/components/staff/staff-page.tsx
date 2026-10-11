@@ -37,7 +37,7 @@ import { Link } from "@/i18n/navigation";
 import { employeesQuery, usersQuery } from "@/lib/api/queries";
 import type { EmployeeOut } from "@/lib/api/schema";
 import { useErrorText } from "@/lib/api/use-error-text";
-import { accountsOnly, matchesEmployee, ROLES } from "@/lib/staff";
+import { accountsOnly, matchesEmployee, ROLES, tableRuns } from "@/lib/staff";
 import { useFormat } from "@/lib/use-format";
 import { useNow } from "@/lib/use-now";
 import { useShellLayout } from "@/lib/use-shell-layout";
@@ -173,12 +173,16 @@ export function StaffPage() {
       </ul>
     );
   } else {
+    // The seed has no phone numbers; a column of dashes says nothing.
+    const phones = shown.some((person) => person.phone);
     body = (
       <Table className="table-fixed">
         <TableHeader>
           <TableRow>
             <TableHead>{t("columns.person")}</TableHead>
-            <TableHead className={cn(medium, "w-[150px]")}>{t("columns.phone")}</TableHead>
+            {phones && (
+              <TableHead className={cn(medium, "w-[150px]")}>{t("columns.phone")}</TableHead>
+            )}
             <TableHead className="w-[200px]">{t("columns.signIn")}</TableHead>
             <TableHead className={cn(wide, "w-[160px]")}>{t("columns.tables")}</TableHead>
             <TableHead className={cn(wide, "w-[130px]")}>{t("columns.joined")}</TableHead>
@@ -191,14 +195,29 @@ export function StaffPage() {
           {shown.map((person) => (
             <TableRow key={person.id} className="relative">
               <TableCell>{name(person)}</TableCell>
-              <TableCell className={cn(medium, "text-muted-foreground tabular-nums")}>
-                {person.phone ?? "–"}
-              </TableCell>
+              {phones && (
+                <TableCell className={cn(medium, "text-muted-foreground tabular-nums")}>
+                  {person.phone ?? "–"}
+                </TableCell>
+              )}
               <TableCell>
                 <SignInSummary person={person} now={now} />
               </TableCell>
-              <TableCell className={cn(wide, "truncate text-muted-foreground")}>
-                {person.tables.length ? person.tables.map((table) => table.number).join(", ") : "–"}
+              <TableCell className={cn(wide, "text-muted-foreground")}>
+                {person.tables.length ? (
+                  <>
+                    <span className="block truncate text-foreground">
+                      {tableRuns(person.tables.map((table) => table.number))}
+                    </span>
+                    {person.tables.length > 1 && (
+                      <span className="block text-xs">
+                        {t("tablesCount", { n: person.tables.length })}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  "–"
+                )}
               </TableCell>
               <TableCell className={cn(wide, "text-muted-foreground tabular-nums")}>
                 {format.date(person.joinDate)}

@@ -12,6 +12,7 @@ import {
   matchesEmployee,
   passwordProblem,
   signInState,
+  tableRuns,
 } from "./staff";
 
 describe("finalPrice", () => {
@@ -258,5 +259,14 @@ describe("settings", () => {
     expect(parsePercent("১৫")).toBe(15);
     expect(parsePercent("7.555")).toBeNull();
     expect(parsePercent("")).toBeNull();
+  });
+});
+
+describe("tableRuns", () => {
+  it("folds back-to-back tables into ranges", () => {
+    expect(tableRuns(["T3", "T1", "T2", "R1", "R2", "R3", "T7"])).toBe("R1–R3, T1–T3, T7");
+    expect(tableRuns(["T1"])).toBe("T1");
+    expect(tableRuns(["T1", "T3"])).toBe("T1, T3");
+    expect(tableRuns(["Patio", "T1", "T2"])).toBe("Patio, T1–T2");
   });
 });

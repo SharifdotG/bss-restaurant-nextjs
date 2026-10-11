@@ -9,6 +9,7 @@ import { Panel } from "@/components/panel";
 import { PasswordInput } from "@/components/password-input";
 import { PageFrame } from "@/components/shell/page-frame";
 import { PersonAvatar } from "@/components/staff/person-avatar";
+import { RolePill } from "@/components/staff/role-pill";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -32,13 +33,25 @@ const PHONE = /^\+?[0-9][0-9 -]{5,18}$/;
 /** Your own details, password and how the app behaves on this device. */
 export function ProfilePage() {
   const t = useTranslations("profile");
-  const roles = useTranslations("session.roles");
+  const nav = useTranslations("nav");
   const session = useSession();
   if (session.status !== "authenticated") return null;
   const { user } = session;
 
   return (
-    <PageFrame page="profile" meta={`${roles(user.role)} · ${user.email}`}>
+    <PageFrame
+      page="profile"
+      title={user.fullName}
+      crumb={nav("profile")}
+      meta={user.email}
+      leading={
+        <PersonAvatar
+          name={user.fullName}
+          className="hidden size-16 md:flex [&_[data-slot=avatar-fallback]]:text-xl"
+        />
+      }
+      badge={<RolePill role={user.role} />}
+    >
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="grid min-w-0 gap-6">
           <DetailsForm key={user.id} user={user} />
@@ -107,13 +120,6 @@ function DetailsForm({ user }: { user: UserOut }) {
           });
         }}
       >
-        <div className="flex items-center gap-4">
-          <PersonAvatar name={`${firstName} ${lastName}`} className="size-14" />
-          <div className="min-w-0">
-            <p className="truncate font-bold">{`${firstName} ${lastName}`.trim() || "—"}</p>
-            <p className="truncate text-sm text-muted-foreground">{user.email}</p>
-          </div>
-        </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field data-invalid={Boolean(show("firstName"))}>
             <FieldLabel htmlFor="me-first">{t("firstName")}</FieldLabel>
@@ -319,11 +325,12 @@ function DeviceCard() {
       <div className="grid gap-4">
         <div className="grid gap-2">
           <p className="text-sm font-bold">{t("theme")}</p>
-          <ThemeSwitch />
+          <ThemeSwitch labelled fill />
+          <p className="text-xs text-muted-foreground">{t("themeHint")}</p>
         </div>
         <div className="grid gap-2">
           <p className="text-sm font-bold">{t("language")}</p>
-          <LanguageSwitch />
+          <LanguageSwitch fill />
         </div>
         <SwitchRow
           title={t("sound")}

@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, initials } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { waitersQuery } from "@/lib/api/queries";
+import { tableRuns } from "@/lib/staff";
 
 type StaffPickerProps = {
   value: number[];
@@ -50,7 +51,7 @@ export function StaffPicker({ value, onChange, ...props }: StaffPickerProps) {
                 <span className="block truncate text-xs text-muted-foreground">
                   {person.designation}
                   {person.tables.length > 0 &&
-                    ` · ${t("has", { tables: person.tables.map((table) => table.number).join(", ") })}`}
+                    ` · ${t("has", { tables: tableRuns(person.tables.map((table) => table.number)) })}`}
                 </span>
               </span>
             </label>

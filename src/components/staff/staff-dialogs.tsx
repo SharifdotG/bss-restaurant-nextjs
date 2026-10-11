@@ -28,7 +28,7 @@ import { RadioCards } from "@/components/ui/radio-cards";
 import type { EmployeeOut, UserRole } from "@/lib/api/schema";
 import { useErrorText } from "@/lib/api/use-error-text";
 import { useSession } from "@/lib/session/client";
-import { grantableRoles, passwordProblem } from "@/lib/staff";
+import { grantableRoles, passwordProblem, tableRuns } from "@/lib/staff";
 import {
   useCreateAccount,
   useMarkLeft,
@@ -335,7 +335,7 @@ function MarkLeftDialog({ person, onClose }: DialogProps) {
   const t = useTranslations("staff.left");
   const errorText = useErrorText();
   const leave = useMarkLeft();
-  const tables = person.tables.map((table) => table.number).join(", ");
+  const tables = tableRuns(person.tables.map((table) => table.number));
 
   return (
     <Dialog open onOpenChange={(open) => !open && !leave.isPending && onClose()}>

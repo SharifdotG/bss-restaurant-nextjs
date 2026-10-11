@@ -17,12 +17,24 @@ type PageFrameProps = {
   crumb?: string;
   parent?: { label: string; href: string };
   meta?: React.ReactNode;
+  badge?: React.ReactNode;
+  leading?: React.ReactNode;
   actions?: React.ReactNode;
   children: React.ReactNode;
 };
 
 /** Every app page goes through here: the role check first, then the header and the page. */
-export function PageFrame({ page, title, crumb, parent, meta, actions, children }: PageFrameProps) {
+export function PageFrame({
+  page,
+  title,
+  crumb,
+  parent,
+  meta,
+  badge,
+  leading,
+  actions,
+  children,
+}: PageFrameProps) {
   const nav = useTranslations("nav");
   const session = useSession();
   if (session.status !== "authenticated") return null;
@@ -39,6 +51,8 @@ export function PageFrame({ page, title, crumb, parent, meta, actions, children 
         crumb={crumb}
         parent={parent}
         meta={meta}
+        badge={badge}
+        leading={leading}
         actions={actions}
       />
       {children}

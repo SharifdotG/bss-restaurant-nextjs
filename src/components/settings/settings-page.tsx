@@ -280,8 +280,8 @@ function SettingsForm({ saved }: { saved: RestaurantOut }) {
         noValidate
         className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]"
       >
-        <fieldset disabled={!editable} className="grid min-w-0 gap-6">
-          <Panel title={t("restaurant.title")} subtitle={t("restaurant.hint")}>
+        <fieldset disabled={!editable} className="@container grid min-w-0 gap-6">
+          <Section title={t("restaurant.title")} hint={t("restaurant.hint")}>
             <div className="grid gap-4 md:grid-cols-2">
               {field(
                 "name",
@@ -330,9 +330,9 @@ function SettingsForm({ saved }: { saved: RestaurantOut }) {
                 "md:col-span-2",
               )}
             </div>
-          </Panel>
+          </Section>
 
-          <Panel title={t("hours.title")} subtitle={t("hours.hint")}>
+          <Section title={t("hours.title")} hint={t("hours.hint")}>
             <div className="grid gap-4 sm:grid-cols-2">
               {field("opensAt", t("hours.opens"), timeSelect("opensAt"))}
               {field("closesAt", t("hours.closes"), timeSelect("closesAt"))}
@@ -345,9 +345,9 @@ function SettingsForm({ saved }: { saved: RestaurantOut }) {
                   ? t("hours.pastMidnight", { hours: format.number(span) })
                   : t("hours.span", { hours: format.number(span) })}
             </p>
-          </Panel>
+          </Section>
 
-          <Panel title={t("bills.title")} subtitle={t("bills.hint")}>
+          <Section title={t("bills.title")} hint={t("bills.hint")}>
             <div className="grid gap-4 sm:grid-cols-2">
               {field(
                 "vat",
@@ -412,9 +412,9 @@ function SettingsForm({ saved }: { saved: RestaurantOut }) {
                 {t("bills.newOrdersOnly")}
               </p>
             )}
-          </Panel>
+          </Section>
 
-          <Panel title={t("guests.title")} subtitle={t("guests.hint")}>
+          <Section title={t("guests.title")} hint={t("guests.hint")}>
             <div className="grid gap-3">
               <SwitchRow
                 title={t("guests.qr")}
@@ -470,9 +470,9 @@ function SettingsForm({ saved }: { saved: RestaurantOut }) {
               </Select>,
               t("guests.lengthHint"),
             )}
-          </Panel>
+          </Section>
 
-          <Panel title={t("receipt.title")} subtitle={t("receipt.hint")}>
+          <Section title={t("receipt.title")} hint={t("receipt.hint")}>
             {field(
               "receiptFooter",
               t("receipt.footer"),
@@ -486,7 +486,7 @@ function SettingsForm({ saved }: { saved: RestaurantOut }) {
               />,
               t("receipt.footerHint"),
             )}
-          </Panel>
+          </Section>
 
           <AnimatePresence>
             {dirty && editable && (
@@ -540,5 +540,28 @@ function SettingsForm({ saved }: { saved: RestaurantOut }) {
         </aside>
       </form>
     </PageFrame>
+  );
+}
+
+/** A group of settings: what it's for on the left, its fields in a card beside it. */
+function Section({
+  title,
+  hint,
+  children,
+}: {
+  title: string;
+  hint: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="grid gap-3 @2xl:grid-cols-[13rem_minmax(0,1fr)] @2xl:gap-6">
+      <header className="@2xl:pt-5">
+        <h2 className="text-md font-bold">{title}</h2>
+        <p className="text-sm text-pretty text-muted-foreground">{hint}</p>
+      </header>
+      <div className="flex min-w-0 flex-col gap-5 rounded-xl bg-card p-5 shadow-md sm:p-6">
+        {children}
+      </div>
+    </section>
   );
 }
