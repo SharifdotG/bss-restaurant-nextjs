@@ -18,7 +18,7 @@ export function StateCard({ icon: Icon, title, children, actions, className }: S
         className,
       )}
     >
-      <span className="grid size-14 place-items-center rounded-xl bg-tone-slate-subtle text-tone-slate-text">
+      <span className="grid size-14 animate-pop place-items-center rounded-xl bg-tone-slate-subtle text-tone-slate-text">
         <Icon weight="duotone" className="size-7" />
       </span>
       <h1 className="mt-4 text-lg font-bold text-balance">{title}</h1>

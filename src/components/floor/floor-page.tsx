@@ -31,15 +31,17 @@ import {
   type FloorView,
 } from "@/lib/floor";
 import { businessDate } from "@/lib/format";
+import { useFirstVisit } from "@/lib/motion";
 import { can, canOpen, PAGE_PATHS } from "@/lib/permissions";
-import { useSession } from "@/lib/session/client";
 import { useDraft } from "@/lib/pos-draft";
+import { useSession } from "@/lib/session/client";
+import { useFormat } from "@/lib/use-format";
 import { useMyWaiterId } from "@/lib/use-my-waiter";
 import { useNow } from "@/lib/use-now";
 import { useShellLayout } from "@/lib/use-shell-layout";
+import { cn } from "@/lib/utils";
 import { TableTile } from "./table-tile";
 import { UpNext } from "./up-next";
-import { useFormat } from "@/lib/use-format";
 
 const viewParser = parseAsStringLiteral(FLOOR_VIEWS).withDefault("all");
 
@@ -50,6 +52,8 @@ export function FloorPage() {
   const phone = useShellLayout() === "phone";
   const now = useNow(30_000);
   const myId = useMyWaiterId();
+  // A waiter's first look after signing in: the tables rise into place, once per session.
+  const intro = useFirstVisit("intro:floor");
   const [view, setView] = useQueryState("show", viewParser);
 
   const tables = useQuery(tablesQuery);
@@ -165,7 +169,12 @@ export function FloorPage() {
                           {t("tableCount", { n: group.length })}
                         </span>
                       </h2>
-                      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:gap-4">
+                      <ul
+                        className={cn(
+                          "grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:gap-4",
+                          intro ? "rise-children" : "animate-appear",
+                        )}
+                      >
                         {group.map((entry) => (
                           <li key={entry.table.id}>
                             <TableTile

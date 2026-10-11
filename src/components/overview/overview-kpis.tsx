@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { KpiCard } from "@/components/stats/kpi-card";
 import type { Dashboard } from "@/lib/api/schema";
 import { useFormat } from "@/lib/use-format";
+import { cn } from "@/lib/utils";
 
 type OverviewKpisProps = {
   dashboard: Dashboard | undefined;
@@ -12,17 +13,18 @@ type OverviewKpisProps = {
   lastWeek?: { sales: number };
   /** Confirmed bookings starting within the hour. */
   bookingsSoon: number | undefined;
+  className?: string;
 };
 
 /** Today in four numbers. No percentages: the API only knows whole days, not "this hour". */
-export function OverviewKpis({ dashboard, lastWeek, bookingsSoon }: OverviewKpisProps) {
+export function OverviewKpis({ dashboard, lastWeek, bookingsSoon, className }: OverviewKpisProps) {
   const t = useTranslations("overview.kpis");
   const format = useFormat();
   const today = dashboard?.today;
   const tables = dashboard?.tables;
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
+    <div className={cn("grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4", className)}>
       <KpiCard
         id="overview.sales"
         label={t("sales")}

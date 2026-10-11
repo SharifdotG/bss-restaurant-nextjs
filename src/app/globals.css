@@ -110,13 +110,10 @@
   --ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /*
-   * Entrances. `--i` on an element staggers it in a list; reduced motion keeps the fade
-   * and drops the movement (see --motion-rise and --motion-pop below).
-   */
+  /* Entrances. Reduced motion keeps the fade and drops the movement (--motion-rise, --motion-pop). */
   --animate-appear: appear var(--duration-base) var(--ease-standard) backwards;
-  --animate-rise: rise 380ms var(--ease-arrive) calc(var(--i, 0) * 50ms) backwards;
-  --animate-pop: pop 320ms var(--ease-pop) calc(var(--i, 0) * 50ms) backwards;
+  --animate-rise: rise 340ms var(--ease-arrive) backwards;
+  --animate-pop: pop 320ms var(--ease-pop) backwards;
   @keyframes appear {
     from {
       opacity: 0;
@@ -204,6 +201,33 @@
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
+  }
+}
+
+/* A group arriving for the first time: each child rises a beat after the one before. */
+@utility rise-children {
+  & > * {
+    animation: var(--animate-rise);
+    /* Set here, not in the token: --i has to be read on each child. */
+    animation-delay: calc(var(--rise-from, 0ms) + var(--i, 0) * 40ms);
+  }
+  & > :nth-child(2) {
+    --i: 1;
+  }
+  & > :nth-child(3) {
+    --i: 2;
+  }
+  & > :nth-child(4) {
+    --i: 3;
+  }
+  & > :nth-child(5) {
+    --i: 4;
+  }
+  & > :nth-child(6) {
+    --i: 5;
+  }
+  & > :nth-child(n + 7) {
+    --i: 6;
   }
 }
 

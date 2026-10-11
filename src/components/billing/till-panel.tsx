@@ -1,6 +1,8 @@
 "use client";
 
-import { CheckIcon, ReceiptIcon, SealCheckIcon } from "@phosphor-icons/react";
+import { useEffect } from "react";
+import { ReceiptIcon, SealCheckIcon } from "@phosphor-icons/react";
+import { animate, useMotionValue, useReducedMotion, useTransform } from "motion/react";
 import * as m from "motion/react-m";
 import { useTranslations } from "next-intl";
 import { EmptyState } from "@/components/empty-state";
@@ -9,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { OrderDetailOut, UserRole } from "@/lib/api/schema";
 import { toTaka } from "@/lib/money";
+import { EASE } from "@/lib/motion";
 import { canTakePayment } from "@/lib/permissions";
 import { useTakePayment } from "@/lib/use-billing-actions";
 import { useFormat } from "@/lib/use-format";
@@ -114,21 +117,37 @@ function TillDone({
         transition={{ type: "spring", stiffness: 360, damping: 20 }}
         className="mx-auto grid size-16 place-items-center rounded-full bg-tone-green-subtle text-tone-green-text"
       >
-        <CheckIcon weight="bold" className="size-8" />
+        <svg viewBox="0 0 32 32" aria-hidden className="size-8">
+          <m.path
+            d="M8 16.5l5.5 5.5L24 10.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={3.2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ delay: 0.15, duration: 0.35, ease: EASE.arrive }}
+          />
+        </svg>
       </m.span>
-      <div>
+      <div className="animate-rise" style={{ animationDelay: "120ms" }}>
         <h2 className="text-2xl font-bold tracking-tight">{t("title")}</h2>
         <p className="text-muted-foreground">
           {t("body", { n: format.orderNo(order.orderNumber) })}
         </p>
       </div>
-      <div className="rounded-xl bg-muted px-5 py-4">
+      <div
+        className="animate-rise rounded-xl bg-muted px-5 py-4"
+        style={{ animationDelay: "180ms" }}
+      >
         {change > 0 ? (
           <>
             <p className="text-sm font-bold text-muted-foreground">{t("giveBack")}</p>
-            <p className="text-4xl font-bold tracking-tight text-tone-green-text tabular-nums">
-              {format.money(toTaka(change))}
-            </p>
+            <ChangeFigure
+              paisa={change}
+              className="text-4xl font-bold tracking-tight text-tone-green-text tabular-nums"
+            />
           </>
         ) : (
           <p className="font-bold text-muted-foreground">{t("noChange")}</p>
@@ -149,6 +168,25 @@ function TillDone({
       </div>
     </div>
   );
+}
+
+/** The change to hand back, counting up so the cashier's eye lands on it. */
+function ChangeFigure({ paisa, className }: { paisa: number; className?: string }) {
+  const format = useFormat();
+  const reduced = useReducedMotion();
+  const shown = useMotionValue(reduced ? paisa : 0);
+  const text = useTransform(shown, (value) => format.money(toTaka(Math.round(value))));
+
+  useEffect(() => {
+    if (reduced) {
+      shown.set(paisa);
+      return;
+    }
+    const controls = animate(shown, paisa, { delay: 0.2, duration: 0.5, ease: EASE.arrive });
+    return () => controls.stop();
+  }, [paisa, reduced, shown]);
+
+  return <m.p className={className}>{text}</m.p>;
 }
 
 function NothingToPay({ order }: TillPanelProps & { order: OrderDetailOut }) {

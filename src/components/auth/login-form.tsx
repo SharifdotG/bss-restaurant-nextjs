@@ -5,6 +5,7 @@ import {
   CashRegisterIcon,
   ChartBarIcon,
   ChefHatIcon,
+  CircleNotchIcon,
   EnvelopeSimpleIcon,
   EyeIcon,
   EyeSlashIcon,
@@ -27,6 +28,7 @@ import { api, unwrap } from "@/lib/api/client";
 import { isApiError } from "@/lib/api/errors";
 import { useErrorText } from "@/lib/api/use-error-text";
 import { DEMO_ENABLED, DEMO_ROLES, demoLogin, type DemoRole } from "@/lib/demo";
+import { DURATION, EASE } from "@/lib/motion";
 import { signIn } from "@/lib/session/client";
 import { useFormat } from "@/lib/use-format";
 import { useNow } from "@/lib/use-now";
@@ -50,8 +52,15 @@ const DEMO_ICONS: Record<DemoRole, Icon> = {
 // The form settles in as one short sequence; reduced motion keeps only the fade.
 const rise = {
   hidden: { opacity: 0, y: 8 },
-  shown: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.2, 0, 0, 1] } },
+  shown: { opacity: 1, y: 0, transition: { duration: 0.32, ease: EASE.standard } },
 } as const;
+
+// Signed in: the form steps back while the workspace loads, and its own entrance takes over.
+const handOff = {
+  hidden: {},
+  shown: { transition: { staggerChildren: 0.05 } },
+  leaving: { opacity: 0, y: -8, transition: { duration: DURATION.base, ease: EASE.exit } },
+};
 
 export function LoginForm() {
   const t = useTranslations("login");
@@ -63,6 +72,7 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(true);
   const [pending, setPending] = useState<"form" | DemoRole | null>(null);
+  const [leaving, setLeaving] = useState(false);
   const [problem, setProblem] = useState<Problem | null>(null);
 
   const locked = problem?.kind === "locked" ? problem : null;
@@ -83,6 +93,7 @@ export function LoginForm() {
         setPending(null);
         return setProblem({ kind: "session" });
       }
+      setLeaving(true);
       router.replace(next);
     } catch (error) {
       setPending(null);
@@ -116,7 +127,7 @@ export function LoginForm() {
   const missing = problem?.kind === "missing";
 
   return (
-    <m.div initial="hidden" animate="shown" transition={{ staggerChildren: 0.05 }}>
+    <m.div initial="hidden" animate={leaving ? "leaving" : "shown"} variants={handOff}>
       <m.h1 variants={rise} className="text-3xl font-bold tracking-tight text-balance">
         {t("title")}
       </m.h1>
@@ -190,7 +201,10 @@ export function LoginForm() {
             {locked ? (
               <Countdown until={locked.until} />
             ) : pending === "form" ? (
-              t("submitting")
+              <>
+                <CircleNotchIcon className="animate-spin motion-reduce:animate-none" />
+                {t("submitting")}
+              </>
             ) : (
               t("submit")
             )}

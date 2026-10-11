@@ -13,6 +13,7 @@ import {
   salesReportQuery,
 } from "@/lib/api/queries";
 import { businessDate, shiftDay } from "@/lib/format";
+import { useFirstVisit } from "@/lib/motion";
 import { can, PAGE_PATHS } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
 import { useNow } from "@/lib/use-now";
@@ -41,6 +42,8 @@ export function OverviewPage() {
   const now = useNow(30_000);
   const today = businessDate(now);
   const manager = session.status === "authenticated" && can(session.user.role, "reports.view");
+  // The first look after signing in: cards rise in reading order, once per session.
+  const intro = useFirstVisit("intro:overview");
 
   const dashboard = useQuery(dashboardQuery).data;
   const active = useQuery(activeOrdersQuery).data?.items;
@@ -90,11 +93,17 @@ export function OverviewPage() {
     >
       <div className="flex flex-col gap-5">
         <OverviewKpis
+          className={cn(intro && "rise-children")}
           dashboard={dashboard}
           lastWeek={lastWeek && { sales: lastWeek.totals.sales }}
           bookingsSoon={soon}
         />
-        <div className="grid grid-flow-dense grid-cols-1 items-stretch gap-5 md:grid-cols-2 lg:grid-cols-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] 2xl:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]">
+        <div
+          className={cn(
+            "grid grid-flow-dense grid-cols-1 items-stretch gap-5 md:grid-cols-2 lg:grid-cols-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] 2xl:grid-cols-[minmax(0,1fr)_minmax(0,24rem)]",
+            intro && "rise-children [--rise-from:160ms]",
+          )}
+        >
           {manager && <SalesPanel today={today} className={wide} />}
           <OpenOrdersPanel orders={active} className={side} />
           <AttentionPanel orders={active} now={now} className={wide} />
