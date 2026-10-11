@@ -253,12 +253,12 @@ function Person({
                 </Link>
               }
             >
-              <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <dl className="grid grid-cols-2 gap-4 2xl:grid-cols-4">
                 {(
                   [
                     ["orders", format.number(stats.orders)],
-                    ["sales", format.money(stats.sales)],
-                    ["average", format.money(stats.averageOrder)],
+                    ["sales", format.moneyWhole(stats.sales)],
+                    ["average", format.moneyWhole(stats.averageOrder)],
                     ["share", format.percent(stats.share)],
                   ] as const
                 ).map(([key, value]) => (
