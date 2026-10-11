@@ -107,6 +107,40 @@
 
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /*
+   * Entrances. `--i` on an element staggers it in a list; reduced motion keeps the fade
+   * and drops the movement (see --motion-rise and --motion-pop below).
+   */
+  --animate-appear: appear var(--duration-base) var(--ease-standard) backwards;
+  --animate-rise: rise 380ms var(--ease-arrive) calc(var(--i, 0) * 50ms) backwards;
+  --animate-pop: pop 320ms var(--ease-pop) calc(var(--i, 0) * 50ms) backwards;
+  @keyframes appear {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      translate: 0 var(--motion-rise);
+    }
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      scale: var(--motion-pop);
+    }
+  }
+  /* A figure that just changed under a live update glows once in the brand tint. */
+  --animate-changed: changed 900ms var(--ease-standard);
+  @keyframes changed {
+    from {
+      background-color: var(--primary-soft);
+    }
+  }
 
   /* A kitchen ticket that just got more food draws the eye twice, then settles. */
   --animate-ticket-flash: ticket-flash 1.4s var(--ease-standard) 2;
@@ -127,6 +161,15 @@
   --duration-fast: 120ms;
   --duration-base: 180ms;
   --duration-slow: 260ms;
+  --motion-rise: 8px;
+  --motion-pop: 0.9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-rise: 0px;
+    --motion-pop: 1;
+  }
 }
 
 @layer base {
