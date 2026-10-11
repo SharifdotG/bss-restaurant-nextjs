@@ -20,7 +20,7 @@ function TabsList({ className, children, ...props }: TabsPrimitive.List.Props) {
       {...props}
     >
       {children}
-      <TabsPrimitive.Indicator className="absolute bottom-0 left-(--active-tab-left) h-0.5 w-(--active-tab-width) rounded-full bg-primary transition-[left,width] duration-(--duration-base) ease-standard" />
+      <TabsPrimitive.Indicator className="absolute bottom-0 left-0 h-0.5 w-(--active-tab-width) translate-x-(--active-tab-left) rounded-full bg-primary transition-[translate,width] duration-(--duration-base) ease-standard" />
     </TabsPrimitive.List>
   );
 }

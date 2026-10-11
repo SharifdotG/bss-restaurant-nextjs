@@ -32,7 +32,7 @@ function RadioCards<T extends string>({
         <label
           key={option.value}
           className={cn(
-            "flex cursor-pointer items-center gap-3 rounded-lg border border-border bg-card px-3.5 py-3 transition-[background-color,border-color,box-shadow] duration-(--duration-fast) ease-standard hover:bg-muted",
+            "flex cursor-pointer items-center gap-3 rounded-lg border border-border bg-card px-3.5 py-3 transition-[background-color,border-color,box-shadow,scale] duration-(--duration-fast) ease-standard hover:bg-muted active:scale-[0.98]",
             "has-focus-visible:ring-3 has-focus-visible:ring-ring/40 has-data-checked:border-primary has-data-checked:bg-primary-soft",
             option.disabled && "pointer-events-none opacity-50",
           )}

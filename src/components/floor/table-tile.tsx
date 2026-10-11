@@ -124,8 +124,8 @@ export function TableTile({ entry, now, onStart }: TableTileProps) {
   );
 
   const className = cn(
-    "block rounded-xl bg-card p-4 shadow-sm transition-[box-shadow,transform] duration-(--duration-fast) outline-none",
-    href && "hover:shadow-md focus-visible:ring-3 focus-visible:ring-ring/40 active:scale-[0.99]",
+    "block rounded-xl bg-card p-4 shadow-sm transition-[box-shadow,scale] duration-(--duration-fast) ease-standard outline-none",
+    href && "hover:shadow-md focus-visible:ring-3 focus-visible:ring-ring/40 active:scale-[0.98]",
   );
 
   return href ? (

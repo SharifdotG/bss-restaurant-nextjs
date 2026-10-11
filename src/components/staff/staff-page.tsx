@@ -163,7 +163,7 @@ export function StaffPage() {
     );
   } else if (phone) {
     body = (
-      <ul className="divide-y divide-border">
+      <ul className="animate-appear divide-y divide-border">
         {shown.map((person) => (
           <li key={person.id} className="relative flex items-center gap-3 px-4 py-3">
             <div className="min-w-0 flex-1">{name(person)}</div>
@@ -176,7 +176,7 @@ export function StaffPage() {
     // The seed has no phone numbers; a column of dashes says nothing.
     const phones = shown.some((person) => person.phone);
     body = (
-      <Table className="table-fixed">
+      <Table className="table-fixed animate-appear">
         <TableHeader>
           <TableRow>
             <TableHead>{t("columns.person")}</TableHead>

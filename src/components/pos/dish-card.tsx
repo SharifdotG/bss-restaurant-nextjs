@@ -69,7 +69,7 @@ export function DishCard({ food, inCart, onAdd, onSetQuantity, photo }: DishCard
   return (
     <article
       className={cn(
-        "group/dish relative flex w-full flex-col rounded-xl bg-card shadow-sm ring-2 transition-[box-shadow] duration-(--duration-fast)",
+        "group/dish relative flex w-full flex-col rounded-xl bg-card shadow-sm ring-2 transition-[box-shadow,scale] duration-(--duration-fast) ease-standard has-[>button:active]:scale-[0.98]",
         inCart > 0 ? "ring-primary" : "ring-transparent hover:shadow-md",
         soldOut && "opacity-70",
       )}

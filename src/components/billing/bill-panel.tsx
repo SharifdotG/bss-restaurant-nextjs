@@ -60,7 +60,7 @@ export function BillPanel({ order, actions, className }: BillPanelProps) {
         <p className="mb-1 text-sm font-bold text-muted-foreground">
           {t("items", { n: order.itemCount })}
         </p>
-        <ul className="divide-y divide-border">
+        <ul className="animate-appear divide-y divide-border">
           {order.items.map((item) => (
             <li key={item.id} className="flex items-start gap-3 py-2.5">
               <span className="w-6 shrink-0 font-bold tabular-nums">

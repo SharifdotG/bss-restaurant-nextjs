@@ -139,7 +139,12 @@ export function MenuGrid({ menu, counts, onAdd, setterFor, className }: MenuPane
   }
 
   return (
-    <ul className={cn("grid grid-cols-2 gap-3 xl:grid-cols-3 2xl:grid-cols-4", className)}>
+    <ul
+      className={cn(
+        "grid animate-appear grid-cols-2 gap-3 xl:grid-cols-3 2xl:grid-cols-4",
+        className,
+      )}
+    >
       {menu.shown.map((food) => (
         <li key={food.id} className="flex">
           <DishCard

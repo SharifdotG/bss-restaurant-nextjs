@@ -17,7 +17,7 @@ export function OrderListCard({ order }: { order: OrderOut }) {
   return (
     <Link
       href={`/orders/${order.id}`}
-      className="block rounded-xl bg-card p-4 shadow-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/40 active:bg-foreground/[0.03]"
+      className="block rounded-xl bg-card p-4 shadow-sm transition-[background-color,scale] duration-(--duration-fast) ease-standard outline-none focus-visible:ring-3 focus-visible:ring-ring/40 active:scale-[0.98] active:bg-foreground/[0.03]"
     >
       <div className="flex items-start justify-between gap-3">
         <p className="min-w-0 truncate">

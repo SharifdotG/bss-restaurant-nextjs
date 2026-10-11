@@ -208,7 +208,7 @@ export function ExpensesPage() {
     list = <EmptyState icon={FunnelSimpleIcon} tone="slate" title={t("noMatch")} />;
   } else if (phone) {
     list = (
-      <ul className="divide-y divide-border">
+      <ul className="animate-appear divide-y divide-border">
         {shown.map((expense) => {
           const Icon = EXPENSE_ICONS[expense.category];
           return (
@@ -231,7 +231,7 @@ export function ExpensesPage() {
     );
   } else {
     list = (
-      <Table className="table-fixed">
+      <Table className="table-fixed animate-appear">
         <TableHeader>
           <TableRow>
             <TableHead className="w-[110px]">{t("columns.date")}</TableHead>
@@ -370,7 +370,7 @@ export function ExpensesPage() {
             ) : categories.length === 0 ? (
               <p className="text-sm text-muted-foreground">{t("nothingYet")}</p>
             ) : (
-              <ul className="-mx-2 grid gap-1">
+              <ul className="-mx-2 grid animate-appear gap-1">
                 {categories.map((share) => {
                   const Icon = EXPENSE_ICONS[share.category];
                   const picked = url.category === share.category;

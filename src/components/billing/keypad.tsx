@@ -22,7 +22,7 @@ export function Keypad({ onKey, className }: { onKey: (key: PadKey) => void; cla
           onPointerDown={(event) => event.preventDefault()}
           onClick={() => onKey(key)}
           aria-label={key === "back" ? t("delete") : undefined}
-          className="grid h-12 place-items-center rounded-md bg-muted text-xl font-bold tabular-nums transition-[background-color,transform] duration-(--duration-fast) ease-standard outline-none select-none hover:bg-secondary focus-visible:ring-3 focus-visible:ring-ring/40 active:translate-y-px active:bg-brand-track"
+          className="grid h-12 place-items-center rounded-md bg-muted text-xl font-bold tabular-nums transition-[background-color,scale] duration-(--duration-fast) ease-standard outline-none select-none hover:bg-secondary focus-visible:ring-3 focus-visible:ring-ring/40 active:scale-[0.98] active:bg-brand-track"
         >
           {key === "back" ? (
             <BackspaceIcon weight="duotone" className="size-6" />

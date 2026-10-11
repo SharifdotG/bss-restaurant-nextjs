@@ -278,7 +278,7 @@ function SettingsForm({ saved }: { saved: RestaurantOut }) {
       <form
         onSubmit={submit}
         noValidate
-        className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]"
+        className="grid animate-appear items-start gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]"
       >
         <fieldset disabled={!editable} className="@container grid min-w-0 gap-6">
           <Section title={t("restaurant.title")} hint={t("restaurant.hint")}>

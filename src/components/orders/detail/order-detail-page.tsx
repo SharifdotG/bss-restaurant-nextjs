@@ -272,7 +272,7 @@ function DetailSkeleton() {
   return (
     <div
       aria-busy
-      className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_360px]"
+      className="grid animate-appear grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_360px]"
     >
       <div className="grid grid-cols-1 gap-5">
         <Skeleton className="h-28 rounded-xl bg-card" />

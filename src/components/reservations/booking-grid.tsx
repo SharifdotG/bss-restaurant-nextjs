@@ -139,7 +139,7 @@ export function BookingGrid({
   };
 
   return (
-    <div ref={scroller} className="overflow-x-auto overscroll-x-contain">
+    <div ref={scroller} className="animate-appear overflow-x-auto overscroll-x-contain">
       <div
         role="table"
         aria-label={t("label")}

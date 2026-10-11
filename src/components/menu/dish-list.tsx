@@ -172,7 +172,7 @@ export function DishTable(props: DishListProps) {
   const categoryCell = besideRail ? "hidden min-[1360px]:table-cell" : "";
 
   return (
-    <Table className="table-fixed">
+    <Table className="table-fixed animate-appear">
       <TableHeader>
         <TableRow>
           <TableHead>{t("columns.dish")}</TableHead>
@@ -252,7 +252,7 @@ export function DishRows({ foods, showCategory, editable, canSellOut, onAction }
   const t = useTranslations("menu.dishes");
 
   return (
-    <ul className="divide-y divide-border">
+    <ul className="animate-appear divide-y divide-border">
       {foods.map((food) => (
         <li key={food.id} className="relative flex items-center gap-3 px-4 py-3">
           <FoodThumb

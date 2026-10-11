@@ -49,7 +49,7 @@ export function KpiCard({
           </>
         ) : (
           <>
-            <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <p className="flex animate-appear flex-wrap items-baseline gap-x-2 gap-y-0.5">
               {text !== undefined ? (
                 <span className="line-clamp-2 min-w-0 text-xl leading-7 font-bold tracking-tight break-words">
                   {text}

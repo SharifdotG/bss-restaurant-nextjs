@@ -203,7 +203,7 @@ function TableChoice({
       onClick={onPick}
       aria-pressed={selected}
       className={cn(
-        "relative w-full rounded-xl p-3 text-left ring-2 transition-[box-shadow,background-color] duration-(--duration-fast) outline-none focus-visible:ring-ring/60",
+        "relative w-full rounded-xl p-3 text-left ring-2 transition-[box-shadow,background-color,scale] duration-(--duration-fast) ease-standard outline-none focus-visible:ring-ring/60 active:scale-[0.98]",
         selected
           ? "bg-card ring-primary"
           : busy

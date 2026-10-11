@@ -32,7 +32,7 @@ function ChoiceTiles<T extends string>({
         <Toggle
           key={option}
           value={option}
-          className="group/tile flex min-h-16 flex-col items-center justify-center gap-1 rounded-lg border border-border bg-card px-2 py-2.5 text-sm font-bold text-muted-foreground transition-[background-color,border-color,color,box-shadow] duration-(--duration-fast) ease-standard outline-none hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/40 data-pressed:border-primary/40 data-pressed:bg-primary-soft data-pressed:text-primary-soft-foreground"
+          className="group/tile flex min-h-16 flex-col items-center justify-center gap-1 rounded-lg border border-border bg-card px-2 py-2.5 text-sm font-bold text-muted-foreground transition-[background-color,border-color,color,box-shadow,scale] duration-(--duration-fast) ease-standard outline-none hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/40 active:scale-[0.98] data-pressed:border-primary/40 data-pressed:bg-primary-soft data-pressed:text-primary-soft-foreground"
         >
           <Icon weight="duotone" className="size-6" />
           {label}
