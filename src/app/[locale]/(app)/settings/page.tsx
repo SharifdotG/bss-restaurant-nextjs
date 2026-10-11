@@ -1,6 +1,7 @@
-import { plannedRoute } from "../app-route";
+import { SettingsPage } from "@/components/settings/settings-page";
+import { pageRoute } from "../app-route";
 
-const route = plannedRoute("settings");
+const route = pageRoute("settings", SettingsPage);
 
 export const generateMetadata = route.generateMetadata;
 export default route.Route;

@@ -34,7 +34,7 @@ import { useErrorText } from "@/lib/api/use-error-text";
 import { amountText } from "@/lib/billing";
 import { toLatinDigits } from "@/lib/format";
 import { discountProblem, finalPrice } from "@/lib/menu";
-import { parseMoney, toPaisa, toTaka } from "@/lib/money";
+import { parseMoney, parsePercent, toPaisa, toTaka } from "@/lib/money";
 import { useFormat } from "@/lib/use-format";
 import { useSaveFood } from "@/lib/use-menu-actions";
 
@@ -80,12 +80,6 @@ type DishFormProps = {
   categories: CategoryOut[];
   onClose: () => void;
   onDelete: (food: FoodOut) => void;
-};
-
-// Percentages allow two decimals like the API; "12.5" works, "12.555" doesn't.
-const parsePercent = (text: string) => {
-  const value = toLatinDigits(text).trim();
-  return /^\d{1,3}(\.\d{1,2})?$/.test(value) ? Number(value) : null;
 };
 
 const parseMinutes = (text: string) => {

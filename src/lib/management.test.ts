@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { CategoryOut, EmployeeOut, ExpenseOut, FoodOut, UserOut } from "@/lib/api/schema";
 import { matchesExpense, monthRange, shiftMonth, spendByCategory } from "./expenses";
+import { parsePercent } from "./money";
+import { billTotals, settingsChanges, timeSteps } from "./settings";
 import { discountProblem, finalPrice, matchesFood, moveId, reorderChanges } from "./menu";
 import {
   accountActions,
@@ -216,5 +218,45 @@ describe("expense months", () => {
     const gas = expense(900, "utilities", { paidTo: "Titas Gas" });
     expect(matchesExpense(gas, { categories: ["utilities"], search: "titas" })).toBe(true);
     expect(matchesExpense(gas, { categories: ["rent"], search: "" })).toBe(false);
+  });
+});
+
+describe("settings", () => {
+  it("adds service charge on the food and VAT on both, like the API", () => {
+    expect(billTotals(1000, 5, 7.5)).toEqual({ service: 50, vat: 78.75, total: 1128.75 });
+    expect(billTotals(333.33, 0, 15)).toEqual({ service: 0, vat: 50, total: 383.33 });
+  });
+
+  it("steps through the day", () => {
+    const steps = timeSteps(30);
+    expect(steps).toHaveLength(48);
+    expect(steps.slice(0, 3)).toEqual(["00:00", "00:30", "01:00"]);
+    expect(steps.at(-1)).toBe("23:30");
+  });
+
+  it("sends only the fields that changed", () => {
+    const saved = {
+      name: "Shorshe",
+      address: null,
+      vatPercent: 7.5,
+      opensAt: "11:00:00",
+      acceptsQrOrders: true,
+    } as unknown as Parameters<typeof settingsChanges>[0];
+    expect(
+      settingsChanges(saved, {
+        name: "Shorshe",
+        address: null,
+        vatPercent: 10,
+        opensAt: "11:00",
+        acceptsQrOrders: false,
+      }),
+    ).toEqual({ vatPercent: 10, acceptsQrOrders: false });
+  });
+
+  it("reads percentages with up to two decimals in either digits", () => {
+    expect(parsePercent("7.5")).toBe(7.5);
+    expect(parsePercent("১৫")).toBe(15);
+    expect(parsePercent("7.555")).toBeNull();
+    expect(parsePercent("")).toBeNull();
   });
 });

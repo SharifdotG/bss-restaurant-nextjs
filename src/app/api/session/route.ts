@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { API_BASE } from "@/lib/api/config";
 import {
   clearRefreshToken,
+  isRemembered,
   isSameOrigin,
   readRefreshToken,
   writeRefreshToken,
@@ -19,8 +20,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ code: "bad_request" }, { status: 400 });
   }
 
+  // "keep" is for a new token on the same device (a password change): stay as remembered as before.
+  const remember = body?.remember === "keep" ? isRemembered(request) : body?.remember !== false;
   const response = new NextResponse(null, { status: 204 });
-  writeRefreshToken(request, response, token, body?.remember !== false);
+  writeRefreshToken(request, response, token, remember);
   return response;
 }
 

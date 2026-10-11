@@ -185,10 +185,13 @@ function boot() {
   return refresh();
 }
 
-/** `remember: false` keeps the session only until the browser closes. */
+/**
+ * `remember: false` keeps the session only until the browser closes; "keep" leaves that as it
+ * was, for the new tokens a password change hands back.
+ */
 export async function signIn(
   tokens: { accessToken: string; refreshToken: string; expiresIn: number; user: User },
-  { remember = true } = {},
+  { remember = true }: { remember?: boolean | "keep" } = {},
 ) {
   const response = await fetch("/api/session", {
     method: "POST",
@@ -201,6 +204,16 @@ export async function signIn(
   writeCache(session);
   adopt(session);
   post({ type: "signed-in", session });
+}
+
+/** A profile edit: the new name shows everywhere, in every tab, without waiting for a refresh. */
+export function updateUser(user: User) {
+  if (state.status !== "authenticated") return;
+  const { accessToken, expiresAt, lifetime } = state;
+  const session = { accessToken, expiresAt, lifetime, user };
+  writeCache(session);
+  adopt(session);
+  post({ type: "refreshed", session });
 }
 
 export async function signOut() {

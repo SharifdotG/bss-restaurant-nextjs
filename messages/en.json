@@ -2100,5 +2100,85 @@
     "remove": "Delete",
     "perDay": "A day on average",
     "biggest": "Most went on {category}, {share} of it"
+  },
+  "settings": {
+    "failed": "Couldn't load the settings",
+    "retry": "Try again",
+    "meta": "Last changed {when}",
+    "saved": "Settings saved",
+    "unsaved": "{n, plural, one {# unsaved change} other {# unsaved changes}}",
+    "discard": "Discard",
+    "saving": "Saving…",
+    "save": "Save changes",
+    "errors": {
+      "name": "The restaurant needs a name.",
+      "phone": "A phone number like 01712 345678.",
+      "email": "That doesn't look like an email.",
+      "percent": "A number from 0 to 100, up to two decimals.",
+      "currency": "Three letters, like BDT.",
+      "symbol": "Add a symbol, like ৳."
+    },
+    "restaurant": {
+      "title": "The restaurant",
+      "hint": "Shown on every bill, the sign-in page and the guest pages.",
+      "name": "Name",
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address"
+    },
+    "hours": {
+      "title": "Opening hours",
+      "hint": "The bookings grid and the header's open or closed line follow these.",
+      "opens": "Opens",
+      "closes": "Closes",
+      "allDay": "Opening and closing at the same time means open around the clock.",
+      "pastMidnight": "Open {hours} hours, closing after midnight.",
+      "span": "Open {hours} hours a day."
+    },
+    "bills": {
+      "title": "Bills",
+      "hint": "What gets added on top of the food.",
+      "vat": "VAT",
+      "vatHint": "Charged on the food and the service charge.",
+      "service": "Service charge",
+      "serviceHint": "Dine-in only; takeaway skips it.",
+      "taxId": "BIN",
+      "taxIdHint": "Your VAT registration number, printed on receipts.",
+      "currency": "Currency",
+      "symbol": "Symbol",
+      "newOrdersOnly": "New rates apply to orders placed after you save. Open bills keep the rates they started with."
+    },
+    "guests": {
+      "title": "Guest orders and bookings",
+      "hint": "What guests can do on their own from the QR codes and the website.",
+      "qr": "Orders from table QR codes",
+      "qrHint": "Guests scan the card on their table and order. Staff accept each one.",
+      "online": "Online takeaway orders",
+      "onlineHint": "Guests order from the website and pick up.",
+      "bookings": "Bookings from the website",
+      "bookingsHint": "Requests land on the bookings page for a yes or no.",
+      "autoConfirm": "Confirm website bookings by themselves",
+      "autoConfirmHint": "If a table fits, the booking is confirmed without anyone checking.",
+      "length": "How long a booking holds a table",
+      "minutes": "{n, plural, other {# min}}",
+      "lengthHint": "The starting length for new bookings; each one can be changed."
+    },
+    "receipt": {
+      "title": "Receipt",
+      "hint": "The last line on every printed bill.",
+      "footer": "Closing line",
+      "footerHint": "A thank-you, your Wi-Fi password, your Facebook page."
+    },
+    "preview": {
+      "title": "Receipt preview",
+      "hint": "Updates as you type.",
+      "caption": "Receipts always print in English."
+    }
+  },
+  "profile": {
+    "saved": "Your details are saved",
+    "password": {
+      "changed": "Password changed. Your other devices are signed out."
+    }
   }
 }

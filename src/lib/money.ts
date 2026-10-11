@@ -31,6 +31,12 @@ export function parseMoney(input: string): number | null {
   return Number(whole || 0) * 100 + Number(fraction.padEnd(2, "0"));
 }
 
+/** A percentage with at most two decimals, like the API takes: "7.5" and "১৫" work, "7.555" doesn't. */
+export function parsePercent(input: string): number | null {
+  const value = toLatinDigits(input).trim();
+  return /^\d{1,3}(\.\d{1,2})?$/.test(value) ? Number(value) : null;
+}
+
 // Lakh grouping in both languages; Bangla also gets Bangla digits.
 const amountFormats: Record<Locale, Intl.NumberFormat> = {
   en: new Intl.NumberFormat("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
