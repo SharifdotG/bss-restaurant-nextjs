@@ -2024,6 +2024,81 @@
       "added": "{title} added",
       "saved": "{title} saved",
       "deleted": "{title} deleted"
-    }
+    },
+    "meta": "What went out in {month}",
+    "add": "Add expense",
+    "rowMenu": "More for {title}",
+    "edit": "Edit",
+    "viewReceipt": "See receipt",
+    "delete": {
+      "title": "Delete {title}?",
+      "body": "{amount} on {date} comes off this month's spending.",
+      "bodyReceipt": "{amount} on {date} comes off this month's spending, and its receipt photo goes too.",
+      "keep": "Keep it",
+      "working": "Deleting…",
+      "confirm": "Delete expense"
+    },
+    "hasReceipt": "Has a receipt",
+    "failed": "Couldn't load the expenses",
+    "retry": "Try again",
+    "emptyTitle": "Nothing spent in {month} yet",
+    "empty": "Add what you pay for: the market run, gas, salaries, repairs. Profit in Reports takes it off the sales.",
+    "noMatch": "No expenses match",
+    "columns": {
+      "date": "Date",
+      "expense": "Expense",
+      "category": "Category",
+      "by": "Added by",
+      "amount": "Amount",
+      "actions": "Actions"
+    },
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "thisMonth": "Back to this month",
+    "spent": "Spent in {month}",
+    "compare": "{amount} in {range}",
+    "byCategory": "Where it went",
+    "byCategoryHint": "Tap one to see only those.",
+    "byCategoryFiltered": "Showing one category. Tap it again for all.",
+    "nothingYet": "Nothing yet this month.",
+    "search": "What, who was paid, notes",
+    "clearCategory": "Show every category",
+    "count": "{n, plural, one {# entry} other {# entries}}",
+    "sheet": {
+      "newTitle": "Add an expense",
+      "newSub": "It counts against this month's profit straight away.",
+      "editTitle": "Edit expense",
+      "editSub": "Reports update as soon as it's saved.",
+      "title": "What for",
+      "titlePlaceholder": "Morning market run",
+      "amount": "Amount",
+      "category": "Category",
+      "date": "Date",
+      "today": "Today",
+      "paidTo": "Paid to",
+      "paidToPlaceholder": "Karwan Bazar, Titas Gas…",
+      "notes": "Notes",
+      "notesPlaceholder": "Anything worth remembering about it",
+      "receipt": "Receipt photo",
+      "receiptHint": "Optional. Snap the memo so the numbers can be checked later.",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "save": "Save changes",
+      "create": "Add expense",
+      "errors": {
+        "title": "Say what it was for.",
+        "amount": "Enter an amount like 2500 or 2500.50.",
+        "category": "Pick a category."
+      }
+    },
+    "receipt": {
+      "alt": "Receipt for {title}",
+      "open": "Open full size",
+      "close": "Close"
+    },
+    "remove": "Delete",
+    "perDay": "A day on average",
+    "biggest": "Most went on {category}, {share} of it"
   }
 }
