@@ -2178,7 +2178,56 @@
   "profile": {
     "saved": "Your details are saved",
     "password": {
-      "changed": "Password changed. Your other devices are signed out."
+      "changed": "Password changed. Your other devices are signed out.",
+      "title": "Password",
+      "hint": "Changing it signs you out on every other device. This one stays signed in.",
+      "current": "Current password",
+      "currentMissing": "Type your current password.",
+      "next": "New password",
+      "rule": "At least 8 characters, with a letter and a number.",
+      "again": "New password again",
+      "mismatch": "These don't match.",
+      "problems": {
+        "short": "At least 8 characters.",
+        "long": "128 characters at most.",
+        "mix": "Use letters and at least one number."
+      },
+      "working": "Changing…",
+      "confirm": "Change password"
+    },
+    "everywhere": {
+      "title": "Signed in somewhere else?",
+      "body": "Lost a phone or used a shared tablet? End every session this account has, this one included.",
+      "action": "Sign out everywhere"
+    },
+    "details": {
+      "title": "Your details",
+      "hint": "Your name shows on orders you take and in the staff list.",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "phone": "Phone",
+      "email": "Sign-in email",
+      "emailHint": "Can't be changed here. Ask a manager if it's wrong.",
+      "required": "This one's needed.",
+      "phoneFormat": "A phone number like 01712 345678.",
+      "saving": "Saving…",
+      "save": "Save details"
+    },
+    "account": {
+      "title": "Your account",
+      "role": "Role",
+      "email": "Email",
+      "lastIn": "Signed in",
+      "since": "Member since",
+      "record": "Your staff record"
+    },
+    "device": {
+      "title": "This device",
+      "hint": "Kept on this device only.",
+      "theme": "Theme",
+      "language": "Language",
+      "sound": "Kitchen and order sounds",
+      "soundHint": "The chime for new tickets and guest orders."
     }
   }
 }
