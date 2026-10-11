@@ -12,6 +12,7 @@ import type { OrderOut } from "@/lib/api/schema";
 import type { BillQueue } from "@/lib/billing";
 import { useLiveSynced } from "@/lib/live/store";
 import type { LiveOrder } from "@/lib/live/types";
+import { listItem } from "@/lib/motion";
 import { minutesSince } from "@/lib/orders";
 import { useFormat } from "@/lib/use-format";
 import { cn } from "@/lib/utils";
@@ -124,13 +125,7 @@ function BillRow({ order, now, active, fresh, prepaid, onSelect }: BillRowProps)
   const who = order.waiter?.fullName.split(" ")[0] ?? order.customerName;
 
   return (
-    <m.li
-      layout="position"
-      initial={{ opacity: 0, y: -6 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.97 }}
-      transition={{ type: "spring", stiffness: 420, damping: 36 }}
-    >
+    <m.li {...listItem}>
       <button
         type="button"
         onClick={() => onSelect(order.id)}

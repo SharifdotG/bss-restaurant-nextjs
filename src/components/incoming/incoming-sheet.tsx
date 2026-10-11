@@ -30,6 +30,7 @@ import type { LiveOrder } from "@/lib/live/types";
 import { INCOMING_LATE_MINUTES } from "@/lib/notifications";
 import { minutesSince } from "@/lib/orders";
 import { closeOverlay, useOverlay } from "@/lib/overlays";
+import { listItem } from "@/lib/motion";
 import { PAGE_PATHS } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
 import { useFormat } from "@/lib/use-format";
@@ -66,9 +67,8 @@ export function IncomingSheet() {
                 {waiting.map((order) => (
                   <m.li
                     key={order.id}
-                    layout="position"
-                    exit={{ opacity: 0, x: 24 }}
-                    transition={{ type: "spring", stiffness: 420, damping: 38 }}
+                    {...listItem}
+                    exit={{ opacity: 0, x: 24, transition: listItem.exit.transition }}
                   >
                     <IncomingCard order={order} role={session.user.role} now={now} />
                   </m.li>

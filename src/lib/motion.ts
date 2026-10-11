@@ -70,3 +70,13 @@ export function forgetVisits() {
     // Nothing stored, nothing to forget.
   }
 }
+
+/**
+ * A key for a live list that changes only once a new filter or page has its data, so
+ * switching views fades the list in once instead of animating every row in and out.
+ */
+export function useViewKey(view: string, settled: boolean) {
+  const [key, setKey] = useState(view);
+  if (settled && key !== view) setKey(view);
+  return key;
+}

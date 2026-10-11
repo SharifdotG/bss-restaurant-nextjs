@@ -3,33 +3,48 @@
 import { useEffect, useState } from "react";
 import { animate, useMotionValue, useReducedMotion, useTransform } from "motion/react";
 import * as m from "motion/react-m";
-
-// Figures count up the first time they're seen in a visit; after that they just show.
-const counted = new Set<string>();
+import { EASE, useFirstVisit } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
 type CountUpProps = {
-  /** Remembers that this figure has already counted up once. */
+  /** Remembers that this figure has already counted up this session. */
   id: string;
   value: number;
   format: (value: number) => string;
   className?: string;
 };
 
-/** A number that rolls up from zero once per visit, then follows live changes quietly. */
+/**
+ * A number that rolls up from zero the first time it's seen in a session. After that a
+ * live change swaps the figure and tints it once, so the change gets noticed.
+ */
 export function CountUp({ id, value, format, className }: CountUpProps) {
   const reduced = useReducedMotion();
-  const [first] = useState(() => !counted.has(id));
+  const first = useFirstVisit(`count:${id}`);
   const shown = useMotionValue(first && !reduced ? 0 : value);
   const text = useTransform(shown, format);
+  const [last, setLast] = useState(value);
+  const [changes, setChanges] = useState(0);
+  if (value !== last) {
+    setLast(value);
+    setChanges(changes + 1);
+  }
 
   useEffect(() => {
-    if (first && !reduced && !counted.has(id)) {
-      counted.add(id);
-      const controls = animate(shown, value, { duration: 0.8, ease: [0.16, 1, 0.3, 1] });
+    if (first && !reduced && changes === 0) {
+      const controls = animate(shown, value, { duration: 0.8, ease: EASE.arrive });
       return () => controls.stop();
     }
     shown.set(value);
-  }, [first, id, reduced, shown, value]);
+  }, [first, reduced, changes, shown, value]);
 
-  return <m.span className={className}>{text}</m.span>;
+  return (
+    <m.span
+      // A new key restarts the tint each time the figure moves.
+      key={changes}
+      className={cn(changes > 0 && "-mx-1 animate-changed rounded-sm px-1", className)}
+    >
+      {text}
+    </m.span>
+  );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { CaretDownIcon, CaretUpDownIcon, CaretUpIcon } from "@phosphor-icons/react";
+import { AnimatePresence } from "motion/react";
 import { useTranslations } from "next-intl";
 import {
   Table,
@@ -10,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { LiveRow } from "@/components/ui/live-row";
 import { Link } from "@/i18n/navigation";
 import type { OrderOut } from "@/lib/api/schema";
 import type { OrderSort } from "@/lib/orders";
@@ -36,7 +38,7 @@ export function OrdersTable({ orders, now, sort, onSort }: OrdersTableProps) {
   const where = useOrderWhere();
 
   return (
-    <Table className="table-fixed">
+    <Table className="table-fixed animate-appear">
       <TableHeader>
         <TableRow>
           <TableHead className="w-[120px]">{t("columns.order")}</TableHead>
@@ -60,64 +62,66 @@ export function OrdersTable({ orders, now, sort, onSort }: OrdersTableProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {orders.map((order) => {
-          const place = where(order);
-          return (
-            <TableRow key={order.id} className="relative">
-              <TableCell>
-                <Link
-                  href={`/orders/${order.id}`}
-                  className="block outline-none after:absolute after:inset-0 after:rounded-sm focus-visible:after:ring-3 focus-visible:after:ring-ring/40 focus-visible:after:ring-inset"
+        <AnimatePresence initial={false}>
+          {orders.map((order) => {
+            const place = where(order);
+            return (
+              <LiveRow key={order.id} className="relative">
+                <TableCell>
+                  <Link
+                    href={`/orders/${order.id}`}
+                    className="block outline-none after:absolute after:inset-0 after:rounded-sm focus-visible:after:ring-3 focus-visible:after:ring-ring/40 focus-visible:after:ring-inset"
+                  >
+                    <span className="block text-md font-bold tabular-nums">
+                      {format.orderNo(order.orderNumber)}
+                    </span>
+                    <span className="block text-xs whitespace-nowrap text-muted-foreground tabular-nums">
+                      {order.orderNumber}
+                    </span>
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <p className="truncate font-medium">{place.title}</p>
+                  <p className="truncate text-xs text-muted-foreground">{place.detail}</p>
+                </TableCell>
+                <TableCell>
+                  <p className="font-medium">{t("itemCount", { n: order.itemCount })}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    <ItemsLine order={order} />
+                  </p>
+                </TableCell>
+                <TableCell className={wide}>
+                  <p className="truncate font-medium">{order.waiter?.fullName ?? t("guest")}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    <WaiterNote order={order} />
+                  </p>
+                </TableCell>
+                <TableCell className={wide}>
+                  <p className="font-medium whitespace-nowrap tabular-nums">
+                    <PlacedAt value={order.createdAt} />
+                  </p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    <PlacedNote order={order} now={now} />
+                  </p>
+                </TableCell>
+                <TableCell>
+                  <OrderStatusPill status={order.status} />
+                </TableCell>
+                <TableCell
+                  className={cn(
+                    "text-right font-bold tabular-nums",
+                    order.status === "cancelled" && "text-muted-foreground line-through",
+                  )}
                 >
-                  <span className="block text-md font-bold tabular-nums">
-                    {format.orderNo(order.orderNumber)}
-                  </span>
-                  <span className="block text-xs whitespace-nowrap text-muted-foreground tabular-nums">
-                    {order.orderNumber}
-                  </span>
-                </Link>
-              </TableCell>
-              <TableCell>
-                <p className="truncate font-medium">{place.title}</p>
-                <p className="truncate text-xs text-muted-foreground">{place.detail}</p>
-              </TableCell>
-              <TableCell>
-                <p className="font-medium">{t("itemCount", { n: order.itemCount })}</p>
-                <p className="truncate text-xs text-muted-foreground">
-                  <ItemsLine order={order} />
-                </p>
-              </TableCell>
-              <TableCell className={wide}>
-                <p className="truncate font-medium">{order.waiter?.fullName ?? t("guest")}</p>
-                <p className="truncate text-xs text-muted-foreground">
-                  <WaiterNote order={order} />
-                </p>
-              </TableCell>
-              <TableCell className={wide}>
-                <p className="font-medium whitespace-nowrap tabular-nums">
-                  <PlacedAt value={order.createdAt} />
-                </p>
-                <p className="truncate text-xs text-muted-foreground">
-                  <PlacedNote order={order} now={now} />
-                </p>
-              </TableCell>
-              <TableCell>
-                <OrderStatusPill status={order.status} />
-              </TableCell>
-              <TableCell
-                className={cn(
-                  "text-right font-bold tabular-nums",
-                  order.status === "cancelled" && "text-muted-foreground line-through",
-                )}
-              >
-                {format.money(order.total)}
-              </TableCell>
-              <TableCell className="text-right">
-                <OrderRowMenu order={order} />
-              </TableCell>
-            </TableRow>
-          );
-        })}
+                  {format.money(order.total)}
+                </TableCell>
+                <TableCell className="text-right">
+                  <OrderRowMenu order={order} />
+                </TableCell>
+              </LiveRow>
+            );
+          })}
+        </AnimatePresence>
       </TableBody>
     </Table>
   );

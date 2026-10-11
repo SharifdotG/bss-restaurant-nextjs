@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChefHatIcon, InfoIcon } from "@phosphor-icons/react";
 import { AnimatePresence, LayoutGroup } from "motion/react";
 import * as m from "motion/react-m";
@@ -16,6 +16,7 @@ import {
   type KitchenColumnKey,
 } from "@/lib/kitchen";
 import type { LiveOrder } from "@/lib/live/types";
+import { DURATION, EASE, LIST_SPRING } from "@/lib/motion";
 import { STATUS_LOOK } from "@/lib/orders";
 import { orderMoves } from "@/lib/permissions";
 import { TONES } from "@/lib/tones";
@@ -35,7 +36,11 @@ type KitchenBoardProps = {
   onBump: (order: LiveOrder, column: KitchenColumn) => void;
 };
 
-const spring = { type: "spring", stiffness: 420, damping: 38, mass: 0.8 } as const;
+// Softer than the list spring, so a new ticket lands with a small settle the eye catches.
+const ARRIVAL = { type: "spring", stiffness: 300, damping: 22 } as const;
+
+// Tickets this screen has already shown; anything else is a fresh one from the floor.
+const seenTickets = new Set<number>();
 
 const ICON_TONE: Record<KitchenColumn["tone"], string> = {
   amber: "text-tone-amber",
@@ -143,16 +148,7 @@ function Column({
             {tickets.map((order) => {
               const moves = orderMoves(role, order);
               return (
-                <m.div
-                  key={order.id}
-                  layoutId={`ticket-${order.id}`}
-                  layout="position"
-                  initial={{ opacity: 0, y: -12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.96 }}
-                  transition={spring}
-                  className="shrink-0"
-                >
+                <TicketSlot key={order.id} id={order.id}>
                   <KitchenTicket
                     order={order}
                     column={column}
@@ -168,7 +164,7 @@ function Column({
                         : undefined
                     }
                   />
-                </m.div>
+                </TicketSlot>
               );
             })}
           </AnimatePresence>
@@ -203,5 +199,36 @@ function EmptyColumn({ column }: { column: KitchenColumn }) {
       <p className="text-xl font-bold">{t("toCookTitle")}</p>
       <p className="max-w-64 text-base text-pretty text-muted-foreground">{t("toCook")}</p>
     </div>
+  );
+}
+
+/** A ticket new to the screen drops in and settles; one changing column just glides across. */
+function TicketSlot({
+  id,
+  ref,
+  children,
+}: {
+  id: number;
+  ref?: React.Ref<HTMLDivElement>;
+  children: React.ReactNode;
+}) {
+  const [fresh] = useState(() => !seenTickets.has(id));
+  useEffect(() => {
+    seenTickets.add(id);
+  }, [id]);
+
+  return (
+    <m.div
+      ref={ref}
+      layoutId={`ticket-${id}`}
+      layout="position"
+      initial={fresh ? { opacity: 0, y: -24, scale: 0.97 } : false}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.96, transition: { duration: DURATION.fast, ease: EASE.exit } }}
+      transition={fresh ? ARRIVAL : LIST_SPRING}
+      className="shrink-0"
+    >
+      {children}
+    </m.div>
   );
 }

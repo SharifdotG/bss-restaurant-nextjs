@@ -11,6 +11,7 @@ import { Pill } from "@/components/ui/pill";
 import { Skeleton } from "@/components/ui/skeleton";
 import { activeOrdersQuery } from "@/lib/api/queries";
 import { useErrorText } from "@/lib/api/use-error-text";
+import { LIST_SPRING } from "@/lib/motion";
 import { BOARD_COLUMNS, boardColumn, STATUS_LOOK, type BoardColumn } from "@/lib/orders";
 import { useNow } from "@/lib/use-now";
 import { OrderCard } from "./order-card";
@@ -21,8 +22,6 @@ const COLUMN_LOOK: Record<BoardColumn, (typeof STATUS_LOOK)[keyof typeof STATUS_
   ready: STATUS_LOOK.ready,
   served: STATUS_LOOK.served,
 };
-
-const spring = { type: "spring", stiffness: 420, damping: 38, mass: 0.8 } as const;
 
 /** Open orders in four columns. A card keeps its identity as it moves, so the eye can follow it. */
 export function OrdersBoard() {
@@ -89,7 +88,7 @@ export function OrdersBoard() {
                         initial={{ opacity: 0, scale: 0.97 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.97 }}
-                        transition={spring}
+                        transition={LIST_SPRING}
                       >
                         <OrderCard order={order} now={now} />
                       </m.div>

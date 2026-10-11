@@ -7,6 +7,8 @@ import {
   ReceiptIcon,
 } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import { useTranslations } from "next-intl";
 import { EmptyState } from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
@@ -22,6 +24,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ordersQuery } from "@/lib/api/queries";
 import type { UserRole } from "@/lib/api/schema";
 import { useErrorText } from "@/lib/api/use-error-text";
+import { listItem, useViewKey } from "@/lib/motion";
 import { ordersQuery as toApiQuery } from "@/lib/orders";
 import { pageRange } from "@/lib/pagination";
 import { useDebounced } from "@/lib/use-debounced";
@@ -64,6 +67,7 @@ export function OrdersList({ role }: { role: UserRole }) {
   const waitingForMe = url.mine && myWaiterId === null;
   const query = useQuery({ ...ordersQuery(toApiQuery(filters, now)), enabled: !waitingForMe });
   const page = query.data;
+  const view = useViewKey(JSON.stringify(filters), Boolean(page) && !query.isPlaceholderData);
 
   const change = (next: OrderUrlChange) => void setUrl({ ...next, page: null });
   const clear = () => void setUrl(CLEARED);
@@ -108,15 +112,18 @@ export function OrdersList({ role }: { role: UserRole }) {
     );
   } else {
     body = phone ? (
-      <ul className="grid grid-cols-1 gap-3">
-        {page.items.map((order) => (
-          <li key={order.id}>
-            <OrderListCard order={order} />
-          </li>
-        ))}
+      <ul key={view} className="grid animate-appear grid-cols-1 gap-3">
+        <AnimatePresence initial={false} mode="popLayout">
+          {page.items.map((order) => (
+            <m.li key={order.id} {...listItem}>
+              <OrderListCard order={order} />
+            </m.li>
+          ))}
+        </AnimatePresence>
       </ul>
     ) : (
       <OrdersTable
+        key={view}
         orders={page.items}
         now={now}
         sort={url.sort}

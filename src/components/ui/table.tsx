@@ -21,17 +21,11 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
   return <tbody data-slot="table-body" className={cn(className)} {...props} />;
 }
 
+const rowClass =
+  "border-b border-border transition-colors duration-(--duration-fast) last:border-b-0 [tbody_&]:hover:bg-foreground/[0.025]";
+
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
-  return (
-    <tr
-      data-slot="table-row"
-      className={cn(
-        "border-b border-border transition-colors duration-(--duration-fast) last:border-b-0 [tbody_&]:hover:bg-foreground/[0.025]",
-        className,
-      )}
-      {...props}
-    />
-  );
+  return <tr data-slot="table-row" className={cn(rowClass, className)} {...props} />;
 }
 
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
@@ -57,4 +51,4 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   );
 }
 
-export { Table, TableBody, TableCell, TableHead, TableHeader, TableRow };
+export { rowClass, Table, TableBody, TableCell, TableHead, TableHeader, TableRow };

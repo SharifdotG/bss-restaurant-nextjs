@@ -3,11 +3,14 @@
 import { useState } from "react";
 import { CheckIcon, WarningIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Count } from "@/components/ui/count";
 import { availabilityQuery } from "@/lib/api/queries";
 import type { ReservationOut } from "@/lib/api/schema";
+import { listItem } from "@/lib/motion";
 import { useReservationStatus } from "@/lib/use-reservation-actions";
 import { cn } from "@/lib/utils";
 import { useWhen } from "./booking-bits";
@@ -47,16 +50,18 @@ export function WaitingPanel({
       </header>
       {shown.length > 0 && (
         <ul className="mt-4 grid divide-y divide-border border-t border-border">
-          {shown.map((booking) => (
-            <Request
-              key={booking.id}
-              booking={booking}
-              today={today}
-              canManage={canManage}
-              onOpen={() => onOpen(booking)}
-              onDecline={() => onDecline(booking)}
-            />
-          ))}
+          <AnimatePresence initial={false}>
+            {shown.map((booking) => (
+              <Request
+                key={booking.id}
+                booking={booking}
+                today={today}
+                canManage={canManage}
+                onOpen={() => onOpen(booking)}
+                onDecline={() => onDecline(booking)}
+              />
+            ))}
+          </AnimatePresence>
         </ul>
       )}
       {requests.length > SHOWN && (
@@ -96,7 +101,7 @@ function Request({ booking, today, canManage, onOpen, onDecline }: RequestProps)
   const full = free !== undefined && free.tables.length === 0 && !booking.table;
 
   return (
-    <li className="py-4 last:pb-0">
+    <m.li {...listItem} className="py-4 last:pb-0">
       <button
         type="button"
         onClick={onOpen}
@@ -139,6 +144,6 @@ function Request({ booking, today, canManage, onOpen, onDecline }: RequestProps)
           </Button>
         </div>
       )}
-    </li>
+    </m.li>
   );
 }
