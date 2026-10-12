@@ -28,7 +28,7 @@ export function RangeBar({ url, today, grouping, className }: RangeBarProps) {
   const groups = GROUPS.map((value) => ({ value, label: t(`groups.${value}`) }));
 
   return (
-    <div className={cn("flex flex-wrap items-center gap-2", className)}>
+    <div className={cn("flex max-w-full min-w-0 flex-wrap items-center gap-2", className)}>
       {/* Five presets don't fit a phone, so they scroll sideways there. */}
       <div className="-mx-4 max-w-[calc(100%+2rem)] overflow-x-auto px-4 md:mx-0 md:max-w-full md:px-0">
         <Segmented
