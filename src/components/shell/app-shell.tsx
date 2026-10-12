@@ -14,8 +14,8 @@ import { useSession } from "@/lib/session/client";
 import { useShellLayout } from "@/lib/use-shell-layout";
 import { cn } from "@/lib/utils";
 import { BottomTabs } from "./bottom-tabs";
-import { CommandPalette } from "./command-palette";
 import { ConnectionBanner } from "./connection-banner";
+import { LazyCommandPalette } from "./lazy-command-palette";
 import { AsideProvider, useAsideSlot } from "./shell-aside";
 import { ShortcutsSheet } from "./shortcuts-sheet";
 import { Sidebar, SidebarContent } from "./sidebar";
@@ -56,7 +56,7 @@ export function AppShell({ children, lost = false }: AppShellProps) {
 
   const overlays = (
     <>
-      <CommandPalette />
+      <LazyCommandPalette />
       <ShortcutsSheet />
       <SignOutAllDialog />
       <IncomingSheet />
