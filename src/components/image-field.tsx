@@ -118,7 +118,7 @@ export function ImageField({
         )}
         {busy && (
           <span className="absolute inset-0 grid place-items-center bg-veil">
-            <CircleNotchIcon className="size-6 animate-spin text-foreground" />
+            <CircleNotchIcon className="size-6 animate-spin text-foreground motion-reduce:animate-none" />
           </span>
         )}
       </button>

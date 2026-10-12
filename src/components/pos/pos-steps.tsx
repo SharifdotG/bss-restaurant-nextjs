@@ -314,12 +314,12 @@ function MenuStep({
           {groups.map((group) => (
             <section key={group.id}>
               {group.name && (
-                <h3 className="mb-1 flex items-baseline justify-between text-sm font-bold">
+                <h2 className="mb-1 flex items-baseline justify-between text-sm font-bold">
                   {group.name}
                   <span className="text-xs font-normal text-muted-foreground">
                     {t("dishCount", { n: group.foods.length })}
                   </span>
-                </h3>
+                </h2>
               )}
               <ul className="divide-y divide-border md:grid md:grid-cols-2 md:gap-x-6 md:divide-y-0">
                 {group.foods.map((food) => (

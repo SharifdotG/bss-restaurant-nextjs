@@ -49,7 +49,7 @@ function SheetContent({
         data-side={side}
         className={cn(
           "fixed z-50 flex flex-col bg-popover text-popover-foreground shadow-lg outline-none",
-          "transition-transform duration-(--duration-slow) ease-standard data-ending-style:duration-(--duration-base) data-ending-style:ease-exit",
+          "transition-transform duration-(--duration-slow) ease-standard data-ending-style:duration-(--duration-base) data-ending-style:ease-exit motion-reduce:transition-none",
           sides[side],
           className,
         )}

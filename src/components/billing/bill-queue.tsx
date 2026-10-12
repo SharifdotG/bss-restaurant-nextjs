@@ -66,7 +66,7 @@ export function BillQueueList({ queue, paid, selected, onSelect, now }: BillQueu
 
       <Group title={t("groups.paid")} count={settled.length}>
         {settled.length === 0 ? (
-          <p className="px-1 py-2 text-sm text-muted-foreground">{t("nonePaid")}</p>
+          <li className="px-1 py-2 text-sm text-muted-foreground">{t("nonePaid")}</li>
         ) : (
           settled
         )}

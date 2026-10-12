@@ -153,6 +153,7 @@ export function ExpensesPage() {
         <span className="truncate font-bold">{expense.title}</span>
         {expense.receiptUrl && (
           <PaperclipIcon
+            role="img"
             className="size-3.5 shrink-0 text-muted-foreground"
             aria-label={t("hasReceipt")}
           />
@@ -421,7 +422,7 @@ export function ExpensesPage() {
             {url.category && (
               <Chip pressed onClick={() => url.setCategory(null)}>
                 {tCategory(url.category)}
-                <XIcon aria-label={t("clearCategory")} />
+                <XIcon role="img" aria-label={t("clearCategory")} />
               </Chip>
             )}
             {expenses.data && (

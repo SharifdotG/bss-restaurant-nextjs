@@ -771,7 +771,8 @@
       "bodyLocked": "এই টেবিলে অর্ডার {n} {status}, তাই আর কিছু যোগ করা যাবে না। আলাদা অর্ডার শুরু করুন।",
       "addTo": "অর্ডার {n}-এ যোগ করুন",
       "separate": "আলাদা অর্ডার শুরু করুন"
-    }
+    },
+    "menuHeading": "মেনু"
   },
   "kitchen": {
     "title": "রান্নাঘর",
@@ -839,7 +840,8 @@
       "uncategorised": "অন্যান্য",
       "noneSoldOut": "সব খাবারই আছে",
       "noneSoldOutHint": "যে খাবার বন্ধ করবেন তা এখানে দেখাবে।",
-      "noMatch": "কোনো খাবার মেলেনি"
+      "noMatch": "কোনো খাবার মেলেনি",
+      "soldOutCount": "{n, plural, other {#টি খাবার শেষ}}"
     },
     "readyNow": "এইমাত্র তৈরি"
   },
@@ -1633,7 +1635,8 @@
       "summary": "{n, number}টি বাকি · {guests, plural, other {# জন অতিথি}}",
       "none": "এই দিনে কোনো বুকিং নেই।",
       "noTable": "টেবিল নেই",
-      "late": "দেরি"
+      "late": "দেরি",
+      "hasBookings": "বুকিং আছে"
     }
   },
   "tables": {

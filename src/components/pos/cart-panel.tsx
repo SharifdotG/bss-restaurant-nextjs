@@ -254,7 +254,7 @@ function CartLineRow({ line, food, onQuantity, onNote }: LineRowProps) {
             type="button"
             onClick={() => setEditing(true)}
             className={cn(
-              "mt-0.5 inline-flex max-w-full items-center gap-1 rounded-xs text-xs outline-none focus-visible:ring-3 focus-visible:ring-ring/40",
+              "hit-target relative mt-0.5 inline-flex max-w-full items-center gap-1 rounded-xs text-xs outline-none focus-visible:ring-3 focus-visible:ring-ring/40",
               line.notes
                 ? "font-medium text-tone-orange-text"
                 : "text-muted-foreground hover:text-foreground",

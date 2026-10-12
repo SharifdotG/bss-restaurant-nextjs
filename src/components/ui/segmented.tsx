@@ -46,7 +46,7 @@ function Segmented<T extends string>({
           value={option.value}
           aria-label={option.ariaLabel}
           className={cn(
-            "relative inline-flex h-[30px] items-center justify-center rounded-sm px-3 text-sm text-muted-foreground transition-colors duration-(--duration-fast) ease-standard outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/40 data-pressed:text-foreground [&_svg]:size-4",
+            "hit-target relative inline-flex h-[30px] items-center justify-center rounded-sm px-3 text-sm text-muted-foreground transition-colors duration-(--duration-fast) ease-standard outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/40 data-pressed:text-foreground [&_svg]:size-4",
             fill && "flex-1",
           )}
         >

@@ -77,7 +77,7 @@ export function CategoryChips({ menu, className }: { menu: Menu; className?: str
             aria-pressed={active}
             onClick={() => menu.setCategory(chip.id)}
             className={cn(
-              "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium whitespace-nowrap transition-colors duration-(--duration-fast) outline-none focus-visible:ring-3 focus-visible:ring-ring/40",
+              "hit-target relative inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium whitespace-nowrap transition-colors duration-(--duration-fast) outline-none focus-visible:ring-3 focus-visible:ring-ring/40",
               active
                 ? "border-primary/30 bg-primary-soft font-bold text-primary-soft-foreground"
                 : "border-border bg-card hover:bg-muted",
@@ -139,23 +139,27 @@ export function MenuGrid({ menu, counts, onAdd, setterFor, className }: MenuPane
   }
 
   return (
-    <ul
-      className={cn(
-        "grid animate-appear grid-cols-2 gap-3 xl:grid-cols-3 2xl:grid-cols-4",
-        className,
-      )}
-    >
-      {menu.shown.map((food) => (
-        <li key={food.id} className="flex">
-          <DishCard
-            food={food}
-            photo={menu.hasPhotos}
-            inCart={counts.get(food.id) ?? 0}
-            onAdd={() => onAdd(food.id)}
-            onSetQuantity={setterFor(food.id)}
-          />
-        </li>
-      ))}
-    </ul>
+    <>
+      {/* Dish names are h3s; this keeps the outline whole for screen readers. */}
+      <h2 className="sr-only">{t("menuHeading")}</h2>
+      <ul
+        className={cn(
+          "grid animate-appear grid-cols-2 gap-3 xl:grid-cols-3 2xl:grid-cols-4",
+          className,
+        )}
+      >
+        {menu.shown.map((food) => (
+          <li key={food.id} className="flex">
+            <DishCard
+              food={food}
+              photo={menu.hasPhotos}
+              inCart={counts.get(food.id) ?? 0}
+              onAdd={() => onAdd(food.id)}
+              onSetQuantity={setterFor(food.id)}
+            />
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }

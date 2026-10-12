@@ -125,6 +125,7 @@ export function SettingsPage() {
       <PageFrame page="settings">
         <div className="grid flex-1 place-items-start pt-2 md:place-items-center md:pb-24">
           <StateCard
+            heading="h2"
             icon={CloudSlashIcon}
             title={t("failed")}
             actions={

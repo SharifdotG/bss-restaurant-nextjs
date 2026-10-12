@@ -63,6 +63,7 @@ export function OrderDetailPage() {
       <PageFrame page="orders" parent={parent}>
         <div className="grid flex-1 place-items-start pt-2 md:place-items-center md:pb-24">
           <StateCard
+            heading="h2"
             icon={MagnifyingGlassIcon}
             title={t("detail.missingTitle")}
             actions={
@@ -85,6 +86,7 @@ export function OrderDetailPage() {
         {query.isError ? (
           <div className="grid flex-1 place-items-start pt-2 md:place-items-center md:pb-24">
             <StateCard
+              heading="h2"
               icon={CloudSlashIcon}
               title={t("detail.failed")}
               actions={

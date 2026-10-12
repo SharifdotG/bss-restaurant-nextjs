@@ -143,6 +143,7 @@ function DishName({ food, onOpen }: { food: FoodOut; onOpen?: () => void }) {
       <span className="truncate font-bold">{food.name}</span>
       {food.isFeatured && (
         <StarIcon
+          role="img"
           weight="fill"
           className="size-3.5 shrink-0 text-brand"
           aria-label={t("featured")}

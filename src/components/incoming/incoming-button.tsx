@@ -27,7 +27,7 @@ export function IncomingButton({ compact = false }: { compact?: boolean }) {
       onClick={() => openOverlay("incoming")}
       aria-label={t("buttonLabel", { n: waiting.length })}
       className={cn(
-        "shrink-0 animate-in fade-in-0 zoom-in-95",
+        "shrink-0 animate-in fade-in-0 zoom-in-95 motion-reduce:zoom-in-100",
         late &&
           "border-transparent bg-tone-amber-subtle text-tone-amber-text hover:bg-tone-amber/20",
       )}

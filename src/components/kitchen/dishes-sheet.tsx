@@ -61,12 +61,15 @@ export function KitchenDishes() {
       )}
       <Button variant="outline" onClick={() => show("all")} className="relative">
         <BowlFoodIcon weight="duotone" />
-        <span className="hidden sm:inline">{t("button")}</span>
+        <span className="sr-only sm:not-sr-only">{t("button")}</span>
         {soldOut.length > 0 && (
-          <span
-            aria-hidden
-            className="absolute -top-1 -right-1 size-2.5 rounded-full bg-tone-red ring-2 ring-background lg:hidden"
-          />
+          <>
+            <span
+              aria-hidden
+              className="absolute -top-1 -right-1 size-2.5 rounded-full bg-tone-red ring-2 ring-background lg:hidden"
+            />
+            <span className="sr-only">{t("soldOutCount", { n: soldOut.length })}</span>
+          </>
         )}
       </Button>
       <DishesSheet

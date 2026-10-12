@@ -54,9 +54,9 @@ export function BookingSearch({ search, today, now, onOpen }: BookingSearchProps
       </p>
       {days.map(({ day, items }) => (
         <section key={day} aria-label={format.weekday(dayToDate(day))}>
-          <h3 className="sticky top-0 z-10 bg-card px-5 pt-4 pb-1 text-xs font-bold text-muted-foreground">
+          <h2 className="sticky top-0 z-10 bg-card px-5 pt-4 pb-1 text-xs font-bold text-muted-foreground">
             {day === today ? t("today") : format.dayWithWeekday(day)}
-          </h3>
+          </h2>
           <ul>
             {items.map((booking) => (
               <li key={booking.id}>

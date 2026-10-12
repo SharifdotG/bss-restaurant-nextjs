@@ -1,9 +1,21 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 /** Sits flush inside a card; the card gives the corners and the shadow. */
 function Table({ className, ...props }: React.ComponentProps<"table">) {
+  const container = useRef<HTMLDivElement>(null);
+  const scrolls = useScrollsSideways(container);
+
   return (
-    <div data-slot="table-container" className="relative w-full overflow-x-auto">
+    <div
+      ref={container}
+      data-slot="table-container"
+      // A table wider than its card scrolls, so keyboards need a way in to scroll it.
+      tabIndex={scrolls ? 0 : undefined}
+      className="relative w-full overflow-x-auto outline-none focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:ring-inset"
+    >
       <table
         data-slot="table"
         className={cn("w-full caption-bottom border-collapse text-sm", className)}
@@ -11,6 +23,20 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
       />
     </div>
   );
+}
+
+function useScrollsSideways(ref: React.RefObject<HTMLElement | null>) {
+  const [scrolls, setScrolls] = useState(false);
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const check = () => setScrolls(element.scrollWidth > element.clientWidth + 1);
+    const observer = new ResizeObserver(check);
+    observer.observe(element);
+    if (element.firstElementChild) observer.observe(element.firstElementChild);
+    return () => observer.disconnect();
+  }, [ref]);
+  return scrolls;
 }
 
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {

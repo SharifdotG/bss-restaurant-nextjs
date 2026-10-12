@@ -67,7 +67,10 @@ export function TableWelcome({ token }: { token: string }) {
               />
             </div>
             <div className="px-6 pt-5 pb-6 text-center">
-              <p className="text-sm text-muted-foreground">{t("atTable")}</p>
+              <h1 className="text-sm text-muted-foreground">
+                {t("atTable")}
+                {table.data && <span className="sr-only"> {table.data.number}</span>}
+              </h1>
               {table.data ? (
                 <>
                   <p className="mt-1 text-6xl leading-none font-bold tracking-tight">

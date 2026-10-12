@@ -45,7 +45,7 @@ function QtyStepper({
         disabled={value <= min && !removable}
         onClick={() => onChange(atMin && removable ? 0 : Math.max(min, value - 1))}
         className={cn(
-          "grid place-items-center rounded-full bg-card text-foreground shadow-sm transition-colors duration-(--duration-fast) outline-none hover:bg-background focus-visible:ring-3 focus-visible:ring-ring/40 disabled:opacity-40",
+          "hit-target relative grid place-items-center rounded-full bg-card text-foreground shadow-sm transition-colors duration-(--duration-fast) outline-none hover:bg-background focus-visible:ring-3 focus-visible:ring-ring/40 disabled:opacity-40",
           atMin && removable && "text-tone-red-text",
           button,
         )}
@@ -71,7 +71,7 @@ function QtyStepper({
         disabled={value >= max}
         onClick={() => onChange(Math.min(max, value + 1))}
         className={cn(
-          "grid place-items-center rounded-full bg-primary text-primary-foreground shadow-sm transition-colors duration-(--duration-fast) outline-none hover:bg-primary-hover focus-visible:ring-3 focus-visible:ring-ring/40 disabled:opacity-40",
+          "hit-target relative grid place-items-center rounded-full bg-primary text-primary-foreground shadow-sm transition-colors duration-(--duration-fast) outline-none hover:bg-primary-hover focus-visible:ring-3 focus-visible:ring-ring/40 disabled:opacity-40",
           button,
         )}
       >

@@ -771,7 +771,8 @@
       "bodyLocked": "Order {n} is {status} at this table, so nothing more can join it. Start a separate order instead.",
       "addTo": "Add to order {n}",
       "separate": "Start a separate order"
-    }
+    },
+    "menuHeading": "Menu"
   },
   "kitchen": {
     "title": "Kitchen",
@@ -839,7 +840,8 @@
       "uncategorised": "Other",
       "noneSoldOut": "Everything's available",
       "noneSoldOutHint": "Dishes you switch off show up here.",
-      "noMatch": "No dishes match"
+      "noMatch": "No dishes match",
+      "soldOutCount": "{n, plural, one {# dish sold out} other {# dishes sold out}}"
     },
     "readyNow": "Just ready"
   },
@@ -1633,7 +1635,8 @@
       "summary": "{n, number} still to come · {guests, plural, one {# guest} other {# guests}}",
       "none": "No bookings on this day.",
       "noTable": "No table",
-      "late": "late"
+      "late": "late",
+      "hasBookings": "has bookings"
     }
   },
   "tables": {

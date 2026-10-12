@@ -62,6 +62,7 @@ export function PersonPage() {
       <PageFrame page="staff" parent={parent}>
         <div className="grid flex-1 place-items-start pt-2 md:place-items-center md:pb-24">
           <StateCard
+            heading="h2"
             icon={MagnifyingGlassIcon}
             title={t("person.missingTitle")}
             actions={
@@ -84,6 +85,7 @@ export function PersonPage() {
         {query.isError ? (
           <div className="grid flex-1 place-items-start pt-2 md:place-items-center md:pb-24">
             <StateCard
+              heading="h2"
               icon={CloudSlashIcon}
               title={t("person.failed")}
               actions={

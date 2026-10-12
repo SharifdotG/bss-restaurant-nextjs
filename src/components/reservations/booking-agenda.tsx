@@ -73,7 +73,9 @@ export function BookingAgenda({
                   type="button"
                   onClick={() => onDay(date)}
                   aria-current={active ? "date" : undefined}
-                  aria-label={format.weekday(dayToDate(date))}
+                  aria-label={[format.dayWithWeekday(date), booked.has(date) && t("hasBookings")]
+                    .filter(Boolean)
+                    .join(", ")}
                   className={cn(
                     "flex w-full flex-col items-center gap-0.5 rounded-lg py-2 text-xs outline-none focus-visible:ring-3 focus-visible:ring-ring/40",
                     active
@@ -186,7 +188,7 @@ function NowLine({ now }: { now: number }) {
   const format = useFormat();
   return (
     <div className="my-1 flex items-center gap-3" aria-hidden>
-      <span className="w-16 shrink-0 text-xs font-bold text-primary tabular-nums">
+      <span className="w-16 shrink-0 text-xs font-bold text-primary-soft-foreground tabular-nums">
         {format.time(now)}
       </span>
       <span className="size-2 rounded-full bg-primary" />

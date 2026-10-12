@@ -41,7 +41,7 @@ export function KpiCard({
       )}
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <h3 className="truncate text-sm font-medium text-muted-foreground">{label}</h3>
+        <h2 className="truncate text-sm font-medium text-muted-foreground">{label}</h2>
         {value === undefined ? (
           <>
             <Skeleton className="h-8 w-28" />

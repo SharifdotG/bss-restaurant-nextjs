@@ -170,6 +170,7 @@ function AddItems({ orderId, userId }: { orderId: number; userId: number }) {
       <PageFrame page="newOrder" title={t("addingTitle", { n })} parent={back}>
         <div className="grid flex-1 place-items-start pt-2 md:place-items-center md:pb-24">
           <StateCard
+            heading="h2"
             icon={LockSimpleIcon}
             title={t("lockedTitle", { n })}
             actions={

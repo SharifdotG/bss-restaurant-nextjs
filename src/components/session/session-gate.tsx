@@ -56,7 +56,7 @@ export function SessionGate({ children, signedOut }: SessionGateProps) {
     <main className="grid min-h-dvh place-items-center" aria-busy>
       <p className="sr-only">{t("checking")}</p>
       <div className="h-1 w-24 overflow-hidden rounded-full bg-brand-track">
-        <div className="h-full w-1/3 animate-pulse rounded-full bg-brand" />
+        <div className="h-full w-1/3 animate-pulse rounded-full bg-brand motion-reduce:animate-none" />
       </div>
     </main>
   );

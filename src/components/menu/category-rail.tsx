@@ -174,6 +174,7 @@ function CategoryItem({ category, editable, onDrop, onMove, onAction, ...row }: 
         badge={
           hidden && (
             <EyeSlashIcon
+              role="img"
               weight="duotone"
               className="size-4 shrink-0 text-muted-foreground"
               aria-label={t("hiddenBadge")}
@@ -186,6 +187,8 @@ function CategoryItem({ category, editable, onDrop, onMove, onAction, ...row }: 
             <button
               type="button"
               aria-label={t("drag", { name: category.name })}
+              // Keyboards move categories from the row menu; the handle is for pointers.
+              tabIndex={-1}
               onPointerDown={(event) => controls.start(event)}
               className="grid h-8 w-5 shrink-0 cursor-grab touch-none place-items-center rounded-sm text-muted-foreground opacity-60 outline-none group-hover/row:opacity-100 focus-visible:ring-3 focus-visible:ring-ring/40 active:cursor-grabbing"
             >
@@ -353,5 +356,5 @@ export function CategoryChips({
 }
 
 const Count = ({ children }: { children: React.ReactNode }) => (
-  <span className="text-xs tabular-nums opacity-70">{children}</span>
+  <span className="text-xs font-normal tabular-nums">{children}</span>
 );
