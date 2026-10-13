@@ -64,7 +64,7 @@ export function BillQueueList({ queue, paid, selected, onSelect, now }: BillQueu
         </Group>
       )}
 
-      <Group title={t("groups.paid")} count={settled.length}>
+      <Group title={t("groups.paid")} count={settled.length} dense>
         {settled.length === 0 ? (
           <li className="px-1 py-2 text-sm text-muted-foreground">{t("nonePaid")}</li>
         ) : (
@@ -79,11 +79,14 @@ function Group({
   title,
   count,
   hint,
+  dense,
   children,
 }: {
   title: string;
   count: number;
   hint?: string;
+  /** Short rows for history, close together. */
+  dense?: boolean;
   children: React.ReactNode;
 }) {
   const format = useFormat();
@@ -96,7 +99,7 @@ function Group({
         </span>
       </h2>
       {hint && <p className="px-1 text-xs text-muted-foreground">{hint}</p>}
-      <ul className="mt-2.5 flex flex-col gap-2">
+      <ul className={cn("mt-2.5 flex flex-col", dense ? "gap-0.5" : "gap-2")}>
         <AnimatePresence initial={false} mode="popLayout">
           {children}
         </AnimatePresence>
@@ -121,6 +124,8 @@ function BillRow({ order, now, active, fresh, prepaid, onSelect }: BillRowProps)
   const wait = useWaitText();
   const closed = order.status === "paid";
   const settled = closed || prepaid;
+  // Paid bills are history: a quiet row instead of a card.
+  const quiet = closed && !prepaid;
   const partPaid = !settled && order.balanceDue < order.total;
   const who = order.waiter?.fullName.split(" ")[0] ?? order.customerName;
 
@@ -131,13 +136,17 @@ function BillRow({ order, now, active, fresh, prepaid, onSelect }: BillRowProps)
         onClick={() => onSelect(order.id)}
         aria-current={active || undefined}
         className={cn(
-          "flex w-full items-center gap-3 rounded-lg bg-card p-3 text-left shadow-sm ring-primary transition-[box-shadow,background-color] duration-(--duration-fast) ease-standard outline-none hover:shadow-md focus-visible:ring-3 focus-visible:ring-ring/40 aria-current:ring-2",
+          "flex w-full items-center gap-3 rounded-lg text-left ring-primary transition-[box-shadow,background-color] duration-(--duration-fast) ease-standard outline-none focus-visible:ring-3 focus-visible:ring-ring/40 aria-current:ring-2",
+          quiet
+            ? "px-2 py-1.5 hover:bg-card aria-current:bg-card"
+            : "bg-card p-3 shadow-sm hover:shadow-md",
           fresh && "animate-ticket-flash motion-reduce:animate-none",
         )}
       >
         <span
           className={cn(
-            "grid size-11 shrink-0 place-items-center rounded-md text-sm font-bold",
+            "grid shrink-0 place-items-center rounded-md font-bold",
+            quiet ? "size-9 text-xs" : "size-11 text-sm",
             settled
               ? "bg-tone-slate-subtle text-tone-slate-text"
               : "bg-primary-soft text-primary-soft-foreground",
@@ -168,8 +177,8 @@ function BillRow({ order, now, active, fresh, prepaid, onSelect }: BillRowProps)
           <span className="font-bold tabular-nums">
             {format.money(settled ? order.total : order.balanceDue)}
           </span>
-          {settled ? (
-            <Pill tone={prepaid ? "green" : "slate"}>{t("bill.settled")}</Pill>
+          {prepaid ? (
+            <Pill tone="green">{t("bill.settled")}</Pill>
           ) : (
             partPaid && (
               <span className="text-xs font-bold text-tone-green-text tabular-nums">

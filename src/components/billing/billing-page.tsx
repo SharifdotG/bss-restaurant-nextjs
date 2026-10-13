@@ -17,6 +17,7 @@ import type { OrderDetailOut, UserRole } from "@/lib/api/schema";
 import { billQueue } from "@/lib/billing";
 import { businessDate } from "@/lib/format";
 import { useLiveOrders } from "@/lib/live/store";
+import type { LiveOrder } from "@/lib/live/types";
 import { canOpen, canRefund, canTakePayment } from "@/lib/permissions";
 import { useSession } from "@/lib/session/client";
 import { useFormat } from "@/lib/use-format";
@@ -92,7 +93,7 @@ export function BillingPage() {
   if (!wide) {
     if (orderId === null || !canOpen(role, "billing")) {
       return (
-        <BillingFrame>
+        <BillingFrame waiting={queue.waiting}>
           <div className="flex flex-col gap-5">
             <TakingsStrip />
             {list}
@@ -127,7 +128,7 @@ export function BillingPage() {
   }
 
   return (
-    <BillingFrame>
+    <BillingFrame waiting={queue.waiting}>
       <div className="grid flex-1 grid-cols-[minmax(0,16rem)_minmax(0,1fr)] items-start gap-5 xl:grid-cols-[minmax(0,19rem)_minmax(0,1fr)]">
         <div className="flex flex-col gap-5">
           <TakingsStrip />
@@ -161,10 +162,20 @@ export function BillingPage() {
   );
 }
 
-function BillingFrame({ children }: { children: React.ReactNode }) {
+function BillingFrame({ waiting, children }: { waiting: LiveOrder[]; children: React.ReactNode }) {
   const pages = useTranslations("pages");
+  const t = useTranslations("billing");
+  const format = useFormat();
+  const due = waiting.reduce((sum, order) => sum + order.balanceDue, 0);
   return (
-    <PageFrame page="billing" meta={pages("billing")}>
+    <PageFrame
+      page="billing"
+      meta={
+        waiting.length
+          ? t("meta", { n: waiting.length, amount: format.money(due) })
+          : pages("billing")
+      }
+    >
       {children}
     </PageFrame>
   );
