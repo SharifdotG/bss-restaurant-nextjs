@@ -61,7 +61,8 @@ export function useFormat() {
       size: "tick" | "full" = "full",
     ) => formatPeriod(start, end, groupBy, locale, size),
     dayRange: (from: string, to: string, long?: boolean) => formatDayRange(from, to, locale, long),
-    relative: (value: DateInput, now?: number) => formatRelative(value, locale, now),
+    relative: (value: DateInput, now?: number, style?: "long" | "short") =>
+      formatRelative(value, locale, now, style),
     number: (value: number, options?: Intl.NumberFormatOptions) =>
       formatNumber(value, locale, options),
     percent: (value: number) => formatPercent(value, locale),

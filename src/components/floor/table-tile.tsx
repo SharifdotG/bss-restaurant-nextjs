@@ -52,7 +52,9 @@ export function TableTile({ entry, now, onStart }: TableTileProps) {
       );
     line = (
       <>
-        <span>{t("order", { n: format.orderNo(order.orderNumber) })}</span>
+        <span className="whitespace-nowrap">
+          {t("order", { n: format.orderNo(order.orderNumber) })}
+        </span>
         <span className="tabular-nums">
           {owing ? t("due", { amount: format.money(order.balanceDue) }) : format.money(order.total)}
         </span>

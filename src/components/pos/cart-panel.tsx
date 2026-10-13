@@ -11,6 +11,7 @@ import {
 } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { EmptyState } from "@/components/empty-state";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -177,13 +178,14 @@ export function CartLines({ draft, update, byId, className }: CartProps & { clas
   const t = useTranslations("pos");
   if (draft.lines.length === 0) {
     return (
-      <div className={cn("grid place-items-center px-6 py-12 text-center", className)}>
-        <span className="grid size-12 place-items-center rounded-xl bg-muted text-muted-foreground">
-          <ShoppingBagIcon weight="duotone" className="size-6" />
-        </span>
-        <p className="mt-3 font-bold">{t("emptyTitle")}</p>
-        <p className="mt-1 max-w-[30ch] text-sm text-muted-foreground">{t("emptyBody")}</p>
-      </div>
+      <EmptyState
+        icon={ShoppingBagIcon}
+        tone="slate"
+        title={t("emptyTitle")}
+        className={cn("justify-center py-12", className)}
+      >
+        {t("emptyBody")}
+      </EmptyState>
     );
   }
   return (

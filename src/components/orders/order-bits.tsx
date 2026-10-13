@@ -82,5 +82,5 @@ export function PlacedNote({
       </>
     );
   }
-  return <>{format.relative(order.createdAt, now)}</>;
+  return <>{format.relative(order.createdAt, now, "short")}</>;
 }

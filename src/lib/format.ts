@@ -82,7 +82,10 @@ export function formatDayRange(from: string, to: string, locale: Locale, long = 
     year: "numeric",
   });
   const noon = (day: string) => new Date(`${day}T12:00:00${DHAKA_OFFSET}`);
-  return from === to ? format.format(noon(from)) : format.formatRange(noon(from), noon(to));
+  // Kept on one line: "Sep 1 –" at the end of a line and "14, 2026" on the next reads badly.
+  return (
+    from === to ? format.format(noon(from)) : format.formatRange(noon(from), noon(to))
+  ).replace(/\s/g, "\u00a0");
 }
 
 type Period = "day" | "week" | "month" | "year";
@@ -126,13 +129,22 @@ export const dayToDate = (day: string) => new Date(`${day}T12:00:00${DHAKA_OFFSE
 export const formatDay = (day: string, locale: Locale) =>
   formatDate(`${day}T12:00:00${DHAKA_OFFSET}`, locale);
 
-const relativeFormats: Partial<Record<Locale, Intl.RelativeTimeFormat>> = {};
+const relativeFormats: Partial<Record<string, Intl.RelativeTimeFormat>> = {};
 
-/** "just now", "5 minutes ago", "3 hours ago"; older than a day falls back to the date. */
-export function formatRelative(value: DateInput, locale: Locale, now = Date.now()) {
-  const format = (relativeFormats[locale] ??= new Intl.RelativeTimeFormat(intlLocale[locale], {
-    numeric: "auto",
-  }));
+/**
+ * "just now", "5 minutes ago", "3 hours ago"; older than a day falls back to the date.
+ * The short style ("5 min. ago") is for table cells.
+ */
+export function formatRelative(
+  value: DateInput,
+  locale: Locale,
+  now = Date.now(),
+  style: "long" | "short" = "long",
+) {
+  const format = (relativeFormats[`${locale}-${style}`] ??= new Intl.RelativeTimeFormat(
+    intlLocale[locale],
+    { numeric: "auto", style },
+  ));
   const seconds = Math.round((toDate(value).getTime() - now) / 1000);
   const abs = Math.abs(seconds);
   if (abs < 45) return format.format(0, "second");
