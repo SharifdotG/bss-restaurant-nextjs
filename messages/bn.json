@@ -1024,6 +1024,7 @@
     "review": "দেখুন"
   },
   "billing": {
+    "meta": "{n, plural, other {#টি বিল অপেক্ষায়}} · {amount} আদায় বাকি",
     "takings": {
       "label": "আজ",
       "sales": "বিক্রি",
@@ -1157,6 +1158,7 @@
   "charts": {
     "paidSales": "পরিশোধিত বিক্রি",
     "stillOpen": "আজ, এখনও চলছে",
+    "scaleTo": "স্কেল {amount} পর্যন্ত",
     "soFar": "এখন পর্যন্ত",
     "orders": "পরিশোধিত অর্ডার",
     "period": "সময়",
@@ -1169,7 +1171,7 @@
     "kpis": {
       "sales": "আজকের বিক্রি",
       "salesNote": "ভ্যাট ও সার্ভিস চার্জসহ",
-      "lastWeek": "গত সপ্তাহের এই দিনে {amount}",
+      "lastWeek": "গত {weekday}: {amount}",
       "refunds": "আজ {amount} ফেরত",
       "orders": "আজকের অর্ডার",
       "ordersNote": "{open, plural, =0 {কোনোটি খোলা নেই} other {#টি এখনও খোলা}}{cancelled, plural, =0 {} other { · #টি বাতিল}}",
@@ -1205,20 +1207,15 @@
       "title": "নজর দিন",
       "sub": "সবচেয়ে জরুরিটা আগে",
       "board": "অর্ডার বোর্ড",
-      "reasons": {
-        "guest": "অতিথি অপেক্ষায়",
-        "ready": "পাসে তৈরি",
-        "kitchen": "রান্নাঘরে সবচেয়ে বেশিক্ষণ"
-      },
       "emptyTitle": "সব ঠিকঠাক",
       "empty": "কোনো অতিথি অপেক্ষায় নেই, পাসেও কিছু পড়ে নেই।"
     },
     "bookings": {
       "title": "আজকের বুকিং",
       "sub": "আরও {n, number}টি আসবে · {guests, number} জন অতিথি",
-      "none": "আজ আর কারও বুকিং নেই",
       "all": "রিজার্ভেশন",
       "emptyTitle": "আজ আর কোনো বুকিং নেই",
+      "emptyBody": "নতুন বুকিং এলে এখানে দেখা যাবে।",
       "request": "অনলাইনে চাওয়া · নিশ্চিত করতে হবে",
       "noTable": "এখনও টেবিল নেই",
       "more": "আরও {n, number}টি"

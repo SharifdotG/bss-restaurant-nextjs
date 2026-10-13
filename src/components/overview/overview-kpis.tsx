@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 type OverviewKpisProps = {
   dashboard: Dashboard | undefined;
   /** Managers only: the same weekday last week, the whole day. */
-  lastWeek?: { sales: number };
+  lastWeek?: { sales: number; day: number };
   /** Confirmed bookings starting within the hour. */
   bookingsSoon: number | undefined;
   className?: string;
@@ -33,7 +33,10 @@ export function OverviewKpis({ dashboard, lastWeek, bookingsSoon, className }: O
         format={format.moneyWhole}
         note={
           lastWeek
-            ? t("lastWeek", { amount: format.moneyWhole(lastWeek.sales) })
+            ? t("lastWeek", {
+                weekday: format.weekdayName(lastWeek.day),
+                amount: format.moneyWhole(lastWeek.sales),
+              })
             : today && today.refunds > 0
               ? t("refunds", { amount: format.money(today.refunds) })
               : t("salesNote")

@@ -33,44 +33,52 @@ export function KpiCard({
   note,
   className,
 }: KpiCardProps) {
+  // Phones: the tile sits beside the label and the figure gets the card's full width.
+  // Wider: the tile stands to the right of all three lines.
+  const body = "col-span-2 sm:col-span-1";
   return (
     <article
       className={cn(
-        "flex min-w-0 items-start gap-4 rounded-xl bg-card p-4 shadow-md sm:p-5",
+        "grid min-w-0 grid-cols-[minmax(0,1fr)_auto] content-start gap-x-3 gap-y-1.5 rounded-xl bg-card p-4 shadow-md sm:gap-x-4 sm:p-5",
         className,
       )}
     >
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <h2 className="truncate text-sm font-medium text-muted-foreground">{label}</h2>
-        {value === undefined ? (
-          <>
-            <Skeleton className="h-8 w-28" />
-            <Skeleton className="h-3.5 w-36" />
-          </>
-        ) : (
-          <>
-            <p className="flex animate-appear flex-wrap items-baseline gap-x-2 gap-y-0.5">
-              {text !== undefined ? (
-                <span className="line-clamp-2 min-w-0 text-xl leading-7 font-bold tracking-tight break-words">
-                  {text}
-                </span>
-              ) : (
-                <CountUp
-                  id={id}
-                  value={value}
-                  format={format}
-                  className="text-2xl font-bold tracking-tight tabular-nums"
-                />
-              )}
-              {badge}
-            </p>
-            {note && <p className="line-clamp-2 text-xs text-muted-foreground">{note}</p>}
-          </>
-        )}
-      </div>
-      <span className="hidden size-12 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground sm:grid">
-        <Icon weight="duotone" className="size-6" />
+      <h2 className="self-center truncate text-sm font-medium text-muted-foreground sm:self-start">
+        {label}
+      </h2>
+      <span className="col-start-2 row-start-1 grid size-9 place-items-center rounded-md bg-primary text-primary-foreground sm:row-span-3 sm:size-12 sm:rounded-lg">
+        <Icon weight="duotone" className="size-5 sm:size-6" />
       </span>
+      {value === undefined ? (
+        <>
+          <Skeleton className={cn("h-8 w-28", body)} />
+          <Skeleton className={cn("h-3.5 w-36", body)} />
+        </>
+      ) : (
+        <>
+          <p className={cn("flex animate-appear flex-wrap items-baseline gap-x-2 gap-y-0.5", body)}>
+            {text !== undefined ? (
+              <span className="line-clamp-2 min-w-0 text-xl leading-7 font-bold tracking-tight break-words">
+                {text}
+              </span>
+            ) : (
+              <CountUp
+                id={id}
+                value={value}
+                format={format}
+                // A loss keeps its minus sign on the same line as the figure.
+                className="text-2xl font-bold tracking-tight whitespace-nowrap tabular-nums"
+              />
+            )}
+            {badge}
+          </p>
+          {note && (
+            <p className={cn("text-xs text-pretty text-muted-foreground sm:line-clamp-2", body)}>
+              {note}
+            </p>
+          )}
+        </>
+      )}
     </article>
   );
 }

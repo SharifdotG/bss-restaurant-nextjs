@@ -1024,6 +1024,7 @@
     "review": "Review"
   },
   "billing": {
+    "meta": "{n, plural, one {# bill waiting} other {# bills waiting}} · {amount} to collect",
     "takings": {
       "label": "Today",
       "sales": "Sales",
@@ -1157,6 +1158,7 @@
   "charts": {
     "paidSales": "Paid sales",
     "stillOpen": "Today, still open",
+    "scaleTo": "Scale to {amount}",
     "soFar": "So far",
     "orders": "Paid orders",
     "period": "Period",
@@ -1169,7 +1171,7 @@
     "kpis": {
       "sales": "Today's sales",
       "salesNote": "VAT and service charge included",
-      "lastWeek": "{amount} on this day last week",
+      "lastWeek": "Last {weekday}: {amount}",
       "refunds": "{amount} refunded today",
       "orders": "Orders today",
       "ordersNote": "{open, plural, =0 {None open} other {# still open}}{cancelled, plural, =0 {} other { · # cancelled}}",
@@ -1205,20 +1207,15 @@
       "title": "Needs attention",
       "sub": "Most urgent first",
       "board": "Orders board",
-      "reasons": {
-        "guest": "Guest waiting for a yes",
-        "ready": "Ready at the pass",
-        "kitchen": "Longest in the kitchen"
-      },
       "emptyTitle": "All caught up",
       "empty": "No guest is waiting and nothing is sitting at the pass."
     },
     "bookings": {
       "title": "Today's bookings",
       "sub": "{n, plural, one {# still to come} other {# still to come}} · {guests, plural, one {# guest} other {# guests}}",
-      "none": "Nobody else is booked today",
       "all": "Reservations",
       "emptyTitle": "No more bookings today",
+      "emptyBody": "New bookings show up here as they come in.",
       "request": "Asked online · needs a yes",
       "noTable": "No table yet",
       "more": "{n, plural, one {and # more} other {and # more}}"

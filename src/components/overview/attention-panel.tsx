@@ -14,10 +14,7 @@ import type { OrderOut } from "@/lib/api/schema";
 import { listItem } from "@/lib/motion";
 import { attentionPicks } from "@/lib/overview";
 import { PAGE_PATHS } from "@/lib/permissions";
-import { TONES } from "@/lib/tones";
 import { cn } from "@/lib/utils";
-
-const REASON_TONE = { guest: "amber", ready: "green", kitchen: "orange" } as const;
 
 /** The orders someone should look at now, most urgent first, each with its next step. */
 export function AttentionPanel({
@@ -34,6 +31,7 @@ export function AttentionPanel({
 
   return (
     <Panel
+      plain
       className={cn("@container", className)}
       title={t("title")}
       subtitle={t("sub")}
@@ -53,32 +51,21 @@ export function AttentionPanel({
           <Skeleton className="hidden h-52 rounded-xl @[30rem]:block" />
         </div>
       ) : picks.length === 0 ? (
-        <EmptyState icon={CoffeeIcon} tone="slate" title={t("emptyTitle")} className="py-8">
+        <EmptyState
+          icon={CoffeeIcon}
+          tone="slate"
+          title={t("emptyTitle")}
+          className="rounded-xl bg-card py-8 shadow-md"
+        >
           {t("empty")}
         </EmptyState>
       ) : (
         <ul className="grid animate-appear grid-cols-1 items-start gap-4 @[30rem]:grid-cols-2 @5xl:grid-cols-3">
           <AnimatePresence initial={false} mode="popLayout">
-            {picks.map(({ order, reason }, i) => (
+            {picks.map(({ order }, i) => (
               // Two fit most screens; the third only shows where there's room for it.
-              <m.li
-                key={order.id}
-                {...listItem}
-                className={cn("grid gap-2", i === 2 && "hidden @5xl:grid")}
-              >
-                <span
-                  className={cn(
-                    "w-fit rounded-full px-2.5 py-0.5 text-xs font-bold",
-                    TONES[REASON_TONE[reason]],
-                  )}
-                >
-                  {t(`reasons.${reason}`)}
-                </span>
-                <OrderCard
-                  order={order}
-                  now={now}
-                  className="shadow-none ring-1 ring-border hover:shadow-sm"
-                />
+              <m.li key={order.id} {...listItem} className={cn(i === 2 && "hidden @5xl:block")}>
+                <OrderCard order={order} now={now} status className="shadow-md" />
               </m.li>
             ))}
           </AnimatePresence>

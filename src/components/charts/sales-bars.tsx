@@ -2,7 +2,16 @@
 
 import { useReducedMotion } from "motion/react";
 import { useTranslations } from "next-intl";
-import { Bar, BarChart, Cell, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  Cell,
+  Text,
+  Tooltip,
+  XAxis,
+  YAxis,
+  type XAxisTickContentProps,
+} from "recharts";
 import { ChartContainer, ChartLegend, ChartTooltipCard } from "@/components/ui/chart";
 import type { GroupBy } from "@/lib/api/schema";
 import { change, niceScale, scaleTicks, type SalesPoint } from "@/lib/reports";
@@ -46,7 +55,24 @@ export function SalesBars({ points, groupBy, className }: SalesBarsProps) {
             axisLine={false}
             tickMargin={8}
             minTickGap={4}
+            // Still used to measure labels, so Recharts doesn't thin them out.
             tickFormatter={(start: string) => format.period(start, start, groupBy, "tick")}
+            // The period still filling up gets a bold label, like the light bar above it.
+            tick={({ x, y, payload }: XAxisTickContentProps) => {
+              const open = points.some((point) => point.open && point.start === payload.value);
+              return (
+                <Text
+                  x={x}
+                  y={y}
+                  textAnchor="middle"
+                  verticalAnchor="start"
+                  className={cn(open && "font-bold")}
+                  style={open ? { fill: "var(--foreground)" } : undefined}
+                >
+                  {format.period(payload.value, payload.value, groupBy, "tick")}
+                </Text>
+              );
+            }}
           />
           <YAxis
             width={40}
@@ -114,6 +140,12 @@ export function SalesBars({ points, groupBy, className }: SalesBarsProps) {
           ...(points.some((point) => point.open)
             ? [{ key: "open", label: t("stillOpen"), color: "var(--chart-3)" }]
             : []),
+          // The pale tracks are the top of the scale, so they get a name too.
+          {
+            key: "track",
+            label: t("scaleTo", { amount: format.moneyCompact(scale.top) }),
+            color: "var(--chart-track)",
+          },
         ]}
       />
       <PointsTable points={points} groupBy={groupBy} />

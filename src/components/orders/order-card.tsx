@@ -20,6 +20,7 @@ import { useFormat } from "@/lib/use-format";
 import { cn } from "@/lib/utils";
 import { useOrderStatus } from "@/lib/use-order-actions";
 import { useOrderWhere, useWaitText } from "./order-bits";
+import { OrderStatusPill } from "./order-status";
 
 const SHOWN_LINES = 3;
 
@@ -27,10 +28,13 @@ const SHOWN_LINES = 3;
 export function OrderCard({
   order,
   now,
+  status,
   className,
 }: {
   order: OrderOut;
   now: number;
+  /** Shows the status pill top right, for cards that aren't already in a status column. */
+  status?: boolean;
   /** Inside another card it sits flat on a hairline instead of floating. */
   className?: string;
 }) {
@@ -68,12 +72,15 @@ export function OrderCard({
         className,
       )}
     >
-      <Link
-        href={`/orders/${order.id}`}
-        className="block text-md font-bold outline-none after:absolute after:inset-0 after:rounded-xl focus-visible:after:ring-3 focus-visible:after:ring-ring/40"
-      >
-        {t("orderN", { n })}
-      </Link>
+      <div className="flex items-start justify-between gap-3">
+        <Link
+          href={`/orders/${order.id}`}
+          className="block text-md font-bold outline-none after:absolute after:inset-0 after:rounded-xl focus-visible:after:ring-3 focus-visible:after:ring-ring/40"
+        >
+          {t("orderN", { n })}
+        </Link>
+        {status && <OrderStatusPill status={order.status} className="shrink-0" />}
+      </div>
       <p className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-muted-foreground">
         <PlaceIcon weight="duotone" className="size-3.5 shrink-0" />
         <span className="truncate">{[where.title, where.detail].filter(Boolean).join(" · ")}</span>

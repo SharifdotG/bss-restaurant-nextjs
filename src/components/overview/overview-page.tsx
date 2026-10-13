@@ -63,9 +63,11 @@ export function OverviewPage() {
     : undefined;
 
   // Rows line up on wide screens: [chart | open], [attention | bookings], [dishes | sources].
-  // Narrower, the small cards pair up and the wide ones take the full row.
+  // Narrower, the small cards pair up and the wide ones take the full row. On a phone what
+  // needs doing comes first and the month's picture goes to the end.
   const wide = "md:col-span-2 lg:col-span-6 xl:col-span-1 xl:col-start-1";
   const side = "lg:col-span-3 xl:col-span-1 xl:col-start-2";
+  const later = "max-md:order-1";
 
   return (
     <PageFrame
@@ -95,7 +97,7 @@ export function OverviewPage() {
         <OverviewKpis
           className={cn(intro && "rise-children")}
           dashboard={dashboard}
-          lastWeek={lastWeek && { sales: lastWeek.totals.sales }}
+          lastWeek={lastWeek && { sales: lastWeek.totals.sales, day: now }}
           bookingsSoon={soon}
         />
         <div
@@ -104,15 +106,20 @@ export function OverviewPage() {
             intro && "rise-children [--rise-from:160ms]",
           )}
         >
-          {manager && <SalesPanel today={today} className={wide} />}
+          {manager && <SalesPanel today={today} className={cn(wide, later)} />}
           <OpenOrdersPanel orders={active} className={side} />
-          <AttentionPanel orders={active} now={now} className={wide} />
+          <AttentionPanel orders={active} now={now} className={cn(wide, "max-md:-order-1")} />
           <BookingsPanel bookings={bookings} now={now} className={side} />
-          <TopDishesPanel foods={dashboard?.topFoodsThisMonth} reports={manager} className={wide} />
+          <TopDishesPanel
+            foods={dashboard?.topFoodsThisMonth}
+            reports={manager}
+            className={cn(wide, later)}
+          />
           <SourcesPanel
             today={today}
             className={cn(
               "md:col-span-2 lg:col-span-6",
+              later,
               manager ? "xl:col-span-1 xl:col-start-2" : "xl:col-span-2 xl:col-start-1",
             )}
           />

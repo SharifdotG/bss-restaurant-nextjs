@@ -50,7 +50,7 @@ export function BookingsPanel({
       className={className}
       title={t("title")}
       subtitle={
-        upcoming ? (upcoming.length ? t("sub", { n: upcoming.length, guests }) : t("none")) : " "
+        !upcoming ? " " : upcoming.length ? t("sub", { n: upcoming.length, guests }) : undefined
       }
       action={
         <Link
@@ -69,12 +69,9 @@ export function BookingsPanel({
           ))}
         </div>
       ) : upcoming.length === 0 ? (
-        <EmptyState
-          icon={CalendarCheckIcon}
-          tone="slate"
-          title={t("emptyTitle")}
-          className="py-6"
-        />
+        <EmptyState icon={CalendarCheckIcon} tone="slate" title={t("emptyTitle")} className="py-6">
+          {t("emptyBody")}
+        </EmptyState>
       ) : (
         <ul className="grid animate-appear gap-2">
           <AnimatePresence initial={false} mode="popLayout">
