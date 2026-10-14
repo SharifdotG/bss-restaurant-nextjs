@@ -86,7 +86,7 @@
     "links": [
       {
         "label": "Backend docs",
-        "href": "https://bss-restaurant-backend.mintlify.app"
+        "href": "https://bss-restaurant-fastapi.mintlify.app"
       },
       {
         "type": "github",
