@@ -1,0 +1,110 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "almond",
+  "name": "BSS Restaurant Frontend",
+  "colors": {
+    "primary": "#d63b00",
+    "light": "#ff673d",
+    "dark": "#d63b00"
+  },
+  "favicon": "/logo/mark.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "background": {
+    "color": {
+      "light": "#f3f6fa",
+      "dark": "#0c1015"
+    }
+  },
+  "fonts": {
+    "family": "Google Sans Flex"
+  },
+  "appearance": {
+    "default": "system"
+  },
+  "contextual": {
+    "options": ["copy", "view"]
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get started",
+        "pages": ["index", "quickstart", "tech-stack", "project-structure"]
+      },
+      {
+        "group": "How it works",
+        "pages": [
+          "how-it-works/talking-to-the-api",
+          "how-it-works/sign-in-and-sessions",
+          "how-it-works/live-updates",
+          "how-it-works/roles-and-permissions",
+          "how-it-works/data-and-caching",
+          "how-it-works/language-money-dates"
+        ]
+      },
+      {
+        "group": "Workspaces",
+        "pages": [
+          "workspaces/overview-and-reports",
+          "workspaces/orders",
+          "workspaces/floor",
+          "workspaces/kitchen",
+          "workspaces/billing",
+          "workspaces/reservations-and-tables",
+          "workspaces/management"
+        ]
+      },
+      {
+        "group": "Design system",
+        "pages": [
+          "design/principles",
+          "design/colour",
+          "design/typography",
+          "design/layout",
+          "design/components",
+          "design/motion"
+        ]
+      },
+      {
+        "group": "Guides",
+        "pages": [
+          "guides/deploy-to-vercel",
+          "guides/add-a-page",
+          "guides/add-a-translation",
+          "guides/testing"
+        ]
+      },
+      {
+        "group": "Reference",
+        "pages": ["reference/environment-variables", "reference/scripts"]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Backend docs",
+        "href": "https://bss-restaurant-backend.mintlify.app"
+      },
+      {
+        "type": "github",
+        "href": "https://github.com/SharifdotG/bss-restaurant-nextjs"
+      }
+    ]
+  },
+  "styling": {
+    "codeblocks": {
+      "theme": {
+        "light": "github-light-default",
+        "dark": "github-dark-default"
+      }
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/SharifdotG"
+    }
+  }
+}

@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Dot folders are tool caches and local files.
     ".*/**",
+    // The docs site is built by Mintlify, not Next.
+    "docs/**",
   ]),
 ]);
 

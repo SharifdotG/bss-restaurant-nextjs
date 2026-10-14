@@ -1,0 +1,52 @@
+---
+title: "Home"
+description: "How the staff dashboard for the BSS Restaurant API is built, and how to run, change and deploy it."
+icon: "/icons/house.svg"
+mode: "frame"
+---
+
+import { Intro, Action, LinkPanel, LinkRow } from "/snippets/landing.jsx";
+
+<div className="bss-landing not-prose">
+
+<Intro
+  title="The staff dashboard for BSS Restaurant"
+  actions={
+    <>
+      <Action href="/quickstart" primary>Run it locally</Action>
+      <Action href="/how-it-works/talking-to-the-api">How it talks to the API</Action>
+    </>
+  }
+>
+  A Next.js app that turns the BSS Restaurant API into one screen per job: the manager's overview, the waiter's floor and order pad, the kitchen's live ticket board, the cashier's till and the front desk's bookings. These docs walk through how it's built and why, and how to run, change and deploy it, starting from zero.
+</Intro>
+
+<img className="bss-shot" src="/screenshots/overview.webp" alt="The manager's overview: today's sales, open orders, a sales chart and live order cards" />
+
+<div className="bss-panels">
+
+<LinkPanel title="Start here">
+  <LinkRow href="/quickstart" icon="/icons/rocket-launch.svg" title="Quickstart">Clone, install and sign in</LinkRow>
+  <LinkRow href="/tech-stack" icon="/icons/stack.svg" title="Tech stack">What each library does here</LinkRow>
+  <LinkRow href="/project-structure" icon="/icons/tree-structure.svg" title="Project structure">Where everything lives</LinkRow>
+</LinkPanel>
+
+<LinkPanel title="Understand it">
+  <LinkRow href="/how-it-works/sign-in-and-sessions" icon="/icons/key.svg" title="Sign-in and sessions">Tokens, cookies and tabs</LinkRow>
+  <LinkRow href="/how-it-works/live-updates" icon="/icons/broadcast.svg" title="Live updates">The WebSocket feed</LinkRow>
+  <LinkRow href="/how-it-works/roles-and-permissions" icon="/icons/shield-check.svg" title="Roles and permissions">Who sees what</LinkRow>
+</LinkPanel>
+
+<LinkPanel title="Change it">
+  <LinkRow href="/guides/add-a-page" icon="/icons/file-plus.svg" title="Add a page">A new screen end to end</LinkRow>
+  <LinkRow href="/design/principles" icon="/icons/palette.svg" title="Design system">Tokens and components</LinkRow>
+  <LinkRow href="/guides/deploy-to-vercel" icon="/icons/cloud-arrow-up.svg" title="Deploy to Vercel">Put it online for free</LinkRow>
+</LinkPanel>
+
+</div>
+
+<p className="bss-aside">
+  The dashboard is one half of the project. The other half is the API it talks to, which has its own docs at <a href="https://bss-restaurant-backend.mintlify.app">bss-restaurant-backend.mintlify.app</a>.
+</p>
+
+</div>

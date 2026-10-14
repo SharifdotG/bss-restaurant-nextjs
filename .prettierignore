@@ -3,3 +3,5 @@ pnpm-lock.yaml
 next-env.d.ts
 src/lib/api/openapi.json
 src/lib/api/schema.d.ts
+# MDX in the docs is formatted by hand, prettier splits JSX children into paragraphs
+docs/**/*.mdx
