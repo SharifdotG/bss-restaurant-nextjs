@@ -9,6 +9,9 @@ I built the API to be frontend agnostic, and this is the first frontend on top o
 staff side. The customer side (ordering from the QR code on a table, online takeaway and
 booking a table) comes later in the same project.
 
+The full docs, from running it locally to how sessions and live updates work, are at
+[bss-restaurant-frontend.mintlify.app](https://bss-restaurant-frontend.mintlify.app).
+
 ![Overview](docs/screenshots/overview.webp)
 
 |                                                      |                                           |
