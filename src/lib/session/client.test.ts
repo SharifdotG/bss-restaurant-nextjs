@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { installLocks, mockFetch, tokens } from "@/test/fakes";
 
 const REFRESH = "POST /api/session/refresh";
@@ -9,6 +9,10 @@ async function load() {
   vi.resetModules();
   return import("./client");
 }
+
+// The first import pulls in react and motion, which can take a while on a cold machine,
+// so it happens once here, outside the per-test timeout.
+beforeAll(() => import("./client"), 120_000);
 
 beforeEach(() => {
   localStorage.clear();
