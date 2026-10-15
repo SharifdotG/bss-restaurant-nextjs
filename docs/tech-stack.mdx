@@ -3,3 +3,77 @@ title: "Tech stack"
 description: "Every library the dashboard uses, what it does here and why it was picked."
 icon: "/icons/stack.svg"
 ---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+
+The short version: a [Next.js](https://nextjs.org) app written in TypeScript, styled with Tailwind, that talks to the API from the browser and is hosted on Vercel's free plan. The exact versions live in <Source path="package.json" />.
+
+## The framework
+
+| Library | What it does here |
+| --- | --- |
+| **Next.js 16** (App Router) | Routing, layouts, the build, and three small server routes that hold the session cookie. Pages are folders under `src/app` |
+| **React 19** | The UI. The [React Compiler](https://react.dev/learn/react-compiler) is switched on in `next.config.ts`, so components are memoised automatically and there's almost no `useMemo` or `useCallback` in the code |
+| **TypeScript** (strict) | Types everywhere, including every API request and response, which are generated from the API's schema |
+
+<Why>
+  Nearly every page is a static shell: the HTML is built once and the data is fetched in the browser. That keeps the server out of the way, so the free Vercel plan is plenty, and it fits the live feed, which needs the sign-in token in the browser anyway. More on that in [Talking to the API](/how-it-works/talking-to-the-api).
+</Why>
+
+## Talking to the API
+
+| Library | What it does here |
+| --- | --- |
+| **openapi-typescript** | Reads the API's `openapi.json` and writes TypeScript types for all 85 operations into `src/lib/api/schema.d.ts` |
+| **openapi-fetch** | A tiny `fetch` wrapper that uses those types, so `api.GET("/api/v1/orders/{order_id}")` knows exactly which parameters it takes and what comes back |
+| **TanStack Query** | Caches what the API returned, shares it between components, refetches when it's stale, and shows loading and error states |
+| **nuqs** | Keeps filters, tabs, search and paging in the URL, so a link or the back button brings you back to the same view |
+
+<Why>
+  I wrote the API too, and it already publishes an exact description of itself. Generating types from it means a renamed field breaks the build, not the till in the middle of service.
+</Why>
+
+## Look and feel
+
+| Library | What it does here |
+| --- | --- |
+| **Tailwind CSS 4** | All styling. The colours, radii and shadows are CSS variables, described in [Colour](/design/colour) and [Layout](/design/layout) |
+| **shadcn/ui on Base UI** | The starting point for buttons, inputs, dialogs, sheets, menus and tabs. shadcn copies component code into `src/components/ui`, so it's ours to change; [Base UI](https://base-ui.com) underneath handles focus, keyboard and screen readers |
+| **Phosphor Icons** | Every icon, mostly in the duotone weight |
+| **Motion** | Animation: list items sliding in, kitchen tickets moving between columns, the payment tick. See [Motion](/design/motion) |
+| **Recharts** | The sales, dishes and expenses charts, drawn with the dashboard's own colours |
+| **next-themes** | Light and dark mode, following the system by default. The kitchen screen is forced dark |
+| **Google Sans Flex** and **Baloo Da 2** | The two typefaces, loaded with `next/font`. Baloo Da 2 only covers Bangla |
+
+A few smaller helpers do one job each: **sonner** for toasts, **cmdk** for the <kbd>Ctrl</kbd> <kbd>K</kbd> command palette, **react-day-picker** for calendars, **react-easy-crop** for cropping dish photos, and **qrcode.react** for the table QR codes.
+
+<Why>
+  The first plan was GSAP for the big moments and Motion for everything else. I dropped GSAP before it shipped: two animation libraries meant two ways to do the same thing and more JavaScript on every page, and Motion alone covers everything the dashboard does.
+</Why>
+
+## Language and dates
+
+| Library | What it does here |
+| --- | --- |
+| **next-intl** | English and Bangla. Every piece of text is in `messages/en.json` and `messages/bn.json`, and every URL starts with `/en` or `/bn` |
+| **Intl** (built into the browser) | Money with lakh grouping (৳1,23,456.50), Bangla digits, and dates and times in Dhaka time |
+
+See [Language, money and dates](/how-it-works/language-money-dates).
+
+## Tools
+
+| Tool | What it does here |
+| --- | --- |
+| **pnpm** | Installs packages. Faster than npm and strict about what each package can see |
+| **ESLint** and **Prettier** | Catch mistakes and keep formatting consistent. Prettier also sorts Tailwind classes |
+| **Vitest** | 232 unit tests for the logic that has to be right: money maths, permissions, sessions, the kitchen board |
+| **Playwright** | End-to-end tests that drive a real browser through a full service. See [Testing](/guides/testing) |
+
+## Hosting
+
+The dashboard runs on [Vercel](https://vercel.com)'s free Hobby plan and is deployed from the command line with `vercel deploy --prod`. The API it talks to runs separately on FastAPI Cloud, with its database on Neon. The [deploy guide](/guides/deploy-to-vercel) walks through it.
+
+<Why>
+  I started on Cloudflare Workers, which has a generous free tier, but its free plan caps each request at 10 ms of CPU time and the app at 3 MB. A Next.js app with this many screens is over both. Vercel's free plan has no such per-request ceiling, and since the pages are static it stays well inside the monthly limits.
+</Why>

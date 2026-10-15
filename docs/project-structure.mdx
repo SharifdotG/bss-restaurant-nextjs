@@ -3,3 +3,92 @@ title: "Project structure"
 description: "Where things live in the repo and how the folders map to what you see on screen."
 icon: "/icons/tree-structure.svg"
 ---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+
+Most of the code sits in three folders under `src`: `app` decides which page shows at which address, `components` draws it, and `lib` holds the logic that doesn't care what it looks like.
+
+```text
+bss-restaurant-nextjs/
+├── src/
+│   ├── app/                  pages and layouts (Next.js App Router)
+│   │   ├── [locale]/         every page lives under /en or /bn
+│   │   │   ├── (app)/        the signed-in dashboard: overview, orders, kitchen, billing…
+│   │   │   ├── (auth)/login/ the sign-in page
+│   │   │   └── t/[token]/    the public page a table's QR code opens
+│   │   ├── api/session/      three server routes that keep the session cookie
+│   │   ├── globals.css       Tailwind setup, type scale, radii, motion
+│   │   └── tokens.css        every colour, light and dark
+│   ├── components/           what's drawn on screen, one folder per area
+│   │   ├── ui/               the shared building blocks: button, dialog, table, pill…
+│   │   ├── shell/            sidebar, top bar, bottom tabs, command palette
+│   │   └── orders/ kitchen/ billing/ …
+│   ├── lib/                  logic: permissions, money, dates, live feed, sessions
+│   │   ├── api/              typed API client, generated types, errors
+│   │   ├── live/             the WebSocket and the live order store
+│   │   └── session/          sign-in, token refresh, the session cookie
+│   ├── i18n/                 language routing and settings
+│   └── proxy.ts              runs before every page: language and sign-in redirects
+├── messages/                 en.json and bn.json, every piece of text
+├── e2e/                      Playwright tests that run a full service
+├── scripts/                  pull-openapi.mjs, fetches the API's schema
+└── docs/                     this documentation
+```
+
+## How a URL becomes a page
+
+Next.js turns folders into addresses. `src/app/[locale]/(app)/kitchen/page.tsx` is the page at `/en/kitchen` and `/bn/kitchen`:
+
+- `[locale]` in square brackets is a placeholder, filled with `en` or `bn`.
+- `(app)` in brackets is a group: it shares a layout but doesn't appear in the URL.
+- `orders/[id]` is an order's own page, `/en/orders/42`.
+
+Each `page.tsx` under `(app)` is two lines that hand over to a component:
+
+```tsx src/app/[locale]/(app)/orders/page.tsx
+const route = pageRoute("orders", OrdersPage);
+export const generateMetadata = route.generateMetadata;
+export default route.Route;
+```
+
+`pageRoute` in <Source path="src/app/[locale]/(app)/app-route.tsx" /> sets the browser tab's title and wraps the page so it can read the URL. The real page is `OrdersPage` in `src/components/orders/orders-page.tsx`.
+
+Around every signed-in page sit two layers, set in <Source path="src/app/[locale]/(app)/layout.tsx" />:
+
+1. **`SessionGate`** waits until it knows who you are, and sends you to sign in if nobody is.
+2. **`AppShell`** draws the sidebar, top bar or bottom tabs, opens the live connection, and mounts the overlays (command palette, shortcuts, the incoming-orders panel).
+
+## Components and logic, kept apart
+
+A screen like the kitchen board is split in two:
+
+- `src/components/kitchen/` draws it: the columns, the tickets, the buttons.
+- `src/lib/kitchen.ts` decides what goes where: which column a ticket belongs in, when its timer turns amber, which lines were added after cooking started.
+
+The logic files have no React in them, which makes them easy to test. Almost every one has a `.test.ts` file beside it.
+
+<Why>
+  When the till shows the wrong change, I want to look at one plain function, not dig through a component. Keeping the rules in `lib` also meant I could write the tests first for the parts that handle money and permissions.
+</Why>
+
+## Where to look
+
+| You want to change… | Start in |
+| --- | --- |
+| A page's layout | `src/components/<area>/<area>-page.tsx` |
+| A button, input or dialog everywhere | `src/components/ui/` |
+| Who can see or do something | <Source path="src/lib/permissions.ts" /> |
+| Some text, in either language | `messages/en.json` and `messages/bn.json` |
+| A colour | <Source path="src/app/tokens.css" /> |
+| How API errors read | <Source path="src/lib/api/errors.ts" /> and the `errors` section of the messages |
+| The sidebar or bottom tabs | <Source path="src/lib/navigation.ts" /> and `src/components/shell/` |
+| How money or dates are shown | <Source path="src/lib/money.ts" /> and <Source path="src/lib/format.ts" /> |
+
+## Files you shouldn't edit by hand
+
+- `src/lib/api/schema.d.ts` is generated from the API's schema with `pnpm api:types`.
+- `src/lib/api/openapi.json` is a saved copy of the API's schema, refreshed with `pnpm api:pull`.
+- `next-env.d.ts` and anything in `.next/` are written by Next.js.
+
+[Scripts](/reference/scripts) explains each `pnpm` command.

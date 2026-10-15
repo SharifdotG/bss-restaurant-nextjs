@@ -1,5 +1,107 @@
 ---
 title: "Quickstart"
-description: "Run the dashboard on your machine against the live API or a local one."
+description: "Run the dashboard on your machine against a local copy of the API, with a month of demo data to click around in."
 icon: "/icons/rocket-launch.svg"
 ---
+
+import { Shot } from "/snippets/shot.jsx";
+
+The dashboard is only a screen. Every order, table and payment you see comes from the BSS Restaurant API, so you need a running API first and the dashboard second. Plan on about fifteen minutes the first time, most of it installing things.
+
+## What you need
+
+| Tool | Version | What it's for |
+| --- | --- | --- |
+| [Node.js](https://nodejs.org) | 24 or newer | Runs Next.js and the build tools |
+| [pnpm](https://pnpm.io) | 12 | Installs packages. `corepack enable` sets it up from Node |
+| [Git](https://git-scm.com) | any | Gets the code |
+| The API | 1.0 | Follow the [backend quickstart](https://bss-restaurant-fastapi.mintlify.app/quickstart). It needs [uv](https://docs.astral.sh/uv/) and Docker or a Postgres database |
+
+## Run it
+
+<Steps>
+  <Step title="Start the API with demo data">
+    Follow the [backend quickstart](https://bss-restaurant-fastapi.mintlify.app/quickstart) until `http://localhost:8000/api/v1/health` answers with `"status":"ok"`, and run `seed-demo` so there's a menu, tables, staff and a month of orders. Note the password `seed-demo` prints at the end: every demo account uses it.
+
+    The API only answers web pages it trusts. In its `.env`, make sure `CORS_ORIGINS` includes the dashboard's address:
+
+    ```bash .env (in the API folder)
+    CORS_ORIGINS=http://localhost:3000
+    ```
+
+    Restart the API after changing it.
+  </Step>
+  <Step title="Get the dashboard code">
+    ```bash
+    git clone https://github.com/SharifdotG/bss-restaurant-nextjs.git
+    cd bss-restaurant-nextjs
+    pnpm install
+    ```
+  </Step>
+  <Step title="Point it at the API">
+    Copy the example settings file. The defaults already point at `http://localhost:8000`.
+
+    ```bash
+    cp .env.example .env.local
+    ```
+
+    If you'd like one-click sign-in buttons for the demo accounts, set these two lines in `.env.local`, using the password `seed-demo` printed:
+
+    ```bash .env.local
+    NEXT_PUBLIC_DEMO_LOGIN=1
+    NEXT_PUBLIC_DEMO_PASSWORD=the-password-seed-demo-printed
+    ```
+
+    Every variable is explained in [Environment variables](/reference/environment-variables).
+  </Step>
+  <Step title="Start it">
+    ```bash
+    pnpm dev
+    ```
+
+    Open [http://localhost:3000](http://localhost:3000). You'll land on the sign-in page.
+  </Step>
+  <Step title="Sign in">
+    Use one of the seeded accounts with the password from step 1, or the demo buttons if you turned them on. Each account opens a different workspace:
+
+    | Account | Role | Lands on |
+    | --- | --- | --- |
+    | `manager@example.com` | Manager | [Overview](/workspaces/overview-and-reports) |
+    | `waiter@example.com` | Waiter | [Floor](/workspaces/floor) |
+    | `chef@example.com` | Chef | [Kitchen](/workspaces/kitchen) |
+    | `cashier@example.com` | Cashier | [Billing](/workspaces/billing) |
+  </Step>
+</Steps>
+
+<Shot name="login" alt="The sign-in page: email and password on the left, a photo of biryani on the right" />
+
+## Try a full service
+
+The best way to see how the pieces connect is to open two browser windows side by side, one signed in as the waiter and one as the chef (use a private window for the second, so the sessions don't mix).
+
+1. As the waiter, open **New order**, pick a free table, add a few dishes and press **Send**.
+2. Watch the chef's kitchen board: the ticket appears in **To cook** within a second or two, with a chime.
+3. As the chef, press **Start**, then **Ready**.
+4. Back as the waiter, the order shows up as ready. Mark it **Served**.
+5. Sign in as the cashier and take the payment on the **Billing** page. Split it between cash and card if you like.
+
+Nothing refreshed the page in between. That's the [live feed](/how-it-works/live-updates) at work.
+
+## If something's off
+
+<AccordionGroup>
+  <Accordion title="The sign-in page says it can't reach the server">
+    The API isn't running, or `NEXT_PUBLIC_API_ORIGIN` in `.env.local` points somewhere else. Open `http://localhost:8000/api/v1/health` in the browser to check. If you change `.env.local`, restart `pnpm dev`: Next.js reads `NEXT_PUBLIC_` variables when it starts.
+  </Accordion>
+  <Accordion title="Sign-in fails with a network error, but the API is up">
+    That's almost always CORS: the API is refusing requests from `http://localhost:3000`. Add it to `CORS_ORIGINS` in the API's `.env` and restart the API.
+  </Accordion>
+  <Accordion title="It says too many attempts">
+    The API allows five sign-in attempts per email from one address in five minutes. Wait for the countdown on the sign-in page, or restart the API: it keeps those counters in memory, so a restart clears them.
+  </Accordion>
+  <Accordion title="The demo buttons don't show">
+    Both `NEXT_PUBLIC_DEMO_LOGIN=1` and a non-empty `NEXT_PUBLIC_DEMO_PASSWORD` are needed, and `pnpm dev` has to be restarted after editing `.env.local`.
+  </Accordion>
+</AccordionGroup>
+
+Next, the [tech stack](/tech-stack) explains what each library in `package.json` is doing here.

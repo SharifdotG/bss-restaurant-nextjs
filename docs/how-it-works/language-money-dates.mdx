@@ -3,3 +3,105 @@ title: "Language, money and dates"
 description: "English and Bangla, taka to the paisa, and Dhaka time everywhere."
 icon: "/icons/translate.svg"
 ---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+
+The restaurant is in Dhaka. Staff may prefer English or Bangla, prices are in taka, and "today" means today in Dhaka, wherever the server happens to be. Three small modules handle all of it.
+
+## Two languages
+
+The dashboard is fully translated into Bangla. Every visible piece of text lives in `messages/en.json` and `messages/bn.json`, about 1,800 entries each, grouped by screen:
+
+```json messages/en.json
+{
+  "nav": { "kitchen": "Kitchen", "billing": "Billing" },
+  "errors": {
+    "codes": {
+      "rate_limited": "Too many tries. Wait {minutes, plural, one {# minute} other {# minutes}} and try again."
+    }
+  }
+}
+```
+
+```json messages/bn.json
+{
+  "nav": { "kitchen": "রান্নাঘর", "billing": "বিলিং" }
+}
+```
+
+[next-intl](https://next-intl.dev) loads the right file and gives components a `t()` function:
+
+```tsx
+const t = useTranslations("nav");
+<span>{t("kitchen")}</span> // "Kitchen" or "রান্নাঘর"
+```
+
+### The language is in the URL
+
+Every address starts with the language: `/en/kitchen` or `/bn/kitchen`. Switching language swaps the prefix and remembers the choice in a cookie for a year. A bare `/kitchen` is redirected to the saved language, or English. The browser's own language setting is ignored on purpose: a shared counter tablet shouldn't change language depending on who set it up.
+
+### Numbers in sentences
+
+Counts use ICU message syntax, which handles "1 minute" and "3 minutes" in English. Bangla has no plural forms, so its messages use `{n, number}` instead, which also prints the number in Bangla digits. A plain `{n}` would print Latin digits, which is a common slip, so a test checks that both files have the same keys and the same placeholders.
+
+## Money
+
+Prices arrive from the API as JSON numbers in taka, like `654.68`. Adding them up as numbers goes wrong in the way every programmer meets once:
+
+```ts
+0.1 + 0.2; // 0.30000000000000004
+```
+
+So all arithmetic happens in whole **paisa** (1 taka = 100 paisa), and only the display goes back to taka. <Source path="src/lib/money.ts" /> has the helpers:
+
+```ts src/lib/money.ts
+export const toPaisa = (taka: number) => Math.round(taka * 100);
+
+export function splitEvenly(totalPaisa: number, parts: number): number[] {
+  if (!Number.isInteger(parts) || parts < 1) return [totalPaisa];
+  const base = Math.floor(totalPaisa / parts);
+  const leftover = totalPaisa - base * parts;
+  return Array.from({ length: parts }, (_, index) => base + (index < leftover ? 1 : 0));
+}
+```
+
+Splitting a ৳1,000.01 bill three ways gives ৳333.34, ৳333.34 and ৳333.33: the leftover paisa go to the first payers, and the shares always add up to the bill exactly.
+
+### How amounts look
+
+Taka are grouped the South Asian way, in thousands and then lakhs, always with two decimals, and with the sign in front:
+
+| | English | Bangla |
+| --- | --- | --- |
+| A total | ৳1,23,456.50 | <span className="bss-bn">৳১,২৩,৪৫৬.৫০</span> |
+| A refund | −৳450.00 | <span className="bss-bn">−৳৪৫০.০০</span> |
+| A chart axis | 80K, 1.5L | <span className="bss-bn">৮০ হা, ১.৫ লা</span> |
+
+Money fields accept what people actually type: `1,250.5`, `৳ ১২৫০`, `1250.` all read as ৳1,250.50. Bangla digits are converted before the number is checked, so a phone with a Bangla keyboard works at the till.
+
+## Dates and times
+
+Dhaka is UTC+6 all year, with no daylight saving. <Source path="src/lib/format.ts" /> formats every date and time in `Asia/Dhaka`, whatever time zone the device is set to, and always on a 12-hour clock:
+
+| | English | Bangla |
+| --- | --- | --- |
+| A day | Thursday, October 15 | <span className="bss-bn">বৃহস্পতিবার ১৫ অক্টোবর</span> |
+| A time | 8:30 PM | <span className="bss-bn">৮:৩০ PM</span> |
+| How long ago | 12 minutes ago | <span className="bss-bn">১২ মিনিট আগে</span> |
+| An order number | 22 | <span className="bss-bn">২২</span> |
+
+Two details matter more than they look:
+
+- **"Today" is the Dhaka business date.** At 1 AM in Dhaka it's already tomorrow there, while it's still yesterday in UTC. `businessDate()` asks for the date in Dhaka, so the overview's "today" and the orders list's "today" roll over at Dhaka midnight.
+- **Dates without a time are shown at noon.** The API sends a booking date as `2026-10-15`. Treated as midnight UTC, that could display as the 14th on a device set to a time zone behind UTC. Placing it at noon in Dhaka keeps it on the right day everywhere.
+
+When the dashboard sends a time to the API, it sends it with the offset spelled out, `2026-10-15T20:30:00+06:00`, so there's no doubt which 8:30 it meant.
+
+## Fonts for both scripts
+
+Text is set in Google Sans Flex. It has no Bangla letters, so the font list continues with Baloo Da 2, and the browser picks up Bangla characters from there. That also covers a Bangla dish name on an English screen. Baloo Da 2 is only downloaded when Bangla text actually appears.
+
+<Why>
+  I chose Baloo Da 2 because it sits comfortably next to Google Sans Flex: rounded, open, and the same weight at the same size. Many Bangla fonts look a size smaller or much heavier beside a Latin face, and a bilingual screen then reads like two different apps.
+</Why>

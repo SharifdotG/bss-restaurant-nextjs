@@ -1,5 +1,124 @@
 ---
 title: "Data and caching"
-description: "TanStack Query, query keys, error handling and why mutations are never retried."
+description: "TanStack Query, query keys, error handling, and why changes are never retried."
 icon: "/icons/database.svg"
 ---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+
+Reading from the API and writing to it are handled by [TanStack Query](https://tanstack.com/query). It remembers what each request returned, shares it between every component that asks, and knows when to ask again. Reads are **queries**; writes are **mutations**.
+
+## Reading: queries
+
+Every query in the app is defined once in <Source path="src/lib/api/queries.ts" />. A query has a **key**, which names the data, and a **function**, which fetches it:
+
+```ts src/lib/api/queries.ts
+export const orderQuery = (id: number) =>
+  queryOptions({
+    queryKey: ["order", id],
+    queryFn: ({ signal }) =>
+      unwrap(api.GET("/api/v1/orders/{order_id}", { params: { path: { order_id: id } }, signal })),
+  });
+```
+
+A component uses it like this, and gets loading, error and data states for free:
+
+```tsx
+const { data: order, isPending, isError } = useQuery(orderQuery(42));
+```
+
+If three components on the screen ask for order 42, there's one request. Leave the page and come back within a few seconds, and the order shows instantly from the cache while a fresh copy loads in the background.
+
+### Keys start with the resource
+
+Every key begins with the name of what it holds: `["orders", filters]`, `["order", 42]`, `["reservations", { day }]`, `["dashboard"]`, `["foods"]`. That makes it easy to say "anything about orders is now out of date" in one line, which is exactly what the [live feed](/how-it-works/live-updates) does when an order changes:
+
+```ts
+client.invalidateQueries({ queryKey: ["orders"] });
+```
+
+### How long data counts as fresh
+
+The default is 30 seconds. Data that rarely changes is kept longer, data that changes often is kept shorter:
+
+| Data | Fresh for |
+| --- | --- |
+| Restaurant settings, opening hours | 10 minutes |
+| Tables, categories, staff list | 5 minutes |
+| Reports | 1 minute |
+| Most things | 30 seconds |
+| Dishes (sold-out changes mid-service) | 30 seconds |
+
+Live events refresh order and booking data straight away, whatever these numbers say.
+
+## Writing: mutations
+
+A change, like placing an order or taking a payment, is a mutation. They live in hooks under `src/lib/use-*-actions.ts`, and all follow the same pattern: call the API, update the cache with what it returned, show a toast.
+
+```ts src/lib/use-order-actions.ts
+export function applyOrder(client: QueryClient, order: OrderDetailOut) {
+  client.setQueryData(["order", order.id], order);
+  void client.invalidateQueries({ queryKey: ["orders"] });
+  void client.invalidateQueries({ queryKey: ["dashboard"] });
+  receive({
+    event: "order.updated",
+    topic: "orders",
+    at: order.updatedAt,
+    data: toLiveOrder(order),
+  });
+}
+```
+
+That last step pushes the change into the live store at once, so the kitchen board and the bell on this device don't wait for the API's echo over the WebSocket.
+
+## Retries, and why changes never retry
+
+The settings in <Source path="src/lib/api/query-client.ts" /> are short, and every line matters:
+
+```ts src/lib/api/query-client.ts
+// Only a dropped connection or a server hiccup is worth asking again; a 4xx won't change.
+const shouldRetry = (failures: number, error: ApiError) =>
+  failures < 2 && (error.status === 0 || error.status >= 500);
+
+export function makeQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: { staleTime: 30_000, retry: shouldRetry },
+      // Never resend a mutation: the API has no idempotency keys, so a retried payment
+      // could be taken twice.
+      mutations: { retry: false },
+    },
+  });
+}
+```
+
+- A **query** that fails because the network blinked or the server had a moment is tried twice more. A `404` or `403` won't change by asking again, so it isn't.
+- A **mutation** is never retried. If a payment request times out, the API may have taken it. Sending it again could charge the guest twice. Instead the dashboard shows the error and re-reads the order, so the cashier sees what actually happened.
+
+## Optimistic updates, used sparingly
+
+An optimistic update changes the screen before the API answers, and puts it back if the API says no. It feels instant, but it can show something that isn't true for a moment. The dashboard uses it in exactly two places, both harmless if they bounce:
+
+- **Marking a dish sold out**, so the chef's switch flips immediately.
+- **Reordering menu categories** by dragging.
+
+Order status, payments and refunds always wait for the API.
+
+<Why>
+  A dashboard that runs a till shouldn't lie, even briefly. If a cashier sees "Paid" and turns to the next guest, and then it quietly flips back, that's money lost. So anything to do with money or the kitchen waits for the server's word, and shows a spinner on the button meanwhile.
+</Why>
+
+## State in the URL
+
+Filters, tabs, search, sorting and page numbers live in the address, through [nuqs](https://nuqs.dev). On the orders page, for example:
+
+```text
+/en/orders?tab=paid&range=week&source=qr&sort=-total&page=2
+```
+
+Reload, share the link, or press back, and you're looking at the same list. Each page's URL settings are defined in one hook beside it, like `src/components/orders/use-order-filters.ts`. Defaults are left out of the address, so the plain `/en/orders` stays clean.
+
+## Signing out clears everything
+
+When the session ends, the whole query cache is cleared, so nothing from one person's session is on screen for the next.
