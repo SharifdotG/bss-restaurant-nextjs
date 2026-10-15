@@ -3,3 +3,66 @@ title: "Floor"
 description: "Tables by area with what's happening at each one, built for a waiter's phone."
 icon: "/icons/map-trifold.svg"
 ---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+import { Shot } from "/snippets/shot.jsx";
+
+**Who uses it:** waiters land here; managers and cashiers can open it too.
+
+<Shot name="floor" phone alt="The floor on a phone: tabs for all, in use, free and booked, then table tiles grouped by area" />
+
+The floor is the restaurant at a glance: every table, grouped by area (ground floor, window, family room, rooftop), each tile saying what's happening there right now.
+
+## What a tile says
+
+A table is in one of three states, worked out by `floorTables()` in <Source path="src/lib/floor.ts" />:
+
+| State | The tile shows | Tapping it |
+| --- | --- | --- |
+| **Has an order** | "Order 12", the amount or "৳450.00 due", and the waiter's first name, or "QR · guest". "Bill due" once served | Opens the order |
+| **Booked** | "Booked 8:00 PM", the guest and party size, and "in 20 min" or "10 min late". Seated guests show as seated | Starts an order for that table |
+| **Free** | "Tap to start an order", or "Booked from 9:30 PM" if a booking is coming later | Starts an order for that table |
+
+A booking holds its table from one hour before it starts. So at 7:15 a table booked for 8:00 shows as booked, and a table booked for 10:00 shows as free, with a hint about the later booking.
+
+```ts src/lib/floor.ts
+const holding = upcoming.find(
+  (booking) =>
+    booking.status === "seated" || Date.parse(booking.startsAt) - now <= HOLD_MINUTES * 60_000,
+);
+if (holding) return { table, state: { kind: "booked", booking: holding } };
+return { table, state: { kind: "free", laterBooking: upcoming[0] ?? null } };
+```
+
+## Filters
+
+Tabs across the top: **All tables**, **In use**, **Free**, **Booked**, and **My tables** for waiters with tables assigned to them. Each shows a count. The choice is kept in the URL, so it survives a reload.
+
+## On a laptop: Up next
+
+<Shot name="floor" alt="The floor on a laptop: table tiles on the left and an Up next column on the right with ready orders, arrivals and bills to pay" />
+
+Wide screens add an **Up next** column:
+
+- **Ready to hand over**, linking to the order.
+- **Arriving** bookings in the next three hours, amber for requests that still need a yes.
+- **Waiting to pay**, linking to the till for those allowed to take payment.
+
+On a phone, ready food shows as a green banner instead ("Order 24 and 2 more are ready"), because that's the thing a waiter mustn't miss.
+
+## Live
+
+The floor is kept fresh by the live feed: when an order is placed, cooked, served or paid anywhere, the tiles change within a second or two. Times like "in 20 min" tick along every 30 seconds.
+
+<Why>
+  I designed this screen for one hand on a phone, mid-service. The tile is the button: tap a busy table to see its order, tap a free one to start one. Nothing needs a second tap to find out what a table is doing.
+</Why>
+
+## Files
+
+| | |
+| --- | --- |
+| Page | `src/components/floor/`: `floor-page.tsx`, `table-tile.tsx`, `up-next.tsx` |
+| Logic | <Source path="src/lib/floor.ts" />, tested in `floor.test.ts` |
+| Also used by | The new-order screen's table picker, which shares `floorTables()` |

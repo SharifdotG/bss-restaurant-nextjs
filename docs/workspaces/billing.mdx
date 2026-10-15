@@ -3,3 +3,96 @@ title: "Billing"
 description: "The cashier's desk: the queue of bills, the till, split payments, receipts and refunds."
 icon: "/icons/cash-register.svg"
 ---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+import { Shot } from "/snippets/shot.jsx";
+
+**Who uses it:** the cashier lands here; managers can open it too, and only managers can refund.
+
+<Shot name="billing" alt="The billing desk: today's takings and the queue of bills on the left, the selected bill in the middle, and the till with cash, card and mobile, a keypad and the change on the right" />
+
+The billing desk is three columns: the queue, the bill, and the till. On a phone they become steps: pick a bill, look it over, pay.
+
+## The queue
+
+The queue reads from the [live store](/how-it-works/live-updates), so bills appear the moment food is served. It has three groups, decided by `billGroup()`:
+
+```ts src/lib/billing.ts
+export function billGroup(order: Pick<LiveOrder, "status" | "total" | "balanceDue">) {
+  if (order.status === "pending" || order.status === "paid" || order.status === "cancelled") {
+    return null;
+  }
+  if (order.balanceDue <= 0) return "prepaid";
+  if (order.status === "served" || order.balanceDue < order.total) return "waiting";
+  return "kitchen";
+}
+```
+
+- **Waiting to pay**: served, or partly paid. Oldest first.
+- **Still in the kitchen**: open orders not served yet. Takeaways often pay before the food is ready, so they can be paid from here.
+- **Paid today**: quiet rows for reference.
+
+A newly due bill flashes once, and the Billing item in the sidebar carries a count. Above the queue, a strip shows today's sales, paid orders and refunds. The ↑ and ↓ keys move through the queue.
+
+## The till
+
+Pick a method: **Cash**, **Card** or **Mobile**. The keys C, K and M do the same.
+
+- **Cash** asks how much was handed over. Quick buttons offer the exact amount and the next round notes (৳500, ৳1,000), and the change shows in large type at the bottom.
+- **Card** takes an optional slip number.
+- **Mobile** shows bKash, Nagad and Rocket, and needs the transaction ID. The wallet's name is saved with the payment.
+
+The amount starts at what's left to pay. A keypad sits under it for touch screens; on a laptop you can just type the digits, and Enter takes the payment.
+
+### Splitting a bill
+
+**Whole bill**, **÷2**, **÷3** or **÷4** split what's left evenly. The shares are worked out in paisa, so they always add up to the bill exactly; any odd paisa go to the first payers. After each part payment the next share is filled in, and each part can use a different method, like half cash, half card.
+
+The till checks before sending: there must be an amount, it can't be more than what's left, cash handed over must cover it, and mobile payments need a transaction ID.
+
+<Shot name="billing" phone alt="The till on a phone: method tiles, the amount and a Take payment button" />
+
+### When it's paid
+
+When the balance reaches zero the order closes as **paid**. A green tick draws itself, the change counts up, and the till offers **Print receipt** and **Next bill**. Nothing prints by itself.
+
+<Why>
+  The payment button never retries and never pretends. If the network drops halfway, the till re-reads the order from the API instead of guessing, so the cashier sees whether the money was recorded before taking it again. I'd rather show a spinner for two seconds than risk charging a guest twice. More on that in [Data and caching](/how-it-works/data-and-caching).
+</Why>
+
+## Receipts
+
+The API makes the receipt itself, as an 80 mm-wide HTML page for thermal printers. The dashboard fetches it with the cashier's token, shows it in a preview (always white, even in dark mode), and prints just that frame. Before payment the button reads **Print bill**; after, **Print receipt**. It's available on the order's own page too.
+
+```tsx src/components/orders/receipt-dialog.tsx
+<iframe
+  ref={frame}
+  title={t("frame")}
+  srcDoc={receipt.data}
+  sandbox="allow-same-origin allow-modals"
+  // The body, not the document: a short receipt would report the frame's own height.
+  onLoad={(event) =>
+    setHeight(event.currentTarget.contentDocument?.body.scrollHeight ?? null)
+  }
+  style={{ height: height ?? 480 }}
+  className="w-[316px] shrink-0 rounded-sm bg-white shadow-md"
+/>
+```
+
+The `sandbox` keeps the receipt's HTML from running scripts, and `allow-modals` lets the print dialog open. The frame grows to the receipt's height, so a long bill isn't cut off.
+
+## Refunds
+
+Managers get **Refund** on the bill and on the order's page. The form takes an amount (with an "All" shortcut), the method (defaulting to how it was paid), an optional reference and a reason with quick picks. A confirmation step follows before anything is sent. A refund never makes a paid order unpaid; it's recorded against the order and shows under refunds in today's takings and the reports.
+
+To cancel an order that has taken money, refund it first. The cancel dialog says so and links straight to the refund.
+
+## Files
+
+| | |
+| --- | --- |
+| Desk | `src/components/billing/`: `billing-page.tsx`, `bill-queue.tsx`, `till.tsx`, `till-panel.tsx`, `keypad.tsx`, `refund-form.tsx` |
+| Receipt | `src/components/orders/receipt-dialog.tsx` |
+| Logic | <Source path="src/lib/billing.ts" />, <Source path="src/lib/money.ts" />, tested in `billing.test.ts` and `money.test.ts` |
+| Payments | <Source path="src/lib/use-billing-actions.ts" /> |

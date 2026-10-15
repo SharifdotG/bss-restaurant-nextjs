@@ -3,3 +3,108 @@ title: "Kitchen"
 description: "The live ticket board for the kitchen screen: bumps, timers, sound and sold-out dishes."
 icon: "/icons/chef-hat.svg"
 ---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+import { Shot } from "/snippets/shot.jsx";
+
+**Who uses it:** the chef lands here; managers can open it too. Meant for a landscape tablet or a screen on the kitchen wall.
+
+<Shot name="kitchen" darkOnly alt="The kitchen board: three columns, To cook, Cooking and Ready, with one big ticket in each showing the order number, table, dishes and a timer" />
+
+The kitchen board is the one screen that's always dark and always full-screen. There's no sidebar and no top bar, just a slim header with the time, the connection status, a mute button and a back arrow for managers.
+
+<Why>
+  It's always dark because a bright white screen next to a stove is hard to read: the glare washes it out, and it's tiring to look at for a whole evening. It's forced in the theme provider, so even the dialogs and toasts on this page are dark.
+</Why>
+
+## Three columns
+
+| Column | Holds | Button |
+| --- | --- | --- |
+| **To cook** | Confirmed orders, newest at the bottom | **Start** |
+| **Cooking** | Orders in preparation | **Ready** |
+| **Ready** | Plated food waiting for a waiter | None for the chef: "The waiter marks it served at handover" |
+
+Each ticket shows the order's daily number in large type, the table or "Takeaway", the waiter, and the dishes with quantities. Notes ("no onion") sit under their dish. The chef can tap a line to tick it off while cooking; ticks are kept on the tablet, so a reload doesn't lose them.
+
+On a phone the columns become tabs, one at a time.
+
+## Bumping a ticket, with undo
+
+Pressing **Start** or **Ready** moves the ticket at once, and a toast appears for five seconds with **Undo**. The request to the API is only sent when the toast goes away.
+
+```ts src/components/kitchen/use-bump.ts
+toast(t(`bumped.${to}`, { n }), {
+  duration: UNDO_MS,
+  action: {
+    label: t("undo"),
+    onClick: () => {
+      settled = true;
+      setHeld(order.id, null);
+    },
+  },
+  onAutoClose: commit,
+  onDismiss: commit,
+});
+```
+
+Order status can't go backwards in the API: once an order is "ready", nobody can make it "preparing" again. So the undo has to happen before the request, not after. A greasy thumb hitting the wrong ticket costs nothing.
+
+## Timers that know the dish
+
+Each ticket has a timer, and its colour depends on what's on it. The slowest dish sets the pace:
+
+```ts src/lib/kitchen.ts
+/** The slowest dish on the ticket sets its pace. */
+export function prepTarget(order: LiveOrder, prepMinutes: ReadonlyMap<string, number | null>) {
+  let slowest = 0;
+  for (const item of order.items) slowest = Math.max(slowest, prepMinutes.get(item.foodName) ?? 0);
+  return slowest ? { late: slowest, veryLate: Math.ceil(slowest * 1.5) } : FALLBACK;
+}
+```
+
+A ticket with a 25-minute biryani turns amber at 25 minutes and red at 38. A ticket of tea and samosas turns amber much sooner. Dishes without a prep time fall back to 15 and 30 minutes. Food in **Ready** is timed from when it was plated: amber at 5 minutes, red at 10, because it's going cold.
+
+Timers use the server's clock, not the tablet's, so two screens in the same kitchen always agree. See [Live updates](/how-it-works/live-updates).
+
+## Start service
+
+The first time the board opens, it offers **Start service**. One tap does three things browsers only allow after a tap:
+
+- **Unlocks sound**, so new tickets chime.
+- **Keeps the screen awake** for the whole service, using the [Wake Lock](https://developer.mozilla.org/docs/Web/API/Screen_Wake_Lock_API) API. If the tab is hidden and shown again, the lock is asked for again.
+- **Goes full-screen**, with no browser bars.
+
+Tickets update either way; Esc skips it.
+
+## Sound
+
+New tickets play a short two-note chime, made in the browser with the Web Audio API, so there's no sound file to load. Guest orders from a QR code get a higher chime, so the front of house can tell them apart. The mute button in the header is remembered on the device.
+
+## Food added mid-cook
+
+When a waiter adds items to an order that's already cooking, the ticket shows an orange **Added 2** tag and flashes twice, so the extra plate isn't missed. The kitchen remembers what was on the ticket when cooking started, to tell what's new.
+
+## Sold-out dishes
+
+**Dishes** in the header opens a list of every dish with a switch. Turning one off marks it sold out everywhere at once: the waiters' menu shows it as sold out, and guests can't order it from a QR code. A chip in the header lists what's currently off.
+
+## Incoming QR and online orders
+
+Orders placed by guests (from a table's QR code or the website) arrive as **pending**, waiting for someone on staff to say yes. They don't reach the kitchen until then.
+
+- An **Incoming** button appears in the top bar of every front-of-house screen while one is waiting, with a count. It turns amber after five minutes.
+- A chime and a toast announce each new one, and the chime repeats every two minutes while any are unanswered.
+- The panel shows each order's table or pickup, items and total, with **Accept**, **Decline** (with a reason) and **Open**.
+
+Accepting confirms the order, makes you its waiter, and sends it to the kitchen.
+
+## Files
+
+| | |
+| --- | --- |
+| Board | `src/components/kitchen/`: `kitchen-board.tsx`, `kitchen-ticket.tsx`, `use-bump.ts`, `start-service.tsx`, `dishes-sheet.tsx` |
+| Logic | <Source path="src/lib/kitchen.ts" />, <Source path="src/lib/kitchen-tickets.ts" />, tested in `kitchen.test.ts` |
+| Sound and screen | <Source path="src/lib/sound.ts" />, <Source path="src/lib/use-screen.ts" /> |
+| Incoming | `src/components/incoming/` |

@@ -3,3 +3,108 @@ title: "Orders and new order"
 description: "The orders list and board, an order's own page, and the point of sale for placing orders."
 icon: "/icons/receipt.svg"
 ---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+import { Shot } from "/snippets/shot.jsx";
+import { Pill } from "/snippets/pill.jsx";
+
+**Who uses it:** managers, cashiers and waiters. Waiters mostly on a phone.
+
+## The orders list
+
+<Shot name="orders" alt="The orders list: tabs for open, all, bills due, paid and cancelled, filters, and a table of orders with status pills" />
+
+Orders opens on **Open** for today. The tabs are Open, All, Bills due, Paid and Cancelled, each with a count. Filters cover source (staff, QR, online), table, date range, waiter for managers, and **Mine** for waiters. You can also search and sort by time or total.
+
+- On a wide screen it's a table. As the screen narrows, the waiter and time columns go first; on a phone each order becomes a card.
+- While the next page loads, the current one stays on screen, faded, so the list never jumps to empty.
+- A set filter turns orange, so it's obvious why the list looks short.
+- Managers get **Export** for a CSV of everything that matches.
+
+Each order's status is a pill in one of five tones, the same everywhere in the dashboard:
+
+<Pill tone="amber">Pending</Pill> <Pill tone="amber">Confirmed</Pill> <Pill tone="orange">Preparing</Pill> <Pill tone="green">Ready</Pill> <Pill tone="green">Served</Pill> <Pill tone="slate">Paid</Pill> <Pill tone="red">Cancelled</Pill>
+
+## The board
+
+<Shot name="orders-board" alt="The orders board: four columns, waiting, preparing, ready and served, with an order card in each" />
+
+**Board** (on a wide screen) shows the open orders in four columns: waiting, preparing, ready and served. Each card has one button for the next step the current role can take, like **Mark served** for a waiter. Cancelling is never the big button. A waiting time sits on every card, amber after 15 minutes and red after 30.
+
+When an order moves, its card glides to the next column instead of disappearing and reappearing.
+
+## An order's own page
+
+<Shot name="order" alt="An order's page: a six-step progress bar, the items with their prices, totals with service charge and VAT, payments, history and details" />
+
+`/en/orders/42` shows everything about one order:
+
+- **Progress** through the six steps, with the time of each. On a phone it's a bar and a sentence: "Kamal started cooking at 8:41 PM. You'll get a ping when it's ready."
+- **Items**, editable in place while the order is pending or confirmed. Change a quantity or remove a line, then **Save**. The last line can't be removed; cancel the order instead.
+- **Totals**: subtotal, service charge (dine-in only), VAT on food and service, total.
+- **Payments**, with **Print bill** and a link to take payment at the till. Managers can refund from here.
+- **History**: who moved it, and when.
+- **Details**: table, source, waiter, customer and phone. A manager can hand the order to a different waiter.
+
+**Cancelling** asks for a reason, with quick picks (Guest left, Ordered by mistake, Kitchen ran out, Duplicate order) and a text box. If money has been taken, the dialog explains that it has to be refunded first.
+
+## Taking an order
+
+The new-order screen works like a till. On a laptop or tablet the menu is on the left and the cart on the right; on a phone it's three steps.
+
+<Shot name="pos" alt="New order on a laptop: category chips and dish cards on the left, the cart with quantities and the total on the right" />
+
+<Shot name="pos" phone alt="Step 1 of 3 on a phone: pick a table, grouped by area, each showing free, bill due or its order" />
+
+1. **Where.** Dine-in or takeaway. Tables are grouped by area and show their state: free, booked from 9 PM, order #12, bill due. Takeaway asks for an optional name and phone.
+2. **Menu.** Dishes by category, or search. Sold-out dishes stay visible with a label, so a waiter can tell the guest rather than wonder where it went. Each line can have a note ("no onion").
+3. **Review and send.** Sending creates the order and confirms it in one go, so it goes straight to the kitchen.
+
+The totals in the cart are worked out the same way the API does it, so the number the waiter tells the guest is the number on the bill:
+
+```ts src/lib/pos.ts
+/** A percentage of an amount in paisa, rounded half up as the API rounds it. */
+export function percentOf(paisa: number, rate: number) {
+  const basisPoints = Math.round(rate * 100);
+  return Math.floor((2 * paisa * basisPoints + 10_000) / 20_000);
+}
+
+export function cartTotals(
+  lines: readonly CartLine[],
+  prices: ReadonlyMap<number, number>,
+  orderType: OrderType,
+  rates: Rates,
+) {
+  const food = lines.reduce(
+    (sum, line) => sum + toPaisa(prices.get(line.foodId) ?? 0) * line.quantity,
+    0,
+  );
+  const service = orderType === "dine_in" ? percentOf(food, rates.serviceChargePercent) : 0;
+  const vat = percentOf(food + service, rates.vatPercent);
+  // ...
+}
+```
+
+Service charge applies to dine-in only, VAT applies to food plus service, and both round half up to the paisa. A test checks the cart against totals the API produced.
+
+### Things that make it work in a rush
+
+- **The cart is saved on the phone** as you go. If the waiter is pulled away or the app is closed, the draft is still there. It's cleared when sent, and on sign-out.
+- **A table that already has an order** asks what you mean: add these items to order #12, or start a separate order. If the first order's food is already out, only "separate" is offered.
+- **Add items** on an order's page opens this same screen in add mode, for that order.
+- Starting from a table on the floor picks that table automatically.
+
+<Why>
+  I made sending confirm the order at once. A waiter standing at the table has already confirmed it with the guest; a second tap is just a chance to forget. "Pending" is kept for guests ordering from a QR code, where someone on staff should say yes first.
+</Why>
+
+## Files
+
+| | |
+| --- | --- |
+| List and board | `src/components/orders/`, URL filters in `use-order-filters.ts` |
+| Order page | `src/components/orders/detail/` |
+| New order | `src/components/pos/` |
+| Logic | <Source path="src/lib/orders.ts" />, <Source path="src/lib/order-detail.ts" />, <Source path="src/lib/pos.ts" />, <Source path="src/lib/pos-draft.ts" /> |
+| Status changes | `useOrderStatus`, `useSendOrder` in <Source path="src/lib/use-order-actions.ts" /> |

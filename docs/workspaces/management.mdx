@@ -3,3 +3,91 @@ title: "Menu, staff and settings"
 description: "Managing the menu, staff, expenses, restaurant settings and your own profile."
 icon: "/icons/bowl-food.svg"
 ---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+import { Shot } from "/snippets/shot.jsx";
+
+These five pages are where the restaurant is set up and looked after. They share one pattern: a list, and a side sheet that slides in to edit one item. Learn it once and the others are familiar.
+
+## Menu
+
+**Who uses it:** managers edit everything; chefs can mark dishes sold out; waiters and cashiers can read it.
+
+<Shot name="menu" alt="The menu page: a rail of categories with counts on the left, and a table of dishes with price, prep time and an availability switch" />
+
+- **Categories** sit in a rail on the left. Managers drag them into the order guests and waiters see. Only the categories that moved are saved. **Move up** and **Move down** in each row's menu do the same from the keyboard.
+- **Dishes** are a table: name, category, price, prep time and an availability switch. Filters show sold-out, featured or discounted dishes.
+- **The dish sheet** holds the photo, name, description, category, price, prep time and a discount: none, a percentage, or a fixed amount off. A live line shows what the guest pays, and the discount can't go over 100% or over the price.
+- **Photos** can be dropped or picked, cropped to a square, and uploaded at once. The dashboard shrinks a large photo to 1,600 pixels before sending it, and the API turns it into WebP.
+- **Deleting** a dish suggests marking it sold out instead. Deleting a category that still has dishes offers to hide it.
+
+The prep time matters beyond the menu: the kitchen's ticket timers use it. See [Kitchen](/workspaces/kitchen).
+
+## Staff
+
+**Who uses it:** managers.
+
+<Shot name="staff" alt="The staff list: each person with role, phone, sign-in state, tables and joined date" />
+
+Staff are **employees** (people who work here) with an optional **sign-in** (an account to use the dashboard). The list shows both in one row. A separate panel lists accounts with no employee record, usually the owner's admin.
+
+- **A person's page** shows their details, their tables, their sign-in, and this month's orders and sales. Salary is hidden until you tap **Show**.
+- **Sign-in actions**: create one, reset the password, change the role, turn it off and on again. A manager can't change other managers or admins.
+- **Mark as left** is permanent. It turns off their sign-in and frees their tables. Turning a sign-in off is the reversible choice.
+- **Passwords** can be typed or generated: three easy-to-read parts like `Mika-Rotu-48`, with a copy button. A reset password is shown once.
+
+```ts src/lib/staff.ts
+export function accountActions(actor: Actor, person: Pick<EmployeeOut, "account" | "isActive">) {
+  const { account } = person;
+  if (!person.isActive || account?.id === actor.id) return [];
+  if (!account) return ["account", "left"] satisfies AccountAction[];
+  const allowed = canManageAccount(actor.role, account.role);
+  const actions: AccountAction[] = [];
+  if (allowed) actions.push("password", "role", account.isActive ? "signInOff" : "signInOn");
+  // Leaving turns their sign-in off too, which needs the same right while it's on.
+  if (allowed || !account.isActive) actions.push("left");
+  return actions;
+}
+```
+
+## Expenses
+
+**Who uses it:** managers and cashiers add and edit; only managers delete.
+
+<Shot name="expenses" alt="The expenses page: this month's total against last month, spending by category as bars, and a list of expenses" />
+
+Expenses open on this month: the total against last month, the daily average, and spending by category as bars (click one to filter). Each expense has a title, amount, one of eight categories, a date (never in the future), who was paid, notes, and an optional photo of the receipt. Managers can download them as a CSV.
+
+## Settings
+
+**Who uses it:** managers.
+
+<Shot name="settings" alt="The settings page: labelled sections for the restaurant, hours, bills and guests, with a live receipt preview" />
+
+One page of labelled sections: the restaurant's name and contact details, opening hours (past midnight is fine), VAT and service charge, currency, what guests can do online (order from a QR code, order online, book a table, confirm bookings automatically), and the receipt footer.
+
+- A **live receipt** beside the form shows a sample bill with the new rates as you type.
+- A **save bar** appears with the number of unsaved changes, **Discard** and **Save**. Leaving the page with changes asks first.
+- Only the fields that changed are sent.
+- New VAT and service charge rates apply to new orders only. Orders already open keep the rates they were placed with.
+
+## Profile
+
+**Who uses it:** everyone.
+
+<Shot name="profile" alt="The profile page: name and phone, password change, this device's theme, language and sound, and account facts" />
+
+Your name and phone, a password change, and settings for this device: theme, language and the kitchen chime. **Sign out everywhere** ends your sessions on every device. Changing your password keeps you signed in here and signs out everywhere else; see [Sign-in and sessions](/how-it-works/sign-in-and-sessions).
+
+<Why>
+  Every one of these pages uses the same side sheet for editing, the same save and discard buttons, the same delete confirmation. A manager who learns the menu page already knows the staff page. It also meant building those pieces once and reusing them, which is most of what [Components](/design/components) is about.
+</Why>
+
+## Files
+
+| | |
+| --- | --- |
+| Pages | `src/components/menu/`, `staff/`, `expenses/`, `settings/`, `profile/` |
+| Shared pieces | `image-field.tsx` and `crop-dialog.tsx` (photos), `password-input.tsx` |
+| Logic | <Source path="src/lib/menu.ts" />, <Source path="src/lib/staff.ts" />, <Source path="src/lib/expenses.ts" />, <Source path="src/lib/settings.ts" />, tested in `management.test.ts` |

@@ -1,5 +1,81 @@
 ---
 title: "Overview and reports"
-description: "The manager's home page and the reports with charts and CSV exports."
+description: "The manager's home page with today's numbers, and the reports with charts and CSV exports."
 icon: "/icons/squares-four.svg"
 ---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+import { Shot } from "/snippets/shot.jsx";
+
+**Who uses it:** managers, and cashiers (without the sales chart and report links). It's where a manager lands after signing in.
+
+## Overview
+
+<Shot name="overview" alt="The overview: four figures for today, a sales chart for the last 14 days, open orders by status, and cards for orders that need attention" />
+
+The overview answers "how's tonight going?" at a glance, then "what needs me right now?" below it.
+
+**Today's figures.** Four cards across the top: sales so far, orders today, the average bill, and tables in use. Each has a short note under the number instead of a percentage change: "Last Wednesday: ৳16,930" under sales, "6 still open" under orders, "5 tables free" under tables. The API reports whole days, so comparing an evening in progress with a finished day as a percentage would mislead.
+
+**Sales by day.** A bar chart of the last 14 days, the month or the year. Today's bar is pale orange, because the day isn't over. Managers only.
+
+**Open orders.** One row per stage (pending, confirmed, preparing, ready, served) with the order numbers and where they are, and the total value on the tables.
+
+**Needs attention.** Up to three order cards, picked in this order:
+
+```ts src/lib/overview.ts
+return [
+  ...guest.map((order) => ({ order, reason: "guest" as const })),
+  ...ready.map((order) => ({ order, reason: "ready" as const })),
+  ...kitchen.map((order) => ({ order, reason: "kitchen" as const })),
+].slice(0, count);
+```
+
+Guest orders from a QR code or the website come first, because nobody has said yes to them yet. Then food that's ready and going cold, oldest first, counted from when it was plated. Then whatever has been in the kitchen longest. If nothing qualifies, the panel says everyone's caught up.
+
+**Tonight's bookings, top dishes, order sources.** The next four bookings (requests highlighted amber), the month's best sellers as bars, and a donut of today's orders by source: staff, QR or online.
+
+Figures count up from zero the first time you open the page in a session, and the cards rise in one after another. After that, a figure that changes under a live update glows once in light orange instead.
+
+## Reports
+
+<Shot name="reports" alt="The sales report: a range bar, four figures with changes against last month, and an area chart of sales with last month as a dashed line" />
+
+Reports are for managers. One page, four tabs, all built on the same range picker:
+
+| Tab | Shows |
+| --- | --- |
+| **Sales and profit** | Sales, orders, expenses and profit with their change; sales as an area chart with the previous period dashed; "of every ৳100" split into VAT, refunds, expenses and profit; a day-by-day table |
+| **Dishes** | Plates sold and food revenue, the top ten with share bars, totals by category, and slow dishes that sold nothing |
+| **Expenses** | Total spent, the biggest category, and cost per ৳100 of sales |
+| **Staff** | Each waiter's orders, sales, average and cancellations |
+
+### Ranges and comparisons
+
+Pick a preset (today, 7 days, this month, last month, this year) or any dates from the calendar. Every figure is compared with the matching earlier period, worked out by `compareRange()` in <Source path="src/lib/reports.ts" />:
+
+- **This month so far** compares with the same days of last month. On October 15, that's September 1 to 15, not all of September.
+- **A whole year** compares with the year before.
+- **Anything else** compares with the same number of days just before it.
+
+The chart groups by day for ranges up to a month, by week up to six months, then by month. You can override it.
+
+### CSV exports
+
+Every tab has a **CSV** button, and the page header has one for all orders in the range. The file needs your access token, so the dashboard fetches it in the background and saves it with a name like `sales-2026-10-01-to-2026-10-15.csv`.
+
+Everything about the view is in the URL (`?tab=dishes&range=lastMonth`), so a manager can bookmark "last month's dishes" or send it to the owner.
+
+<Why>
+  I left percentage changes off the overview on purpose. At 8 PM, "−40% vs yesterday" is just the evening still running, and it would make someone anxious for nothing. Reports compare whole periods, where the percentages mean something.
+</Why>
+
+## Files
+
+| | |
+| --- | --- |
+| Pages | `src/components/overview/`, `src/components/reports/` |
+| Charts | `src/components/charts/`, built on Recharts. Each also renders a hidden table for screen readers |
+| Figures | `src/components/stats/`: `KpiCard`, `CountUp`, `Delta`, `ShareBar` |
+| Logic | <Source path="src/lib/overview.ts" />, <Source path="src/lib/reports.ts" />, tested in `reports.test.ts` |
