@@ -3,3 +3,87 @@ title: "Deploy to Vercel"
 description: "Put the dashboard online on Vercel's free plan and point it at your API."
 icon: "/icons/cloud-arrow-up.svg"
 ---
+
+import { Why } from "/snippets/why.jsx";
+
+The dashboard runs on [Vercel](https://vercel.com)'s free Hobby plan. You deploy it from your own machine with the Vercel command-line tool, and it talks to an API you've already deployed. The [backend docs](https://bss-restaurant-fastapi.mintlify.app/guides/deploy-to-fastapi-cloud) cover putting the API online.
+
+<Note>
+  Vercel's Hobby plan is for personal, non-commercial projects. Usage limits pause the project rather than charge you, and this app's static pages use very little of them.
+</Note>
+
+## Before you start
+
+- The API is online and answers at `https://<your-api>/api/v1/health`.
+- You have a [Vercel account](https://vercel.com/signup).
+- The dashboard builds on your machine: `pnpm build` finishes without errors.
+
+## Deploy
+
+<Steps>
+  <Step title="Install the Vercel CLI and sign in">
+    ```bash
+    npm install -g vercel
+    vercel login
+    ```
+  </Step>
+  <Step title="Link the folder to a Vercel project">
+    From the dashboard's folder:
+
+    ```bash
+    vercel link
+    ```
+
+    Answer the questions to create a new project. Vercel detects Next.js and pnpm on its own. This writes a `.vercel/` folder, which is already in `.gitignore`.
+  </Step>
+  <Step title="Tell it where the API is">
+    ```bash
+    vercel env add NEXT_PUBLIC_API_ORIGIN production
+    ```
+
+    Paste your API's address without `/api/v1`, for example `https://my-api.fastapicloud.dev`. Leave the demo variables unset in production: the sign-in buttons for demo accounts are for local use.
+  </Step>
+  <Step title="Deploy">
+    ```bash
+    vercel deploy --prod
+    ```
+
+    The build runs on Vercel and prints the address when it's done, something like `https://your-project.vercel.app`.
+  </Step>
+  <Step title="Let the API trust the dashboard">
+    The API refuses browser requests from sites it doesn't know (that's [CORS](/how-it-works/talking-to-the-api#cors-briefly)). Add the dashboard's address to the API's `CORS_ORIGINS` and restart or redeploy the API. On FastAPI Cloud:
+
+    ```bash
+    fastapi cloud env set CORS_ORIGINS=https://your-project.vercel.app
+    ```
+
+    If you also run the dashboard locally against the same API, list both, separated by a comma.
+  </Step>
+</Steps>
+
+## Put the server routes next to the API
+
+The three session routes run on Vercel's servers, and each one calls the API. If the API runs in AWS `us-east-1`, as this project's does on FastAPI Cloud, set the project's function region to **Washington, D.C. (iad1)** in the Vercel dashboard under **Settings → Functions**. Every token refresh then takes a short hop instead of crossing an ocean.
+
+## Check it works
+
+1. Open the address Vercel printed. You should be redirected to `/en/login`.
+2. Sign in. If you get a network error, it's almost always `CORS_ORIGINS`.
+3. Open the same page in a second tab, and wait for the **Live** chip in the top bar.
+4. Place an order in one tab and watch it arrive in the other.
+
+## Updating it
+
+Run `vercel deploy --prod` again after each change. Each deploy gets its own address too, so you can open an older one if something goes wrong, and promote it back from the Vercel dashboard.
+
+If the API changes, refresh the types first, then build and deploy:
+
+```bash
+pnpm api:pull https://my-api.fastapicloud.dev
+pnpm api:types
+pnpm typecheck
+```
+
+<Why>
+  I deploy from my machine instead of connecting the GitHub repository to Vercel. Pushes to GitHub then don't redeploy anything by accident, and I decide when a version goes live. Connecting the repository works too, if you'd rather every push to `main` deploy itself.
+</Why>

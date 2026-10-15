@@ -1,5 +1,49 @@
 ---
 title: "Scripts"
-description: "What each pnpm script does and when to run it."
+description: "What each pnpm command does and when to run it."
 icon: "/icons/terminal-window.svg"
 ---
+
+import { Source } from "/snippets/source.jsx";
+
+Every command is `pnpm <name>`, defined in <Source path="package.json" />.
+
+## Everyday
+
+| Command | What it does | When |
+| --- | --- | --- |
+| `pnpm install` | Installs the packages from `pnpm-lock.yaml` | After cloning, and after pulling changes to `package.json` |
+| `pnpm dev` | Starts the dev server on [localhost:3000](http://localhost:3000), reloading as you save | While working |
+| `pnpm build` | Builds the production version into `.next/` and lists every route | Before deploying, and before `pnpm e2e` |
+| `pnpm start` | Serves that production build on port 3000 | To try the real build locally |
+
+## Checks
+
+| Command | What it does |
+| --- | --- |
+| `pnpm lint` | ESLint, with Next.js's recommended rules for React and performance |
+| `pnpm typecheck` | Generates the route types Next.js knows about (`next typegen`), then type-checks the whole project (`tsc --noEmit`) |
+| `pnpm format` | Rewrites every file in the project's style with Prettier, including sorting Tailwind classes |
+| `pnpm format:check` | Reports files that aren't formatted, without changing them |
+| `pnpm test` | Runs the Vitest unit tests once |
+| `pnpm test:watch` | Runs them again whenever you save |
+| `pnpm e2e` | Runs the Playwright end-to-end tests. Needs `pnpm build` first and the local API. See [Testing](/guides/testing) |
+
+## The API's schema
+
+| Command | What it does |
+| --- | --- |
+| `pnpm api:pull [origin]` | Downloads the API's `openapi.json` into `src/lib/api/openapi.json`. Without an origin it uses the live API; pass `http://localhost:8000` to use your local one |
+| `pnpm api:types` | Turns that file into TypeScript types in `src/lib/api/schema.d.ts` |
+
+Run both after the API changes, then `pnpm typecheck` to see what in the dashboard needs to follow. They're separate on purpose: the saved schema only changes when you pull it, so a change on the API's side never surprises a build. More in [Talking to the API](/how-it-works/talking-to-the-api#types-generated-from-the-api).
+
+## Deploying
+
+Deploying uses the Vercel CLI rather than a script:
+
+```bash
+vercel deploy --prod
+```
+
+See [Deploy to Vercel](/guides/deploy-to-vercel).

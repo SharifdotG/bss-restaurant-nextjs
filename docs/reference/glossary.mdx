@@ -1,0 +1,111 @@
+---
+title: "Glossary"
+description: "Plain explanations of the terms these docs use, from App Router to WebSocket."
+icon: "/icons/book-open-text.svg"
+---
+
+Short explanations of the technical words used across these docs, in alphabetical order. Each links to where it matters in this project.
+
+### Access token
+
+A short-lived pass the dashboard sends with every request to prove who you are. Here it lasts 15 minutes. See [Sign-in and sessions](/how-it-works/sign-in-and-sessions).
+
+### API
+
+Application Programming Interface: a program other programs talk to. Here, the BSS Restaurant API is the FastAPI backend that stores everything and enforces the rules. The dashboard is one program that talks to it. See the [backend docs](https://bss-restaurant-fastapi.mintlify.app).
+
+### App Router
+
+The way Next.js turns folders into pages: `src/app/[locale]/(app)/orders/page.tsx` becomes `/en/orders`. See [Project structure](/project-structure#how-a-url-becomes-a-page).
+
+### BroadcastChannel
+
+A browser feature that lets tabs of the same site send each other messages. The dashboard uses it so every tab hears about sign-ins, sign-outs and token refreshes.
+
+### Cache
+
+A saved copy of something fetched earlier, so it can be shown instantly next time. TanStack Query keeps one for API data. See [Data and caching](/how-it-works/data-and-caching).
+
+### CORS
+
+Cross-Origin Resource Sharing. Browsers block a page on one site from reading responses from another site's API unless that API says it's allowed. The API lists the sites it trusts in `CORS_ORIGINS`. See [CORS, briefly](/how-it-works/talking-to-the-api#cors-briefly).
+
+### CSRF
+
+Cross-Site Request Forgery: an attack where another website makes your browser send a request to a site you're signed in to. The dashboard's session routes refuse requests that don't come from its own pages.
+
+### CSS variable
+
+A named value in CSS, like `--primary`, that other styles can refer to. All the dashboard's colours are CSS variables, which is how dark mode can swap them all at once. See [Colour](/design/colour).
+
+### Endpoint
+
+One address on the API that does one thing, like `GET /api/v1/orders` (list orders) or `POST /api/v1/orders/{order_id}/payments` (take a payment).
+
+### httpOnly cookie
+
+A cookie that the browser sends to the server but won't show to JavaScript on the page. The refresh token is kept in one, so a script injected into the page couldn't read it.
+
+### Idempotency
+
+When doing something twice has the same effect as doing it once. Taking a payment isn't idempotent: sending it twice could charge twice. That's why the dashboard never retries a change automatically.
+
+### JWT
+
+JSON Web Token: a small piece of signed data, like "user 7, a waiter, valid until 9:45". The API can check the signature without looking anything up, which makes it fast, but it can't be cancelled before it expires. The access token is a JWT.
+
+### Middleware
+
+Code that runs on every request or response, around the main work. The dashboard's API client has one piece that adds the access token and retries once after refreshing it.
+
+### Mutation
+
+In TanStack Query, a request that changes something on the server: placing an order, taking a payment. The opposite of a query.
+
+### OKLCH
+
+A way of writing colours as lightness, chroma (colourfulness) and hue. Unlike hex codes, two colours with the same lightness value really do look equally light, which makes building a matching dark theme much easier. See [Colour](/design/colour).
+
+### OpenAPI
+
+A standard format for describing an API: every endpoint, its parameters and the shape of its answers. FastAPI writes one automatically, and the dashboard generates its TypeScript types from it.
+
+### Optimistic update
+
+Changing the screen before the server answers, and undoing it if the server says no. Fast, but briefly untrue, so the dashboard only uses it for marking dishes sold out and reordering categories.
+
+### Paisa
+
+One hundredth of a taka. All money maths in the dashboard happens in whole paisa to avoid rounding errors. See [Money](/how-it-works/language-money-dates#money).
+
+### Query
+
+In TanStack Query, a request that reads data, with a key that names it, like `["order", 42]`. The opposite of a mutation.
+
+### Refresh token
+
+A longer-lived token (7 days here) used only to get a new access token. It works once; using it again revokes the whole session. See [Sign-in and sessions](/how-it-works/sign-in-and-sessions#the-hard-part-several-tabs).
+
+### Role
+
+What kind of staff member an account belongs to: admin, manager, cashier, waiter or chef. It decides what they can open and do. See [Roles and permissions](/how-it-works/roles-and-permissions).
+
+### Server component and client component
+
+In Next.js, server components are rendered on the server and send plain HTML; client components (marked `"use client"`) run in the browser and can be interactive. Almost every screen in the dashboard is a client component inside a thin server-rendered page.
+
+### Static page
+
+A page whose HTML is built once, at build time, rather than on every visit. The dashboard's pages are static shells that fetch their data in the browser, which keeps hosting cheap and fast.
+
+### Token rotation
+
+Giving out a new refresh token every time one is used, so each is only good once. If an old one is ever used again, the API knows something is wrong.
+
+### Web Lock
+
+A browser feature that lets only one tab at a time run a piece of code with a given name. The dashboard uses it so only one tab refreshes the session at once.
+
+### WebSocket
+
+A connection between the browser and a server that stays open, so the server can send messages whenever something happens instead of waiting to be asked. The dashboard's live feed is a WebSocket. See [Live updates](/how-it-works/live-updates).

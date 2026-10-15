@@ -1,5 +1,173 @@
 ---
 title: "Add a page"
-description: "Add a new screen end to end: route, permissions, navigation and translations."
+description: "Add a new screen end to end: permissions, route, navigation, data and translations."
 icon: "/icons/file-plus.svg"
 ---
+
+import { Source } from "/snippets/source.jsx";
+
+This guide adds a **Suppliers** page for managers, listing the restaurant's suppliers. It's an example: the API doesn't have suppliers yet, so step 1 assumes you've added a `GET /api/v1/suppliers` endpoint to it first. The other steps are the same for any page.
+
+The good news: most of the steps are enforced by TypeScript. Add the page's name in step 2 and the build will point at every list that still needs an entry.
+
+<Steps>
+  <Step title="Update the API types">
+    With the new endpoint running locally:
+
+    ```bash
+    pnpm api:pull http://localhost:8000
+    pnpm api:types
+    ```
+
+    `api.GET("/api/v1/suppliers")` now type-checks, and its response type is known.
+  </Step>
+  <Step title="Register the page and who can open it">
+    In <Source path="src/lib/permissions.ts" />, add `"suppliers"` to the `Page` type, then fill in the three lists that describe a page:
+
+    ```ts src/lib/permissions.ts
+    export const PAGES: readonly Page[] = [
+      // ...
+      "expenses",
+      "suppliers",
+      "reports",
+      // ...
+    ];
+
+    const PAGE_ROLES: Record<Page, readonly Role[]> = {
+      // ...
+      suppliers: MANAGERS,
+    };
+
+    export const PAGE_PATHS = {
+      // ...
+      suppliers: "/suppliers",
+    } as const satisfies Record<Page, string>;
+    ```
+
+    `PAGE_ROLES` and `PAGE_PATHS` are typed as covering every page, so TypeScript complains until both have an entry. The [sign-in check](/how-it-works/sign-in-and-sessions#before-a-page-even-loads) in `proxy.ts` reads `PAGE_PATHS` too, so the new address is protected automatically.
+  </Step>
+  <Step title="Give it an icon and a place in the sidebar">
+    In `src/components/shell/page-icon.tsx`, add a [Phosphor](https://phosphoricons.com) icon to `PAGE_ICONS`:
+
+    ```ts
+    import { TruckIcon } from "@phosphor-icons/react";
+
+    export const PAGE_ICONS: Record<Page, Icon> = {
+      // ...
+      suppliers: TruckIcon,
+    };
+    ```
+
+    Then add it to the **manage** group in <Source path="src/lib/navigation.ts" />. The sidebar, the More sheet on phones and the command palette all read from here, and they filter by role on their own.
+
+    ```ts src/lib/navigation.ts
+    const GROUPS: NavGroup[] = [
+      { id: "service", pages: ["overview", "orders", "floor", "kitchen", "billing", "reservations"] },
+      { id: "manage", pages: ["menu", "tables", "staff", "expenses", "suppliers", "reports", "settings"] },
+    ];
+    ```
+  </Step>
+  <Step title="Add its words in both languages">
+    Every page needs a name in `nav` (the sidebar, the browser tab, the breadcrumb) and a line in `pages` (the subtitle under the title). Add them to both files, plus a section for the page's own text:
+
+    ```json messages/en.json
+    "nav": { "suppliers": "Suppliers" },
+    "pages": { "suppliers": "Who the restaurant buys from" },
+    "suppliers": { "list": "All suppliers", "empty": "No suppliers yet", "add": "Add supplier" }
+    ```
+
+    ```json messages/bn.json
+    "nav": { "suppliers": "সরবরাহকারী" },
+    "pages": { "suppliers": "রেস্তোরাঁ যাদের কাছ থেকে কেনে" },
+    "suppliers": { "list": "সব সরবরাহকারী", "empty": "এখনও কোনো সরবরাহকারী নেই", "add": "সরবরাহকারী যোগ করুন" }
+    ```
+
+    Missing a key in `bn.json`? `pnpm test` fails and says which. See [Add a translation](/guides/add-a-translation).
+  </Step>
+  <Step title="Fetch the data">
+    Add a query to <Source path="src/lib/api/queries.ts" />. Start the key with the resource's name so it's easy to refresh later:
+
+    ```ts src/lib/api/queries.ts
+    export const suppliersQuery = queryOptions({
+      queryKey: ["suppliers"],
+      queryFn: ({ signal }) => unwrap(api.GET("/api/v1/suppliers", { signal })),
+      staleTime: 5 * 60_000,
+    });
+    ```
+  </Step>
+  <Step title="Build the page">
+    Create `src/components/suppliers/suppliers-page.tsx`. `PageFrame` checks the role and draws the header; `Panel` is the card; the rest is ordinary React:
+
+    ```tsx src/components/suppliers/suppliers-page.tsx
+    "use client";
+
+    import { PlusIcon, TruckIcon } from "@phosphor-icons/react";
+    import { useQuery } from "@tanstack/react-query";
+    import { useTranslations } from "next-intl";
+    import { EmptyState } from "@/components/empty-state";
+    import { Panel } from "@/components/panel";
+    import { PageFrame } from "@/components/shell/page-frame";
+    import { Button } from "@/components/ui/button";
+    import { Skeleton } from "@/components/ui/skeleton";
+    import { suppliersQuery } from "@/lib/api/queries";
+
+    export function SuppliersPage() {
+      const t = useTranslations("suppliers");
+      const suppliers = useQuery(suppliersQuery);
+
+      return (
+        <PageFrame
+          page="suppliers"
+          actions={
+            <Button>
+              <PlusIcon weight="bold" />
+              {t("add")}
+            </Button>
+          }
+        >
+          <Panel title={t("list")}>
+            {suppliers.isPending ? (
+              <Skeleton className="h-40" />
+            ) : suppliers.data?.items.length ? (
+              <ul>{/* one row per supplier */}</ul>
+            ) : (
+              <EmptyState icon={TruckIcon} title={t("empty")} />
+            )}
+          </Panel>
+        </PageFrame>
+      );
+    }
+    ```
+
+    Check the props of `EmptyState` and `Panel` in their files: the editor will show them as you type.
+  </Step>
+  <Step title="Add the route">
+    Create `src/app/[locale]/(app)/suppliers/page.tsx`. It's the same two lines as every other page:
+
+    ```tsx src/app/[locale]/(app)/suppliers/page.tsx
+    import { SuppliersPage } from "@/components/suppliers/suppliers-page";
+    import { pageRoute } from "../app-route";
+
+    const route = pageRoute("suppliers", SuppliersPage);
+
+    export const generateMetadata = route.generateMetadata;
+    export default route.Route;
+    ```
+  </Step>
+  <Step title="Check it">
+    ```bash
+    pnpm typecheck
+    pnpm test
+    pnpm dev
+    ```
+
+    The permission and navigation tests list every page, so update `permissions.test.ts` and `navigation.test.ts` with the new page's expectations. Then sign in as a manager (the page is in the sidebar) and as a waiter (it isn't, and typing `/en/suppliers` shows "Only managers can open Suppliers").
+  </Step>
+</Steps>
+
+## Optional extras
+
+- **A keyboard shortcut:** add a letter to `GO_KEYS` in `src/lib/navigation.ts`, and <kbd>G</kbd> then that letter opens the page.
+- **A phone tab:** add the page to a role's `TABS` in the same file. Otherwise it appears under **More**.
+- **URL state:** filters and tabs belong in the address. Copy a small hook like `src/components/expenses/use-expenses-url.ts`.
+- **Live updates:** if the API sends events for the new resource, invalidate `["suppliers"]` in `src/lib/live/query-sync.ts`.

@@ -3,3 +3,104 @@ title: "Add a translation"
 description: "Add or change text in English and Bangla without breaking either."
 icon: "/icons/globe-simple.svg"
 ---
+
+import { Source } from "/snippets/source.jsx";
+
+All the dashboard's text lives in two files, `messages/en.json` and `messages/bn.json`. They have exactly the same shape: the same keys, in the same groups, with the English in one and the Bangla in the other. Components never contain words of their own.
+
+## Change existing text
+
+Find the words in `en.json` (search for the English you see on screen), change them, and change the same key in `bn.json`. That's it. `pnpm dev` picks the change up straight away.
+
+## Add new text
+
+<Steps>
+  <Step title="Add the key to both files">
+    Put it in the group for the screen it belongs to. Here, a new hint on the kitchen board:
+
+    ```json messages/en.json
+    "kitchen": {
+      "quietHint": "Nothing to cook. New tickets chime when they arrive."
+    }
+    ```
+
+    ```json messages/bn.json
+    "kitchen": {
+      "quietHint": "রান্নার কিছু নেই। নতুন টিকিট এলে শব্দ হবে।"
+    }
+    ```
+  </Step>
+  <Step title="Use it">
+    ```tsx
+    const t = useTranslations("kitchen");
+
+    <p>{t("quietHint")}</p>
+    ```
+
+    The keys are typed from `en.json` (set up in `src/global.d.ts`), so a typo in `t("quietHnit")` is a build error, and the editor suggests the keys as you type.
+  </Step>
+  <Step title="Run the tests">
+    ```bash
+    pnpm test
+    ```
+
+    <Source path="src/i18n/messages.test.ts" /> checks that both files have the same keys and that every message uses the same placeholders in both languages. If you forgot the Bangla, it tells you which key.
+  </Step>
+</Steps>
+
+## Placeholders, plurals and numbers
+
+Messages use [ICU message syntax](https://next-intl.dev/docs/usage/messages). Values go in curly braces and are passed when you call `t()`:
+
+```json messages/en.json
+"moved": { "served": "Order {n} served" }
+```
+
+```tsx
+t("moved.served", { n: 22 }); // "Order 22 served"
+```
+
+English needs plural forms; Bangla doesn't have them. So the same message looks different in the two files:
+
+```json messages/en.json
+"lockedBody": "Sign-in for {email} is paused for {minutes, plural, one {# minute} other {# minutes}}. You can try again at {time}."
+```
+
+```json messages/bn.json
+"lockedBody": "{email} দিয়ে সাইন-ইন {minutes, number} মিনিটের জন্য বন্ধ। {time}-এ আবার চেষ্টা করতে পারবেন।"
+```
+
+<Warning>
+  In Bangla, write numbers as `{n, number}`, not `{n}`. A bare `{n}` prints Latin digits (5) instead of Bangla ones (৫). The tests check this for the error messages, and it's worth doing everywhere.
+</Warning>
+
+## Money, dates and order numbers
+
+Don't format these inside a message. Format them first with `useFormat()` (from `src/lib/use-format.ts`), then pass the result in:
+
+```tsx
+const format = useFormat();
+t("due", { amount: format.money(order.balanceDue) }); // "৳450.00 due" or "৳৪৫০.০০ বাকি"
+```
+
+`format.money`, `format.time`, `format.date` and `format.orderNo` all follow the current language and Dhaka time. See [Language, money and dates](/how-it-works/language-money-dates).
+
+## Error messages from the API
+
+When the API refuses something, it sends a `code`. Each code has its message under `errors.codes`:
+
+```json messages/en.json
+"errors": {
+  "codes": {
+    "table_in_use": "This table has orders or bookings. Switch it off instead."
+  }
+}
+```
+
+If the API adds a new code, add a message for it in both files. Until you do, people see a general message for the kind of error (403, 409, 500 and so on) from `errors.generic`, which is safe but less helpful.
+
+## Tips for the Bangla
+
+- Keep it as short as the English. Buttons and pills have limited room, and Bangla words are often longer.
+- Use the words staff actually say. Some English terms (অর্ডার, বিল, ফ্লোর) are what people use at work, and a formal translation would read oddly.
+- Check the screen after changing it, in both languages: <kbd>Ctrl</kbd> <kbd>K</kbd> then "Show in বাংলা" swaps without leaving the page.

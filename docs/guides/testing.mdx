@@ -1,5 +1,85 @@
 ---
 title: "Testing"
-description: "Unit tests with Vitest and end-to-end tests with Playwright."
+description: "Unit tests with Vitest, end-to-end tests with Playwright, and the checks to run before a deploy."
 icon: "/icons/test-tube.svg"
 ---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+
+There are two kinds of tests. **Unit tests** check the logic on its own, in milliseconds, with no browser and no API. **End-to-end tests** drive a real browser through a whole service against a real API.
+
+## Unit tests
+
+```bash
+pnpm test         # run them all once
+pnpm test:watch   # re-run the affected tests as you save
+```
+
+[Vitest](https://vitest.dev) runs 232 tests in 22 files in a few seconds. They sit next to the code they test, like `src/lib/money.ts` and `src/lib/money.test.ts`, and they cover the parts where a mistake costs money or trust:
+
+| File | Covers |
+| --- | --- |
+| `money.test.ts` | Paisa maths, splitting bills, reading typed amounts, ৳ formatting in both languages |
+| `permissions.test.ts` | The whole page and action table for every role, and which order moves each role gets |
+| `session/client.test.ts` | Two tabs refreshing at once rotate the token only once; an unreachable server doesn't sign you out |
+| `live/state.test.ts` | Snapshots, out-of-order events, paid orders leaving the board |
+| `billing.test.ts` | The bill queue, quick cash amounts, shares, the till's checks |
+| `kitchen.test.ts` | Columns, the undo window, ticket timers, added items |
+| `pos.test.ts` | Cart lines and totals that match the API to the paisa |
+| `reports.test.ts` | Date ranges, comparisons, axis rounding |
+| `reservations.test.ts` | Opening hours past midnight, the grid's lanes, late bookings |
+| `messages.test.ts` | English and Bangla have the same keys and placeholders |
+
+A test reads like a sentence about what should be true:
+
+```ts src/lib/money.test.ts
+describe("formatMoney", () => {
+  it("puts the symbol first with lakh grouping", () => {
+    expect(formatMoney(123456.5, "en")).toBe("৳1,23,456.50");
+    expect(formatMoney(123456.5, "bn")).toBe("৳১,২৩,৪৫৬.৫০");
+  });
+});
+```
+
+The session tests need things Node doesn't have, like Web Locks and `localStorage`. They run in a fake browser ([happy-dom](https://github.com/capricorn86/happy-dom)), with stand-ins for Web Locks and `fetch` in <Source path="src/test/fakes.ts" />.
+
+## End-to-end tests
+
+[Playwright](https://playwright.dev) opens Microsoft Edge (the copy already installed on the machine, so nothing is downloaded) and clicks through the app like a person would.
+
+You need the local API running with the demo data (see the [Quickstart](/quickstart)) and the demo sign-in buttons switched on in `.env.local`, because the tests sign in with them. Then:
+
+```bash
+pnpm build
+pnpm e2e
+```
+
+The tests run against the production build, which `pnpm e2e` starts if it isn't already running.
+
+| File | Checks |
+| --- | --- |
+| `e2e/roles.spec.ts` | Each role lands on its own page; a signed-out visitor is sent to sign in and comes back to the page they wanted |
+| `e2e/two-tabs.spec.ts` | Two tabs reloading at the same moment with an old token both stay signed in |
+| `e2e/full-service.spec.ts` | A waiter sends an order, the chef cooks it, the waiter serves it, the cashier splits it between cash and card and opens the receipt, and the manager's average-bill figure updates |
+
+<Note>
+  The API allows five sign-ins per account in five minutes, and the tests run one at a time for the same reason. Running the whole suite twice in a row hits that limit; wait a few minutes, or restart the API.
+</Note>
+
+<Why>
+  I test logic, not looks. The maths behind the till, the permission table and the session rules each have tests written alongside them, because getting them wrong is expensive and they're plain functions that are easy to test. The screens themselves are checked by running a real service end to end, which catches the mistakes that matter there: a button that isn't offered, an order that never reaches the kitchen.
+</Why>
+
+## Before you deploy
+
+Run these four, in this order. The deploy guide assumes they pass.
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+```
+
+`pnpm typecheck` first generates the route types Next.js knows about, then checks the whole project with TypeScript. `pnpm build` also lists every route and whether it's static (○) or a server function (ƒ), which is a quick way to see that a change hasn't made a page dynamic by accident.

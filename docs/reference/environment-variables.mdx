@@ -3,3 +3,61 @@ title: "Environment variables"
 description: "Every variable the dashboard reads, what it does and its default."
 icon: "/icons/brackets-curly.svg"
 ---
+
+import { Source } from "/snippets/source.jsx";
+
+The dashboard reads three variables. Locally they go in `.env.local` (copy `.env.example` to start); on Vercel they're set with `vercel env add` or in the project settings.
+
+All three start with `NEXT_PUBLIC_`, which tells Next.js they're safe to send to the browser, and they are: none of them is a secret. Next.js reads them when the dev server starts or the app is built, so after changing one, restart `pnpm dev` or redeploy.
+
+## `NEXT_PUBLIC_API_ORIGIN`
+
+Where the BSS Restaurant API lives, **without** `/api/v1` and without a trailing slash.
+
+| | |
+| --- | --- |
+| Default | `http://localhost:8000` |
+| Example | `https://my-api.fastapicloud.dev` |
+| Read in | <Source path="src/lib/api/config.ts" /> |
+
+Everything is built from it: REST requests go to `<origin>/api/v1/...`, the live feed to `wss://<origin>/api/v1/live` (or `ws://` locally), and photos stored on the API's own disk to `<origin>/media/...`.
+
+The API must list the dashboard's own address in its `CORS_ORIGINS`, or the browser will block the requests. See [CORS, briefly](/how-it-works/talking-to-the-api#cors-briefly).
+
+## `NEXT_PUBLIC_DEMO_LOGIN`
+
+Shows one-click sign-in buttons for the demo accounts (Manager, Waiter, Chef, Cashier) on the sign-in page.
+
+| | |
+| --- | --- |
+| Default | `0` (off) |
+| On | `1` |
+| Read in | <Source path="src/lib/demo.ts" /> |
+
+The buttons sign in as `manager@example.com`, `waiter@example.com`, `chef@example.com` and `cashier@example.com`, the accounts the API's `seed-demo` command creates. They only appear when this is `1` **and** the password below is set.
+
+## `NEXT_PUBLIC_DEMO_PASSWORD`
+
+The password `seed-demo` printed for the demo accounts.
+
+| | |
+| --- | --- |
+| Default | empty |
+| Read in | <Source path="src/lib/demo.ts" /> |
+
+<Warning>
+  Because it starts with `NEXT_PUBLIC_`, this password is shipped to every visitor's browser. That's fine for a local copy with demo data. Leave both demo variables unset in production unless the API stops demo accounts from changing their password, their profile, or other people's accounts. Otherwise anyone could sign in as the demo manager and change things for everyone.
+</Warning>
+
+## Example `.env.local`
+
+```bash .env.local
+# Where the BSS Restaurant API lives, without /api/v1
+NEXT_PUBLIC_API_ORIGIN=http://localhost:8000
+
+# "Look around as…" buttons on the sign-in page, for the seeded demo accounts.
+NEXT_PUBLIC_DEMO_LOGIN=1
+NEXT_PUBLIC_DEMO_PASSWORD=the-password-seed-demo-printed
+```
+
+`.env.local` is ignored by git, so your values stay on your machine. `.env.example` is the committed template.

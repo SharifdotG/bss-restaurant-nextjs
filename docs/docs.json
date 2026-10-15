@@ -78,7 +78,7 @@
       },
       {
         "group": "Reference",
-        "pages": ["reference/environment-variables", "reference/scripts"]
+        "pages": ["reference/environment-variables", "reference/scripts", "reference/glossary"]
       }
     ]
   },
