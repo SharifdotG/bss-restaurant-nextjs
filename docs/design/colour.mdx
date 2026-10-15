@@ -1,0 +1,92 @@
+---
+title: "Colour"
+description: "One orange, cool slate neutrals and five state tones, in light and dark."
+icon: "/icons/palette.svg"
+---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+import { Swatches } from "/snippets/swatches.jsx";
+import { Pill } from "/snippets/pill.jsx";
+
+Every colour in the dashboard is a CSS variable defined in <Source path="src/app/tokens.css" />, once for light mode and once for dark. Components never use a raw colour; they use the variable's name through Tailwind, like `bg-card` or `text-muted-foreground`. Change a value in that file and every screen follows.
+
+The values are written in [OKLCH](/reference/glossary#oklch), a colour format where lightness means what it looks like it means. That makes it easy to build a dark theme with the same contrast as the light one. The hex codes below are close equivalents, for reference.
+
+## Surfaces and text
+
+<Swatches
+  rows={[
+    { token: "background", light: "#f3f6fa", dark: "#0c1015", use: "The page, and the sidebar, which sits on the same ground" },
+    { token: "card", light: "#ffffff", dark: "#15181f", use: "Cards, inputs, popovers. Lighter than the page in both themes" },
+    { token: "foreground", light: "#303846", dark: "#f0f2f5", use: "Body text and headings" },
+    { token: "muted-foreground", light: "#636c7b", dark: "#9da5b1", use: "Secondary lines, labels, placeholders" },
+    { token: "border", light: "#e3e6ec", dark: "#252930", use: "Dividers and table rules. Cards have no border, just a soft shadow" },
+  ]}
+/>
+
+## The orange
+
+One orange, in two strengths, with two soft companions.
+
+<Swatches
+  rows={[
+    { token: "primary", light: "#d63b00", dark: "#d63b00", use: "Orange 600: the primary button, the current page's tile, figure icons. The only orange that carries white text" },
+    { token: "brand", light: "#ff673d", dark: "#ff673d", use: "Orange 500: chart marks, progress, the focus ring. Never used for text on white" },
+    { token: "brand-track", light: "#ffe8df", dark: "#3e1f16", use: "The soft track behind every orange 500 fill" },
+    { token: "primary-soft", light: "#fff5f1", dark: "#3f1a0f", use: "Soft buttons, pressed chips, text selection" },
+    { token: "primary-soft-foreground", light: "#b02d00", dark: "#ffaf93", use: "Text on the soft orange, and links" },
+  ]}
+/>
+
+<Why>
+  Orange 500 is the brand colour, but white text on it fails contrast, and orange text on white is worse. So buttons use a deeper orange 600 that white text reads clearly on, and the brighter 500 is kept for things that aren't words: bars, progress, the focus ring.
+</Why>
+
+## State tones
+
+Five tones carry every status in the app. Each has a soft background (`-subtle`), a text colour (`-text`), and a solid for dots and icons. Components don't pick a colour for a status themselves: <Source path="src/lib/orders.ts" /> and <Source path="src/lib/reservations.ts" /> map each status to a tone and an icon in one place.
+
+<Swatches
+  rows={[
+    { token: "tone-amber-subtle", light: "#fff6e9", dark: "#362202", use: "Amber: waiting. Pending and confirmed orders, booking requests, reconnecting" },
+    { token: "tone-orange-subtle", light: "#fff5f1", dark: "#3d1c13", use: "Orange: in the kitchen. Preparing, seated" },
+    { token: "tone-green-subtle", light: "#e6ffec", dark: "#0e2e19", use: "Green: done well. Ready, served, confirmed bookings, live" },
+    { token: "tone-slate-subtle", light: "#ebeef2", dark: "#22272d", use: "Slate: finished or idle. Paid, completed, cancelled bookings" },
+    { token: "tone-red-subtle", light: "#fff5f5", dark: "#3d1a1c", use: "Red: a problem. Cancelled orders, no-shows, offline, delete" },
+  ]}
+/>
+
+<Pill tone="amber">Pending</Pill> <Pill tone="orange">Preparing</Pill> <Pill tone="green">Ready</Pill> <Pill tone="slate">Paid</Pill> <Pill tone="red">Cancelled</Pill>
+
+The pills above are this site's copy of the dashboard's `Pill` component, using the same tokens. In the app each one also has a duotone icon.
+
+## Charts
+
+<Swatches
+  rows={[
+    { token: "chart-1", light: "#ff673d", dark: "#ee5d2b", use: "The main series: sales, this period" },
+    { token: "chart-2", light: "#a7aeba", dark: "#747e8d", use: "The comparison: last period, second series" },
+    { token: "chart-3", light: "#ffaf93", dark: "#8c3a1f", use: "A part still in progress, like today's unfinished bar" },
+    { token: "chart-4", light: "#747e8d", dark: "#a7aeba", use: "A fourth series" },
+  ]}
+/>
+
+Charts never use the state tones, so red on a chart never gets confused with "something's wrong".
+
+## Using the tokens
+
+Tailwind turns each variable into classes, through the `@theme inline` block in <Source path="src/app/globals.css" />:
+
+```tsx
+<div className="rounded-xl bg-card p-6 shadow-md">
+  <p className="text-sm text-muted-foreground">Today's sales</p>
+  <span className="rounded-full bg-tone-green-subtle px-2.5 text-tone-green-text">Ready</span>
+</div>
+```
+
+Dark mode needs nothing extra in components: the `.dark` class on `<html>` swaps the variables underneath.
+
+<Note>
+  Adding a new colour is a design decision, not a coding one. If a screen seems to need one, it's usually a sign that one of the three jobs (action, data, state) is being stretched.
+</Note>

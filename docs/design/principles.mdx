@@ -1,0 +1,49 @@
+---
+title: "Principles"
+description: "What the dashboard should feel like, and the rules every screen follows."
+icon: "/icons/compass.svg"
+---
+
+import { Why } from "/snippets/why.jsx";
+import { Shot } from "/snippets/shot.jsx";
+
+The dashboard should look like the tools restaurants and shops already trust, such as Square, Toast and Shopify's admin: calm, familiar, quick to read. White rounded cards on a cool grey-blue background, one confident orange, slate text. People open it in the middle of a busy service, so it has to tell them what's going on in a second or two and then get out of the way.
+
+<Shot name="overview" alt="The overview in light mode: white cards on a pale blue-grey background, orange icon tiles, slate text" />
+
+## The rules
+
+**The job in front of you.** Each role lands on its own screen, and anything it can't act on is left out rather than shown greyed out. A waiter's phone has four tabs, not fourteen.
+
+**Live by default.** Orders, tickets and bookings update themselves. Nobody should ever refresh to find out what changed.
+
+**Never lie about money.** Totals, change and refunds come from exact paisa maths and the server's numbers. Nothing at the till changes on screen before the API has agreed.
+
+**Readable at a glance, under pressure.** Status is legible from across a kitchen. The next action is the one orange button, reachable with one thumb.
+
+**Two languages, one product.** Bangla is a first-class reading experience, not a translation pasted over English layouts.
+
+## Colour has three jobs
+
+Colour is used for three things, and nothing else:
+
+1. **The action.** Orange 600 on the one primary button per screen, the current page in the sidebar, and the icon tiles on figures.
+2. **Live data.** Orange 500 on chart bars, progress and large fills, always on a soft orange track.
+3. **State.** Five soft tones (amber, orange, green, slate, red), each a tinted background with dark text, an icon and a word.
+
+Everything else is slate on white or on the background. If a colour on screen isn't doing one of those three jobs, it comes out. [Colour](/design/colour) has the full set.
+
+## Never colour alone
+
+A status is never just a coloured dot. Every pill has a word and an icon as well, so it reads in black and white, to anyone with colour blindness, and from across the room. The same goes for the live connection chip: "Live", "Reconnecting", "Offline".
+
+## Accessible by default
+
+- Text meets WCAG 2.2 AA contrast in both themes.
+- Every control can be reached and used with the keyboard, with a visible orange focus ring.
+- On touch screens every small button has at least a 44-pixel target, even when it looks smaller.
+- Motion respects the system's "reduce motion" setting. See [Motion](/design/motion).
+
+<Why>
+  An earlier version of this design had a more decorated look of its own: printed-label textures, more colours, more personality. It looked interesting in a mock-up and tiring in use. I replaced it with something deliberately familiar, because staff shouldn't have to learn a new visual language to find the Pay button.
+</Why>

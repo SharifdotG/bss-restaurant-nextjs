@@ -1,0 +1,70 @@
+---
+title: "Typography"
+description: "Google Sans Flex for everything, Baloo Da 2 for Bangla, and the type scale."
+icon: "/icons/text-aa.svg"
+---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+
+One typeface does every job: **Google Sans Flex**, a friendly, open sans-serif. Headings and figures are bold; running text is regular. There's no second display font. Bangla text is set in **Baloo Da 2**, which the browser picks up automatically for Bangla characters. (This documentation uses the same two fonts, and Google Sans Code for code.)
+
+## Loading the fonts
+
+Both come from Google Fonts through `next/font`, in <Source path="src/lib/fonts.ts" />. Next.js downloads them at build time and serves them from the app itself, so there's no request to Google when someone opens the dashboard.
+
+```ts src/lib/fonts.ts
+export const googleSans = Google_Sans_Flex({
+  subsets: ["latin"],
+  axes: ["opsz"],
+  // No metric overrides exist for this family yet, so skip the generated fallback.
+  adjustFontFallback: false,
+  variable: "--font-google-sans",
+  display: "swap",
+});
+
+// Picks up Bangla glyphs after Google Sans in the stack; only fetched when Bangla text shows up.
+export const baloo = Baloo_Da_2({
+  subsets: ["bengali"],
+  variable: "--font-baloo",
+  display: "swap",
+  preload: false,
+});
+```
+
+The font stack in `globals.css` lists Google Sans first and Baloo second. Google Sans has no Bangla letters, so for those the browser falls through to Baloo, letter by letter. That's why a Bangla dish name on an English screen still looks right.
+
+## The scale
+
+The dashboard replaces Tailwind's default sizes with its own, each with a fixed line height. They're defined in <Source path="src/app/globals.css" />:
+
+| Class | Size / line height | Used for |
+| --- | --- | --- |
+| `text-4xl` | 36 / 44 | The biggest figures: change due at the till, kitchen ticket numbers |
+| `text-3xl` | 30 / 38 | Page titles on tablets and up |
+| `text-2xl` | 24 / 32 | Page titles on phones, figures on cards, totals |
+| `text-xl` | 20 / 28 | Order card titles where the card is the main thing |
+| `text-lg` | 18 / 26 | Dialog titles |
+| `text-md` | 16 / 24 | Panel and card titles |
+| `text-base` | 14 / 20 | Body text, the default |
+| `text-sm` | 13 / 18 | Subtitles, table cells, small buttons |
+| `text-xs` | 12 / 16 | Pills and labels |
+| `text-2xs` | 11 / 16 | Uppercase headings over sidebar groups and table columns |
+
+14 pixels is small for a document, and right for a working screen full of tables and numbers. Headings are bold with slightly tighter letter spacing (`tracking-tight`).
+
+## Numbers line up
+
+Every number in the app uses **tabular figures**: each digit is the same width, so columns of prices line up and a counting-up total doesn't wobble. It's switched on for the whole page in `globals.css`:
+
+```css
+body {
+  font-variant-numeric: tabular-nums;
+}
+```
+
+Money is always written with two decimals and the ৳ sign on the same line as the number, which the formatting functions in <Source path="src/lib/money.ts" /> take care of.
+
+<Why>
+  I tried a serif for headings early on and dropped it. In a dashboard, headings are labels, not headlines, and a second typeface mostly added noise. One family with clear weight steps reads faster, and its variable axes give every size a cut that looks right.
+</Why>

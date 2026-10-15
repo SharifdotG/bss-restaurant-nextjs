@@ -1,0 +1,93 @@
+---
+title: "Motion"
+description: "Where things move, how fast, and how reduced motion is respected."
+icon: "/icons/path.svg"
+---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+
+Motion in the dashboard has two jobs: show what changed, and mark the few moments worth marking. Everything else is still. A working screen where things wiggle for their own sake is harder to read, not nicer.
+
+## Two speeds
+
+**Inside working screens, quick and quiet.** State changes take 120 to 260 milliseconds: a button dips when pressed, a tab's underline slides, a new order slides into a list, a page fades in.
+
+**At the edges, a little more expressive.** A handful of moments are allowed to take up to about 700 milliseconds:
+
+| Moment | What happens |
+| --- | --- |
+| The first time you open the overview or floor in a session | The cards rise in one after another; figures count up from zero |
+| A payment completes | A green circle springs in, a tick draws itself, the change counts up |
+| A new ticket reaches the kitchen | It drops into **To cook** and settles, with a chime |
+| Food is added to a ticket that's cooking | The ticket's outline flashes orange twice |
+| An empty list or "all caught up" | The icon tile pops in and the line under it rises |
+
+The first-visit moments only play once per session per screen. `useFirstVisit()` in <Source path="src/lib/motion.ts" /> remembers what you've seen in `sessionStorage`, and signing out forgets it, so the next person gets the welcome too.
+
+## The tokens
+
+Durations and easing curves are tokens, defined once for CSS in `globals.css` and once for JavaScript in `src/lib/motion.ts`, with the same values:
+
+```ts src/lib/motion.ts
+/** The CSS easing tokens, for Motion components. */
+export const EASE = {
+  standard: [0.2, 0, 0, 1] as Bezier,
+  exit: [0.4, 0, 1, 1] as Bezier,
+  arrive: [0.16, 1, 0.3, 1] as Bezier,
+};
+
+/** The CSS duration tokens in seconds. */
+export const DURATION = { fast: 0.12, base: 0.18, slow: 0.26 };
+```
+
+- **standard** for most state changes.
+- **exit** for things leaving: quick to start, so they get out of the way.
+- **arrive** for entrances: fast at first, then a long, soft landing.
+
+## Who animates what
+
+Two tools, and each element is animated by only one of them:
+
+- **CSS** for simple things: hover colours, the button press, dialogs and sheets opening, skeletons, page fades, and the `rise` and `pop` entrance animations.
+- **[Motion](https://motion.dev)** for anything that moves between places: list items gliding when the list reorders, kitchen tickets sliding between columns, the sliding chip in segmented controls, and the payment tick.
+
+Live lists share one preset, so every list in the app moves the same way:
+
+```ts src/lib/motion.ts
+/**
+ * One entrance and exit for every live list: a row drops in from just above, a finished
+ * one shrinks away quickly, and the rest glide into place.
+ */
+export const listItem = {
+  layout: "position",
+  initial: { opacity: 0, y: -8 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.97, transition: { duration: DURATION.fast, ease: EASE.exit } },
+  transition: LIST_SPRING,
+} as const;
+```
+
+Motion's code is loaded in two steps (`LazyMotion`): a small part with the first page, and the layout animations after it has painted, so they never slow down the first load.
+
+## Reduced motion
+
+People can ask their system to reduce motion, often because movement makes them feel unwell. The dashboard respects it everywhere:
+
+- Motion components follow the setting automatically, through `<MotionConfig reducedMotion="user">`.
+- CSS entrances keep their fade but drop the movement: the `--motion-rise` distance becomes 0.
+- Figures don't count up; they just appear.
+- Skeletons stop pulsing, and the kitchen's added-items flash is switched off.
+
+```css src/app/globals.css
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-rise: 0px;
+    --motion-pop: 1;
+  }
+}
+```
+
+<Why>
+  I gave each kind of animation exactly one owner. When CSS and a JavaScript library both try to animate the same element, they fight, and you get jumps that are miserable to debug. One owner per element, and one shared preset for every live list, kept the motion consistent and the code small.
+</Why>

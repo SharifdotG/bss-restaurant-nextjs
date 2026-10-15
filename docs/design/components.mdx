@@ -1,0 +1,122 @@
+---
+title: "Components"
+description: "The shared building blocks, and how to reuse them instead of starting over."
+icon: "/icons/puzzle-piece.svg"
+---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+import { Pill } from "/snippets/pill.jsx";
+
+Every screen is built from the same few dozen pieces. Before writing a new one, check here: there's probably something that already does the job.
+
+## Where they live
+
+| Folder | What's in it |
+| --- | --- |
+| `src/components/ui/` | The basics: button, input, select, dialog, sheet, tabs, table, pill, chip, switch, tooltip, calendar, toasts. 35 files |
+| `src/components/` (top level) | Pieces shared between areas: `Panel`, `EmptyState`, `StateCard`, `ImageField`, `DatePicker`, `PrintSheet`, `DownloadButton` |
+| `src/components/stats/` | Figures: `KpiCard`, `CountUp`, `Delta`, `ShareBar` |
+| `src/components/shell/` | The frame around every page: sidebar, top bar, tabs, `PageFrame`, `PageHeader` |
+| `src/components/<area>/` | Pieces only one area uses, like the kitchen ticket or the till keypad |
+
+## shadcn and Base UI
+
+The basics started from [shadcn/ui](https://ui.shadcn.com). shadcn isn't a package you install and update; it copies each component's source into your project, and from then on it's your code. These were restyled to the dashboard's tokens and in some cases rewritten.
+
+Underneath, most of them use [Base UI](https://base-ui.com), which handles the hard, invisible parts: focus moving into a dialog and back out, Escape to close, arrow keys in menus and tabs, and the right labels for screen readers.
+
+```tsx src/components/ui/button.tsx
+import { Button as ButtonPrimitive } from "@base-ui/react/button";
+```
+
+## Variants with cva
+
+A component with several looks, like the button, lists them once with [cva](https://cva.style) (class-variance-authority) instead of piling up conditions:
+
+```tsx src/components/ui/button.tsx
+variants: {
+  variant: {
+    default: "bg-primary text-primary-foreground hover:bg-primary-hover",
+    outline:
+      "border-border bg-card text-foreground shadow-sm hover:bg-muted aria-expanded:bg-muted",
+    secondary: "bg-secondary text-secondary-foreground hover:bg-muted",
+    soft: "bg-primary-soft text-primary-soft-foreground hover:bg-brand-track",
+    ghost: "text-foreground hover:bg-muted aria-expanded:bg-muted",
+    destructive:
+      "bg-destructive text-destructive-foreground hover:bg-destructive/90 focus-visible:ring-destructive/40",
+    link: "h-auto px-0 text-primary-soft-foreground underline-offset-4 hover:underline",
+  },
+  size: {
+    default: "h-10 gap-2 px-4 text-base",
+    sm: "h-8 gap-1.5 px-3 text-sm [&_svg:not([class*='size-'])]:size-4",
+    lg: "h-11 gap-2 px-5 text-md",
+    icon: "size-10",
+    "icon-sm": "size-8 [&_svg:not([class*='size-'])]:size-4",
+  },
+},
+```
+
+Using it reads like plain English: `<Button variant="outline" size="sm">Print bill</Button>`. Every button shrinks to 98% when pressed and has the orange focus ring, because both are in the shared base classes.
+
+**The rule for buttons:** one `default` (orange) button per screen, for the main thing to do. Everything else is `outline`, `secondary` or `ghost`. `destructive` (red) only appears inside a confirmation.
+
+## Status pills
+
+`Pill` takes one of the five tones, an icon and a word. Components never choose a colour for a status directly; they look it up:
+
+```ts src/lib/orders.ts
+export const STATUS_LOOK: Record<OrderStatus, { tone: Tone; icon: Icon }> = {
+  pending: { tone: "amber", icon: HourglassMediumIcon },
+  // Confirmed is still waiting, now for the chef.
+  confirmed: { tone: "amber", icon: SealCheckIcon },
+  preparing: { tone: "orange", icon: FireIcon },
+  ready: { tone: "green", icon: BellRingingIcon },
+  served: { tone: "green", icon: CheckCircleIcon },
+  paid: { tone: "slate", icon: WalletIcon },
+  cancelled: { tone: "red", icon: ProhibitIcon },
+};
+```
+
+`OrderStatusPill` and `BookingStatusPill` wrap this, so a page writes `<OrderStatusPill status={order.status} />` and gets the right tone, icon and translated word.
+
+<Pill tone="amber">Pending</Pill> <Pill tone="orange">Preparing</Pill> <Pill tone="green">Ready</Pill> <Pill tone="slate">Paid</Pill> <Pill tone="red">Cancelled</Pill>
+
+## The pieces you'll reach for most
+
+| Component | What it's for |
+| --- | --- |
+| `Panel` | The white card every section sits in, with a title, a subtitle and an action on the right. `plain` drops the card for sections that bring their own |
+| `PageFrame` | Wraps a page: checks the role, then draws the header and the content |
+| `KpiCard` | A figure with a label, an orange icon tile, a note and an optional change. Shows a skeleton until the number arrives |
+| `EmptyState` | What a list shows when there's nothing in it: an icon, a line, and an action |
+| `StateCard` | A whole-page message: not found, not your role, can't connect |
+| `Sheet` | The side panel used for every edit form. Slides in from the right; a few, like booking details, rise from the bottom on phones |
+| `Dialog` | For confirmations and short, focused tasks |
+| `Segmented` | A small switch between two to four options, with a sliding white chip |
+| `Chip` | Quick picks, like cancel reasons or quick cash amounts |
+| `Table` | Data tables that scroll sideways when narrow and hide less important columns first |
+| `LiveRow` | A table row that slides in and out as live data changes |
+| `ImageField` | Drop or pick a photo, crop it, upload it |
+
+## Loading, empty, error
+
+Every screen that fetches data handles all three:
+
+- **Loading** shows a **skeleton**: grey shapes where the content will be, so the page doesn't jump when it arrives. Spinners are only used inside buttons.
+- **Empty** shows an `EmptyState` with a sentence that says why ("No bills waiting") and, where it makes sense, what to do.
+- **Error** shows the message from [the API's error code](/how-it-works/talking-to-the-api#errors-that-make-sense) and a **Try again** button.
+
+## Icons
+
+All icons are [Phosphor](https://phosphoricons.com):
+
+- **Duotone** inside tiles, pills, empty states and dialogs: the shape plus a soft fill.
+- **Bold** for small action glyphs: the plus on "New order", check marks, arrows.
+- **Regular** everywhere else.
+
+Each page has its own icon, listed once in `src/components/shell/page-icon.tsx` and used by the sidebar, the tabs and the command palette, so they always match. Dishes without a photo get an icon guessed from their category (a cup for drinks, a cake for desserts), in English or Bangla.
+
+<Why>
+  I treat `src/components/ui` as the design system in code. When a screen needed something slightly different, I changed the shared component or added a variant, rather than restyling it on the spot. That's the only way a project this size still looks like one product at the end.
+</Why>

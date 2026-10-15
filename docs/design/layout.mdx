@@ -1,0 +1,81 @@
+---
+title: "Layout"
+description: "The app shell, breakpoints from phone to wall screen, spacing, corners and depth."
+icon: "/icons/layout.svg"
+---
+
+import { Why } from "/snippets/why.jsx";
+import { Source } from "/snippets/source.jsx";
+import { Shot } from "/snippets/shot.jsx";
+
+## One shell, four shapes
+
+Every signed-in page sits inside the same shell, which changes shape with the screen. The shape is chosen by `useShellLayout()` in <Source path="src/lib/use-shell-layout.ts" />:
+
+| Screen width | Shape | Navigation |
+| --- | --- | --- |
+| 1280 px and up | **Full** | A 260 px sidebar with labels. It can be collapsed to a rail with <kbd>Ctrl</kbd> <kbd>B</kbd>, and the choice is remembered |
+| 1024 to 1279 px | **Rail** | An 84 px sidebar of icon tiles |
+| 768 to 1023 px | **Drawer** | A top bar whose menu button opens the sidebar as a sheet |
+| Below 768 px | **Phone** | No sidebar or top bar. Bottom tabs for the role's main pages, plus **More** |
+
+<Shot name="floor" phone alt="The floor on a phone, with the bottom tabs: Floor, Orders, New order and Reservations" />
+
+The bottom tabs are different for each role. A waiter gets Floor, Orders, a big **+** for a new order, and Reservations. A chef gets Kitchen and Menu. Everything else is under **More**.
+
+Three pages bend the shell:
+
+- **Kitchen** has no shell at all: just the board, full-screen.
+- **New order** and **Billing** pin the sidebar to the rail, because the cart and the till need the width.
+- **New order** on a phone hides the bottom tabs, since it's a three-step flow with its own back button.
+
+<Why>
+  I matched each shape to who actually holds the device. Managers sit at a laptop, so they get the full sidebar. Waiters are on phones mid-service, so their main pages are a thumb away at the bottom. The kitchen is a tablet on the wall that nobody navigates, so it has no navigation.
+</Why>
+
+## Spacing
+
+Spacing follows Tailwind's 4-pixel steps, and in practice uses a handful of them: 4, 8, 12, 16, 20, 24 and 32.
+
+| Where | Spacing |
+| --- | --- |
+| Page edges | 16 px on phones, 24 px on tablets, 32 px from 1280 px |
+| Between cards | 20 to 24 px |
+| Inside cards | 20 px on phones, 24 px from 640 px |
+| Controls | 40 px tall by default, 32 px small, 44 px large |
+
+On touch screens, small buttons reach out to a 44-pixel target without looking bigger. That's the `hit-target` utility in `globals.css`, which adds an invisible area around the button only when the pointer is a finger.
+
+## Corners
+
+| Radius | Used on |
+| --- | --- |
+| 6 and 8 px | Small details: key caps, skeleton lines, tiny badges |
+| 10 px | Buttons, inputs, icon tiles. The default |
+| 12 px | Nav items, alerts, small cards |
+| 16 px | Cards and panels |
+| 20 px | Dialogs and sheets |
+| Full | Pills, the search field, toggles |
+
+## Depth
+
+There are no borders on cards. Depth comes from soft, cool shadows on white over the pale background, in three levels:
+
+| Level | Shadow | Used on |
+| --- | --- | --- |
+| Low | `0 2px 8px` | Icon tiles, the active nav item, outline buttons |
+| Card | `0 6px 24px` | Every card and panel |
+| High | `0 16px 40px` | Dialogs, sheets and popovers, over a dimmed backdrop |
+
+The shadow colour is a slate tint at 6% (12% for the high level) in light mode, and near-black at 30% and 50% in dark mode, where cards are also a step lighter than the page. Hovering a card doesn't lift it; elevation belongs to the kind of thing, not the pointer.
+
+## Page anatomy
+
+Most pages start the same way, through `PageFrame` and `PageHeader` in `src/components/shell/`:
+
+1. A breadcrumb (tablet and up): restaurant name, then the page.
+2. The page title, with a short line under it: "2 bills waiting · ৳1,772.14 to collect".
+3. Actions on the right. The primary one is the only orange button.
+4. The content, usually a grid of cards.
+
+On phones the title row also carries the live chip and the notification bell, since there's no top bar.
