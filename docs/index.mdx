@@ -6,6 +6,7 @@ mode: "frame"
 ---
 
 import { Intro, Action, LinkPanel, LinkRow } from "/snippets/landing.jsx";
+import { Shot } from "/snippets/shot.jsx";
 
 <div className="bss-landing not-prose">
 
@@ -21,7 +22,9 @@ import { Intro, Action, LinkPanel, LinkRow } from "/snippets/landing.jsx";
   A Next.js app that turns the BSS Restaurant API into one screen per job: the manager's overview, the waiter's floor and order pad, the kitchen's live ticket board, the cashier's till and the front desk's bookings. These docs walk through how it's built and why, and how to run, change and deploy it, starting from zero.
 </Intro>
 
-<img className="bss-shot" src="/screenshots/overview.webp" alt="The manager's overview: today's sales, open orders, a sales chart and live order cards" />
+<div className="bss-shot-frame">
+  <Shot name="overview" alt="The manager's overview: today's sales, open orders, a sales chart and live order cards" />
+</div>
 
 <div className="bss-panels">
 
